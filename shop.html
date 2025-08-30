@@ -1,230 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Shop | Nayanta Eyewear</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <style>
-    html { scroll-behavior: smooth; }
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #f9f9f9; color: #333; }
-
-    /* Navbar */
-    nav { position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(10px); display: flex; justify-content: space-between; align-items: center;
-      padding: 1rem 2rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
-    nav .logo { color: #fff; font-size: 1.8rem; font-weight: bold; letter-spacing: 1px; }
-    nav ul { list-style: none; display: flex; gap: 1.5rem; align-items: center; }
-    nav ul li a { color: #fff; text-decoration: none; font-size: 1rem; transition: color 0.3s; }
-    nav ul li a:hover, nav ul li a.active { color: #ff4d4d; }
-    .menu-toggle { display: none; font-size: 1.8rem; color: #fff; cursor: pointer; }
-
-    /* Cart Badge */
-    .cart-icon { position: relative; font-size: 1.3rem; color: white; }
-    .cart-count {
-      position: absolute;
-      top: -8px;
-      right: -12px;
-      background: #ff4d4d;
-      color: white;
-      font-size: 0.8rem;
-      font-weight: bold;
-      padding: 2px 6px;
-      border-radius: 50%;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nayanta Eyewear | Maintenance</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
     }
-
-    @media (max-width: 768px) {
-      nav ul { display: none; flex-direction: column; background: rgba(0, 0, 0, 0.95); position: absolute;
-        top: 60px; right: 0; width: 200px; padding: 1rem; border-radius: 8px; }
-      nav ul.show { display: flex; }
-      .menu-toggle { display: block; }
+    body, html {
+        height: 100%;
+        overflow: hidden;
+        background: linear-gradient(135deg, #f9f9f9, #e0e0e0);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        position: relative;
     }
-
-    /* Hero */
-    .shop-header { background: linear-gradient(to right, rgba(0, 0, 0, 0.6), rgba(60, 60, 60, 0.7)),
-        url('https://png.pngtree.com/background/20230528/original/pngtree-red-sunglasses-in-water-on-a-black-background-picture-image_2783564.jpg') center/cover no-repeat;
-      color: white; text-align: center; padding: 160px 20px 100px; }
-    .shop-header h1 { font-size: 3rem; font-weight: bold; margin-bottom: 10px; }
-    .shop-header p { font-size: 1.2rem; max-width: 700px; margin: 0 auto; }
-
-    /* Tabs */
-    .tabs { display: flex; justify-content: center; gap: 15px; margin: 30px 0; flex-wrap: wrap; }
-    .tab-btn { padding: 10px 20px; border: none; border-radius: 8px; background: #eee; cursor: pointer;
-      font-weight: bold; transition: all 0.3s ease; }
-    .tab-btn.active, .tab-btn:hover { background: linear-gradient(135deg, #ff0000, #cc0000); color: #fff; }
-
-    /* Shop Section */
-    .shop-section { padding: 40px 20px; max-width: 1200px; margin: auto; }
-    .shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 20px; }
-    .product-card { background: #fff; border-radius: 16px; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-      overflow: hidden; transition: transform 0.3s ease; text-align: center; padding-bottom: 20px; }
-    .product-card:hover { transform: translateY(-5px); }
-    .product-card img { width: 100%; height: 220px; object-fit: cover; }
-    .product-card h3 { font-size: 1.2rem; margin: 15px 0 8px; color: #333; }
-    .product-card p { font-size: 1rem; font-weight: bold; color: #cc0000; }
-    .btn { background: linear-gradient(135deg, #ff0000, #cc0000); color: white; padding: 10px 25px; border: none;
-      border-radius: 8px; font-weight: bold; margin-top: 10px; cursor: pointer; transition: all 0.3s ease; }
-    .btn:hover { background: #990000; transform: scale(1.05); }
-
-    /* Footer */
-    .footer { background: #222; color: #fff; text-align: center; padding: 20px 10px; margin-top: 60px; letter-spacing: 0.5px; }
-
-    @media (max-width: 768px) {
-      .shop-header h1 { font-size: 2.2rem; }
-      .shop-header p { font-size: 1rem; }
+    h1 {
+        font-size: 3rem;
+        color: #222;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.1);
     }
-    @media (max-width: 480px) {
-      .shop-header { padding: 120px 15px 80px; }
-      .shop-header h1 { font-size: 1.8rem; }
-      .shop-header p { font-size: 0.9rem; }
+    p {
+        font-size: 1.2rem;
+        color: #555;
+        margin-bottom: 40px;
     }
-  </style>
+    .game-container {
+        width: 80%;
+        max-width: 600px;
+        height: 400px;
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
+    .glasses {
+        width: 50px;
+        position: absolute;
+        top: -60px;
+        transition: top 0.1s linear;
+        cursor: pointer;
+    }
+    .scoreboard {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        font-weight: 600;
+        font-size: 1.2rem;
+        color: #333;
+    }
+    footer {
+        position: absolute;
+        bottom: 20px;
+        font-size: 0.9rem;
+        color: #888;
+    }
+</style>
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav>
-    <div class="logo">Nayanta</div>
-    <i class="fas fa-bars menu-toggle" onclick="toggleMenu()"></i>
-    <ul id="menu">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a class="active" href="shop.html">Shop</a></li>
-      <li>
-        <a href="cart.html" class="cart-icon">
-          <i class="fas fa-shopping-cart"></i>
-          <span class="cart-count" id="cart-count">0</span>
-        </a>
-      </li>
-      <li><a href="contact.html">Contact</a></li>
-    </ul>
-  </nav>
+<h1>Nayanta Eyewear</h1>
+<p>Our site is currently under maintenance. Meanwhile, enjoy this mini-game!</p>
 
-  <!-- Hero -->
-  <header class="shop-header">
-    <h1>Shop Eyewear</h1>
-    <p>Discover our premium collection of glasses and sunglasses</p>
-  </header>
+<div class="game-container" id="gameContainer">
+    <div class="scoreboard" id="score">Score: 0</div>
+</div>
 
-  <!-- Tabs -->
-  <div class="tabs">
-    <button class="tab-btn active" onclick="showCollection('men')">For Men</button>
-    <button class="tab-btn" onclick="showCollection('women')">For Women</button>
-    <button class="tab-btn" onclick="showCollection('computer')">Computer Glasses</button>
-    <button class="tab-btn" onclick="showCollection('sunglass')">Sunglasses</button>
-    <button class="tab-btn" onclick="showCollection('kids')">For Kids</button>
-  </div>
+<footer>We'll be back soon. Thank you for your patience!</footer>
 
-  <!-- Shop Section -->
-  <section class="shop-section">
+<script>
+// Game setup
+const container = document.getElementById('gameContainer');
+const scoreBoard = document.getElementById('score');
+let score = 0;
 
-    <!-- Men -->
-    <div class="shop-grid collection" id="men">
-      <div class="product-card">
-        <img src="https://images.unsplash.com/photo-1589561084283-930aa7b1ce50?w=600" alt="Men Classic Sunglasses">
-        <h3>Men Classic Sunglasses</h3>
-        <p>₹1499</p>
-        <button class="btn">Add to Cart</button>
-      </div>
-      <div class="product-card">
-        <img src="https://images.unsplash.com/photo-1591076482161-42ce6f423f06?w=600" alt="Men Premium Aviators">
-        <h3>Premium Aviators</h3>
-        <p>₹2499</p>
-        <button class="btn">Add to Cart</button>
-      </div>
-    </div>
+function createGlasses() {
+    const glasses = document.createElement('img');
+    glasses.src = 'https://i.ibb.co/7JfBf4v/sunglasses.png'; // placeholder glasses image
+    glasses.className = 'glasses';
+    glasses.style.left = Math.random() * (container.offsetWidth - 50) + 'px';
+    container.appendChild(glasses);
 
-    <!-- Women -->
-    <div class="shop-grid collection" id="women" style="display:none;">
-      <div class="product-card">
-        <img src="https://images.unsplash.com/photo-1585386959984-a4155224a1fb?w=600" alt="Women Stylish Glasses">
-        <h3>Women Stylish Glasses</h3>
-        <p>₹1799</p>
-        <button class="btn">Add to Cart</button>
-      </div>
-      <div class="product-card">
-        <img src="https://images.unsplash.com/photo-1577803645773-f96470509666?w=600" alt="Women Premium Frames">
-        <h3>Premium Frames</h3>
-        <p>₹2299</p>
-        <button class="btn">Add to Cart</button>
-      </div>
-    </div>
+    let topPosition = -60;
 
-    <!-- Computer Glasses -->
-    <div class="shop-grid collection" id="computer" style="display:none;">
-      <div class="product-card">
-        <img src="https://images.unsplash.com/photo-1585386959984-a4155224a1fb?w=600" alt="Blue Light Glasses">
-        <h3>Blue Light Glasses</h3>
-        <p>₹999</p>
-        <button class="btn">Add to Cart</button>
-      </div>
-    </div>
-
-    <!-- Sunglasses -->
-    <div class="shop-grid collection" id="sunglass" style="display:none;">
-      <div class="product-card">
-        <img src="https://images.unsplash.com/photo-1589561084283-930aa7b1ce50?w=600" alt="Classic Sunglasses">
-        <h3>Classic Sunglasses</h3>
-        <p>₹1499</p>
-        <button class="btn">Add to Cart</button>
-      </div>
-    </div>
-
-    <!-- Kids -->
-    <div class="shop-grid collection" id="kids" style="display:none;">
-      <div class="product-card">
-        <img src="https://images.unsplash.com/photo-1585386959984-a4155224a1fb?w=600" alt="Kids Frames">
-        <h3>Kids Frames</h3>
-        <p>₹799</p>
-        <button class="btn">Add to Cart</button>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <p>&copy; 2025 Nayanta Eyewear. All rights reserved.</p>
-  </footer>
-
-  <!-- Script -->
-  <script>
-    function toggleMenu() {
-      document.getElementById("menu").classList.toggle("show");
+    function fall() {
+        topPosition += 4;
+        glasses.style.top = topPosition + 'px';
+        if (topPosition < container.offsetHeight) {
+            requestAnimationFrame(fall);
+        } else {
+            container.removeChild(glasses);
+        }
     }
 
-    function showCollection(id) {
-      document.querySelectorAll('.collection').forEach(col => col.style.display = "none");
-      document.getElementById(id).style.display = "grid";
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
-    }
+    fall();
 
-    // ---- CART FUNCTIONALITY ----
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    function updateCartCount() {
-      document.getElementById("cart-count").innerText = cart.length;
-    }
-
-    updateCartCount();
-
-    document.querySelectorAll(".btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const productCard = btn.closest(".product-card");
-        const name = productCard.querySelector("h3").innerText;
-        const price = parseInt(productCard.querySelector("p").innerText.replace("₹",""));
-        const image = productCard.querySelector("img").src;
-
-        const product = { name, price, image };
-
-        cart.push(product);
-        localStorage.setItem("cart", JSON.stringify(cart));
-        updateCartCount();
-        alert(`${name} added to cart!`);
-      });
+    glasses.addEventListener('click', () => {
+        score += 1;
+        scoreBoard.textContent = 'Score: ' + score;
+        container.removeChild(glasses);
     });
-  </script>
+}
+
+// Spawn glasses every 1.5 seconds
+setInterval(createGlasses, 1500);
+</script>
+
 </body>
 </html>
