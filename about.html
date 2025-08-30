@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Us | Nayanta Eyewear</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    /* Navbar */
+    nav {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    nav .logo {
+      color: #fff;
+      font-size: 1.8rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      color: #ff4d4d;
+    }
+
+    /* Mobile Nav */
+    .menu-toggle {
+      display: none;
+      font-size: 1.8rem;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        display: none;
+        flex-direction: column;
+        background: rgba(0, 0, 0, 0.95);
+        position: absolute;
+        top: 60px;
+        right: 0;
+        width: 200px;
+        padding: 1rem;
+        border-radius: 8px;
+      }
+
+      nav ul.show {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+    }
+
+    /* Hero */
+    .about-header {
+      background: linear-gradient(to right, rgba(0, 0, 0, 0.6), rgba(60, 60, 60, 0.7)),
+        url('https://png.pngtree.com/background/20230528/original/pngtree-red-sunglasses-in-water-on-a-black-background-picture-image_2783564.jpg') center/cover no-repeat;
+      color: white;
+      text-align: center;
+      padding: 160px 20px 100px;
+    }
+
+    .about-header h1 {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .about-header p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Section */
+    .section {
+      padding: 60px 20px;
+      max-width: 1100px;
+      margin: auto;
+      text-align: center;
+    }
+
+    .section h2 {
+      font-size: 2.2rem;
+      color: #cc0000;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .section h2::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 4px;
+      margin: 10px auto 0;
+      background: #cc0000;
+      border-radius: 2px;
+    }
+
+    .content-block {
+      background: #fff;
+      margin-top: 40px;
+      border-radius: 16px;
+      padding: 40px 30px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .content-block:hover {
+      transform: translateY(-5px);
+    }
+
+    .content-block i {
+      font-size: 2.5rem;
+      color: #cc0000;
+      margin-bottom: 15px;
+    }
+
+    .content-block p {
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #ff0000, #cc0000);
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+      margin-top: 30px;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #990000;
+      transform: scale(1.05);
+    }
+
+    .footer {
+      background: #222;
+      color: #fff;
+      text-align: center;
+      padding: 20px 10px;
+      margin-top: 60px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .about-header h1 {
+        font-size: 2.2rem;
+      }
+
+      .about-header p {
+        font-size: 1rem;
+      }
+
+      .content-block {
+        padding: 25px 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .about-header {
+        padding: 120px 15px 80px;
+      }
+
+      .about-header h1 {
+        font-size: 1.8rem;
+      }
+
+      .about-header p {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">Nayanta</div>
+    <i class="fas fa-bars menu-toggle" onclick="toggleMenu()"></i>
+    <ul id="menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a class="active" href="about.html">About</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="collections.html">Collections</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <header class="about-header">
+    <h1>About Nayanta Eyewear</h1>
+    <p>Crafting premium eyewear that blends style, durability, and comfort — redefining how the world sees fashion.</p>
+  </header>
+
+  <section class="section">
+    <h2>Our Mission</h2>
+    <div class="content-block">
+      <i class="fas fa-bullseye"></i>
+      <p>At Nayanta, our mission is to empower self-expression through eyewear that’s fashionable, affordable, and built to last. We strive to make premium-quality glasses accessible to everyone while inspiring confidence in every look.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Our Vision</h2>
+    <div class="content-block">
+      <i class="fas fa-eye"></i>
+      <p>We envision a world where eyewear is more than necessity — it’s a lifestyle statement. Nayanta aims to become the go-to brand for trendsetters who want to see and be seen with clarity, comfort, and elegance.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>What We Do</h2>
+    <div class="content-grid">
+      <div class="content-block">
+        <i class="fas fa-glasses"></i>
+        <p>Design and craft high-quality prescription glasses and sunglasses with cutting-edge technology and style-forward aesthetics.</p>
+      </div>
+      <div class="content-block">
+        <i class="fas fa-truck"></i>
+        <p>Offer fast, reliable delivery worldwide, ensuring you get your perfect pair right at your doorstep.</p>
+      </div>
+      <div class="content-block">
+        <i class="fas fa-heart"></i>
+        <p>Deliver eyewear that not only protects your vision but also enhances your lifestyle with confidence and charm.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>&copy; 2025 Nayanta Eyewear. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("menu").classList.toggle("show");
+    }
+  </script>
+</body>
+</html>

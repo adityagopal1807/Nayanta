@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Donate Food | FoodMitra</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0,0,0,0.6)), 
+        url('https://i.ibb.co/WpB6wKXY/backs.jpg') center/cover no-repeat;
+      color: #fff;
+      padding-top: 80px;
+      min-height: 100vh;
+      background-color: #f5f5f5;
+      color: #333;
+      line-height: 1.6;
+    }
+.form-container {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 16px;
+  max-width: 600px;
+  margin: 100px auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  color: #fff;
+}
+
+    nav {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      z-index: 999;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+       background: rgba(0, 0, 0, 0.7); /* dark transparent background */
+  backdrop-filter: blur(10px);
+    }
+
+    nav .logo {
+      color: #fff;
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+
+    nav ul li a:hover, nav ul li a.active {
+      color: #ff4d4d;
+    }
+
+    .dashboard {
+  max-width: 480px;  /* narrower width */
+  margin: 40px auto;
+  background: rgba(255, 255, 255, 0.95);
+  color: #333;
+  padding: 25px 30px;  /* less padding */
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.dashboard h2 {
+  text-align: center;
+  color: #cc0000;
+  margin-bottom: 15px; /* smaller margin */
+  font-size: 1.6rem;  /* smaller font */
+}
+
+.dashboard form label {
+  display: block;
+  margin-top: 10px; /* smaller margin */
+  font-weight: 600;
+  font-size: 0.9rem; /* smaller font */
+}
+
+.dashboard form input,
+.dashboard form textarea,
+.dashboard form select {
+  width: 100%;
+  padding: 8px; /* less padding */
+  margin-top: 4px; /* smaller margin */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.9rem; /* smaller font */
+}
+
+.dashboard form textarea {
+  resize: vertical;
+}
+
+.dashboard .btn {
+  background: linear-gradient(135deg, #ff0000, #cc0000);
+  color: #fff;
+  padding: 10px 24px; /* smaller padding */
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 14px; /* smaller font */
+  margin-top: 15px;
+  width: 100%;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(255, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    margin: 20px 15px;
+    padding: 20px;
+  }
+}
+
+/* Background image with red overlay and blur */
+.background-wrapper::before {
+  content: "";
+  position: fixed; /* fixed so it stays put behind all content */
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('https://i.ibb.co/WpB6wKXY/backs.jpg') center/cover no-repeat;
+  filter: blur(6px);
+  z-index: -2;
+}
+
+.background-wrapper::after {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(204, 0, 0, 0.4); /* red overlay with 40% opacity */
+  z-index: -1;
+}
+
+    .footer {
+      background: #222;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+      margin-top: 60px;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard {
+        margin: 20px;
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+    <div class="background-wrapper">
+ 
+
+
+  <nav>
+    <div class="logo">FoodMitra</div>
+    <ul>
+      <li><a href="/index">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a class="active" href="donate.html">Donate Food</a></li>
+      <li><a href="/listings">Browse Listings</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <section class="dashboard">
+    <h2><i class="fas fa-utensils"></i> Donate Surplus Food</h2>
+    <form action="/thank_you.html" method="POST">
+      <label for="donorName">Your Name / Organization</label>
+      <input type="text" id="donorName" name="donorName" required>
+
+      <label for="foodItem">Food Description</label>
+      <textarea id="foodItem" name="foodItem" rows="3" placeholder="Type of food, quantity, packaging..." required></textarea>
+
+      <label for="category">Category</label>
+      <select id="category" name="category" required>
+        <option value="">-- Select Category --</option>
+        <option value="human">For People</option>
+        <option value="animals">For Animals</option>
+      </select>
+
+      <label for="expiry">Expiry / Best Before Time</label>
+      <input type="datetime-local" id="expiry" name="expiry" required>
+
+      <label for="pickup">Pickup Address</label>
+      <textarea id="pickup" name="pickup" rows="3" placeholder="Full pickup address..." required></textarea>
+
+      <label for="pincode">Pincode</label>
+      <input type="text" id="pincode" name="pincode" pattern="[0-9]{6}" maxlength="6" placeholder="e.g., 110001" required>
+
+      <label for="contact">Contact Number</label>
+      <input type="tel" id="contact" name="contact" pattern="[0-9]{10}" placeholder="10-digit mobile number" required>
+
+      <button type="submit" class="btn"><i class="fas fa-paper-plane"></i> Submit Donation</button>
+    </form>
+  </section>
+
+  <footer class="footer">
+    <p>&copy; 2025 FoodMitra. All rights reserved.</p>
+  </footer>
+  </div>
+</body>
+</html>

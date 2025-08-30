@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart | Nayanta Eyewear</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; margin:0; background:#f9f9f9; }
+    nav { position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; background: rgba(0,0,0,0.85);
+      display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; color:#fff; }
+    nav .logo { font-size: 1.5rem; font-weight:bold; }
+    nav ul { list-style:none; display:flex; gap:1.5rem; }
+    nav ul li a { color:#fff; text-decoration:none; }
+    nav ul li a:hover { color:#ff4d4d; }
+    
+    .cart-container { max-width:1000px; margin:120px auto 40px; padding:20px; }
+    .cart-title { font-size:2rem; margin-bottom:20px; text-align:center; }
+    .cart-items { display:flex; flex-direction:column; gap:20px; }
+    .cart-item { display:flex; align-items:center; justify-content:space-between; background:#fff; padding:15px; 
+      border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+    .cart-item img { width:80px; height:60px; object-fit:cover; border-radius:8px; }
+    .cart-info { flex:1; margin-left:15px; }
+    .cart-info h3 { margin:0 0 5px; font-size:1.1rem; }
+    .cart-info p { margin:0; color:#cc0000; font-weight:bold; }
+    .remove-btn { background:#ff4d4d; border:none; color:#fff; padding:8px 12px; border-radius:6px; cursor:pointer; }
+    .remove-btn:hover { background:#cc0000; }
+    .cart-total { margin-top:30px; text-align:right; font-size:1.2rem; font-weight:bold; }
+    .checkout-btn { margin-top:20px; display:block; margin-left:auto; padding:12px 20px; 
+      background:linear-gradient(135deg, #ff0000, #cc0000); color:white; border:none; border-radius:8px; cursor:pointer; }
+    .checkout-btn:hover { background:#990000; }
+    .empty { text-align:center; font-size:1.2rem; margin-top:50px; }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">Nayanta</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="cart.html" class="active">Cart</a></li>
+    </ul>
+  </nav>
+
+  <!-- Cart -->
+  <div class="cart-container">
+    <h2 class="cart-title">Your Shopping Cart</h2>
+    <div id="cart-items" class="cart-items"></div>
+    <p id="empty" class="empty">Your cart is empty 🛒</p>
+    <div id="cart-total" class="cart-total"></div>
+    <button id="checkout-btn" class="checkout-btn" style="display:none;">Proceed to Checkout</button>
+  </div>
+
+  <script>
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const cartContainer = document.getElementById("cart-items");
+    const emptyMsg = document.getElementById("empty");
+    const cartTotal = document.getElementById("cart-total");
+    const checkoutBtn = document.getElementById("checkout-btn");
+
+    function renderCart() {
+      cartContainer.innerHTML = "";
+      if(cart.length === 0) {
+        emptyMsg.style.display = "block";
+        cartTotal.innerHTML = "";
+        checkoutBtn.style.display = "none";
+        return;
+      }
+      emptyMsg.style.display = "none";
+      let total = 0;
+      cart.forEach((item, index) => {
+        total += item.price;
+        const div = document.createElement("div");
+        div.classList.add("cart-item");
+        div.innerHTML = `
+          <img src="${item.image}" alt="${item.name}">
+          <div class="cart-info">
+            <h3>${item.name}</h3>
+            <p>₹${item.price}</p>
+          </div>
+          <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+        `;
+        cartContainer.appendChild(div);
+      });
+      cartTotal.innerText = "Total: ₹" + total;
+      checkoutBtn.style.display = "block";
+    }
+
+    function removeItem(index) {
+      cart.splice(index,1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCart();
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>
