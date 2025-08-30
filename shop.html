@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nayanta Eyewear | Maintenance</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 <style>
     * {
         margin: 0;
@@ -14,50 +15,43 @@
     }
     body, html {
         height: 100%;
-        overflow: hidden;
-        background: linear-gradient(135deg, #f9f9f9, #e0e0e0);
+        background: linear-gradient(135deg, #fefefe, #e0e0e0);
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
-        flex-direction: column;
+        overflow: hidden;
         position: relative;
     }
     h1 {
         font-size: 3rem;
         color: #222;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
         text-shadow: 2px 2px 8px rgba(0,0,0,0.1);
     }
     p {
         font-size: 1.2rem;
         color: #555;
         margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
-    .game-container {
-        width: 80%;
-        max-width: 600px;
-        height: 400px;
-        background: #fff;
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        position: relative;
-        overflow: hidden;
-        cursor: pointer;
+    p i {
+        color: #ff4d6d;
     }
-    .glasses {
-        width: 50px;
+    .glasses-icon {
         position: absolute;
-        top: -60px;
-        transition: top 0.1s linear;
-        cursor: pointer;
+        font-size: 2rem;
+        color: #ff4d6d;
+        animation: float 6s linear infinite;
+        cursor: default;
+        opacity: 0.7;
     }
-    .scoreboard {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        font-weight: 600;
-        font-size: 1.2rem;
-        color: #333;
+    @keyframes float {
+        0% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(15deg); }
+        100% { transform: translateY(0) rotate(0deg); }
     }
     footer {
         position: absolute;
@@ -69,52 +63,17 @@
 </head>
 <body>
 
-<h1>Nayanta Eyewear</h1>
-<p>Our site is currently under maintenance. Meanwhile, enjoy this mini-game!</p>
+<h1><i class="fa-solid fa-glasses"></i> Nayanta Eyewear</h1>
+<p><i class="fa-solid fa-wrench"></i> Our site is currently under maintenance. We'll be back soon!</p>
 
-<div class="game-container" id="gameContainer">
-    <div class="scoreboard" id="score">Score: 0</div>
-</div>
+<!-- Decorative glasses icons -->
+<i class="fa-solid fa-glasses glasses-icon" style="top: 10%; left: 15%; animation-duration: 7s;"></i>
+<i class="fa-solid fa-glasses glasses-icon" style="top: 50%; left: 70%; animation-duration: 5s;"></i>
+<i class="fa-solid fa-glasses glasses-icon" style="top: 30%; left: 40%; animation-duration: 6s;"></i>
+<i class="fa-solid fa-glasses glasses-icon" style="top: 70%; left: 20%; animation-duration: 8s;"></i>
+<i class="fa-solid fa-glasses glasses-icon" style="top: 80%; left: 80%; animation-duration: 5.5s;"></i>
 
-<footer>We'll be back soon. Thank you for your patience!</footer>
-
-<script>
-// Game setup
-const container = document.getElementById('gameContainer');
-const scoreBoard = document.getElementById('score');
-let score = 0;
-
-function createGlasses() {
-    const glasses = document.createElement('img');
-    glasses.src = 'https://i.ibb.co/7JfBf4v/sunglasses.png'; // placeholder glasses image
-    glasses.className = 'glasses';
-    glasses.style.left = Math.random() * (container.offsetWidth - 50) + 'px';
-    container.appendChild(glasses);
-
-    let topPosition = -60;
-
-    function fall() {
-        topPosition += 4;
-        glasses.style.top = topPosition + 'px';
-        if (topPosition < container.offsetHeight) {
-            requestAnimationFrame(fall);
-        } else {
-            container.removeChild(glasses);
-        }
-    }
-
-    fall();
-
-    glasses.addEventListener('click', () => {
-        score += 1;
-        scoreBoard.textContent = 'Score: ' + score;
-        container.removeChild(glasses);
-    });
-}
-
-// Spawn glasses every 1.5 seconds
-setInterval(createGlasses, 1500);
-</script>
+<footer>Thank you for your patience & love for stylish eyewear!</footer>
 
 </body>
 </html>
