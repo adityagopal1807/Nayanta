@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | Nayanta Eyewear</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; margin:0; background:#f9f9f9; }
+    nav { position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; background: rgba(0,0,0,0.85);
+      display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; color:#fff; }
+    nav .logo { font-size: 1.5rem; font-weight:bold; }
+    nav ul { list-style:none; display:flex; gap:1.5rem; }
+    nav ul li a { color:#fff; text-decoration:none; }
+    nav ul li a:hover { color:#ff4d4d; }
+
+    .checkout-container { max-width:600px; margin:120px auto 40px; padding:20px; background:#fff; border-radius:10px;
+      box-shadow:0 2px 10px rgba(0,0,0,0.1);}
+    h2 { text-align:center; margin-bottom:20px; }
+    label { display:block; margin:10px 0 5px; font-weight:bold; }
+    input, textarea { width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; margin-bottom:15px; }
+    .order-summary { margin:20px 0; background:#f1f1f1; padding:15px; border-radius:8px; }
+    .order-summary h3 { margin:0 0 10px; }
+    .order-item { display:flex; justify-content:space-between; margin-bottom:5px; }
+    .total { font-weight:bold; margin-top:10px; }
+    .discount { color:green; margin-top:5px; font-weight:bold; }
+    button { width:100%; padding:12px; background:linear-gradient(135deg, #ff0000, #cc0000); 
+      color:white; border:none; border-radius:8px; cursor:pointer; font-size:1rem; }
+    button:hover:not(:disabled) { background:#990000; }
+    button:disabled { background: #ccc; cursor: not-allowed; }
+    .success { text-align:center; color:green; font-weight:bold; margin-top:20px; }
+    .loading { text-align:center; color:#444; margin-top:15px; font-style:italic; }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">Nayanta</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="cart.html">Cart</a></li>
+    </ul>
+  </nav>
+
+  <div class="checkout-container">
+    <h2>Checkout</h2>
+
+    <form id="checkout-form">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" placeholder="Your Name" required>
+
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" placeholder="Your Phone Number" required>
+
+      <label for="address">Delivery Address</label>
+      <textarea id="address" rows="4" placeholder="Your Address" required></textarea>
+
+      <div class="order-summary" id="order-summary">
+        <h3>Order Summary</h3>
+      </div>
+
+      <button type="submit" id="submit-btn">Place Order</button>
+    </form>
+
+    <p id="loading-msg" class="loading" style="display:none;">⏳ Processing your order...</p>
+    <p id="success-msg" class="success" style="display:none;">✅ Your order has been placed successfully!</p>
+  </div>
+
+  <script>
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const discountData = JSON.parse(localStorage.getItem("discount")) || { amount: 0, msg: "" };
+
+    const orderSummary = document.getElementById("order-summary");
+    const form = document.getElementById("checkout-form");
+    const successMsg = document.getElementById("success-msg");
+    const loadingMsg = document.getElementById("loading-msg");
+    const submitBtn = document.getElementById("submit-btn");
+
+    // Render order summary
+    let total = 0;
+    cart.forEach(item => {
+      total += item.price;
+      const div = document.createElement("div");
+      div.classList.add("order-item");
+      div.innerHTML = `<span>${item.name}</span><span>₹${item.price}</span>`;
+      orderSummary.appendChild(div);
+    });
+
+    if(discountData.amount > 0){
+      const discountDiv = document.createElement("div");
+      discountDiv.classList.add("discount");
+      discountDiv.innerText = `${discountData.msg} (-₹${discountData.amount.toFixed(2)})`;
+      orderSummary.appendChild(discountDiv);
+    }
+
+    const finalTotal = total - discountData.amount;
+    const totalDiv = document.createElement("div");
+    totalDiv.classList.add("total");
+    totalDiv.innerText = `Total: ₹${finalTotal.toFixed(2)}`;
+    orderSummary.appendChild(totalDiv);
+
+    // Handle form submit
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
+      const address = document.getElementById("address").value;
+
+      if(!name || !phone || !address) return alert("Please fill all fields!");
+
+      const orderData = { name, phone, address, items: cart, total, discount: discountData, finalTotal };
+
+      // 🚨 Replace with your Google Apps Script Web App URL
+      const scriptURL = "https://script.google.com/macros/s/AKfycbyh_xqgvx0cObiq1uDeoH-NsxX-ZxlMnh6RqQGY5OuD2x69qIyphDIWnmNN2i--ziFqMQ/exec";
+
+      // Prevent multiple clicks
+      submitBtn.disabled = true;
+      loadingMsg.style.display = "block";
+
+      fetch(scriptURL, {
+        method: "POST",
+        mode: "no-cors", // bypass CORS
+        body: JSON.stringify(orderData),
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(() => {
+        localStorage.removeItem("cart");
+        localStorage.removeItem("discount");
+        form.style.display = "none";
+        loadingMsg.style.display = "none";
+        successMsg.style.display = "block";
+
+        // Redirect after 3s
+        setTimeout(() => { window.location.href = "thankyou.html"; }, 3000);
+      })
+      .catch(err => {
+        alert("Request failed: " + err);
+        submitBtn.disabled = false;
+        loadingMsg.style.display = "none";
+      });
+    });
+  </script>
+</body>
+</html>

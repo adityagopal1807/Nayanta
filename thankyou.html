@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You | Nayanta Eyewear</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #000000, #222831, #393E46);
+      color: white;
+      font-family: "Poppins", sans-serif;
+      overflow: hidden;
+    }
+
+    .container {
+      text-align: center;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+      animation: fadeIn 2s ease;
+    }
+
+    p {
+      font-size: 1.2rem;
+      opacity: 0.8;
+      animation: fadeIn 2.5s ease;
+    }
+
+    .gift-box {
+      font-size: 5rem;
+      color: #ffcc00;
+      margin-top: 30px;
+      position: relative;
+      animation: bounce 2s infinite;
+    }
+
+    /* Floating lens */
+    .lens {
+      position: absolute;
+      font-size: 2rem;
+      color: #00adb5;
+      opacity: 0;
+      animation: floatLens 6s infinite;
+    }
+
+    .lens:nth-child(1) { left: -30px; animation-delay: 0s; }
+    .lens:nth-child(2) { left: 30px; animation-delay: 1s; }
+    .lens:nth-child(3) { left: -80px; animation-delay: 2s; }
+    .lens:nth-child(4) { left: 80px; animation-delay: 3s; }
+
+    @keyframes floatLens {
+      0% { bottom: 30px; opacity: 0; transform: scale(0.5) rotate(0deg); }
+      20% { opacity: 1; }
+      50% { opacity: 1; transform: scale(1) rotate(360deg); }
+      100% { bottom: 300px; opacity: 0; transform: scale(0.7) rotate(720deg); }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Thank You!</h1>
+    <p>We will contact you shortly.</p>
+
+    <div class="gift-box">
+      <i class="fa-solid fa-gift"></i>
+      <!-- Floating Lenses -->
+      <i class="fa-solid fa-glasses lens"></i>
+      <i class="fa-solid fa-circle lens"></i>
+      <i class="fa-solid fa-glasses lens"></i>
+      <i class="fa-solid fa-circle lens"></i>
+    </div>
+  </div>
+</body>
+</html>
