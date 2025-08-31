@@ -305,45 +305,59 @@
     }
 
     /* FAQ chatbot */
-   const faq = {
-    "hello": "Hello 👋! Welcome to Nayanta Eyewear. How can I help you?",
-    "hi": "Hi there! 😊 Welcome to Nayanta Eyewear. How can I help you?",
-    "buy": "To buy eyewear, go to the 'Shop' page, pick your frame, and checkout.",
-        "order": "To buy eyewear, go to the 'Shop' page, pick your frame, and checkout.",
-    "sunglasses": "Our sunglasses are available under the 'Collections' section.",
-    "contact": "You can reach us via the 'Contact' page or email nayantaeyewears@gmail.com or call us at 9955428948.",
-     "help": "You can reach us via the 'Contact' page or email nayantaeyewears@gmail.com or call us at 9955428948.",
-    "premium": "Yes! Our Premium Collection has luxury eyewear just for you. ✨",
-    "delivery": "We usually deliver within 3-5 business days 🚚.",
-    "return": "We offer a 7-day easy return policy if your eyewear doesn’t fit.",
-    "thank": "You're welcome! 🌸 Enjoy shopping with Nayanta.",
-    "nayanta": "Nayanta is a premium eyewear brand offering stylish, durable, and affordable glasses. 😎",
-  };
+   <script>
+const faq = {
+  "hello": "Hello 👋! Welcome to Nayanta Eyewear. How can I help you?",
+  "hi": "Hi there! 😊 Welcome to Nayanta Eyewear. How can I help you?",
+  "buy": "To buy eyewear, go to the 'Shop' page, pick your frame, and checkout.",
+  "order": "To buy eyewear, go to the 'Shop' page, pick your frame, and checkout.",
+  "sunglasses": "Our sunglasses are available under the 'Collections' section.",
+  "contact": "You can reach us via the 'Contact' page or email nayantaeyewears@gmail.com or call us at 9955428948.",
+  "help": "You can reach us via the 'Contact' page or email nayantaeyewears@gmail.com or call us at 9955428948.",
+  "premium": "Yes! Our Premium Collection has luxury eyewear just for you. ✨",
+  "delivery": "We usually deliver within 3-5 business days 🚚.",
+  "return": "We offer a 7-day easy return policy if your eyewear doesn’t fit.",
+  "thank": "You're welcome! 🌸 Enjoy shopping with Nayanta.",
+  "nayanta": "Nayanta is a premium eyewear brand offering stylish, durable, and affordable glasses. 😎",
+};
 
-    function sendMessage() {
-      const inputField = document.getElementById("user-input");
-      const message = inputField.value.trim().toLowerCase();
-      if (!message) return;
+function sendMessage() {
+  const inputField = document.getElementById("user-input");
+  const message = inputField.value.trim().toLowerCase();
+  if (!message) return;
 
-      appendMessage(inputField.value, "user");
-      inputField.value = "";
+  appendMessage(inputField.value, "user");
+  inputField.value = "";
 
-      const reply = faq[message] || "🤖 Sorry, I didn’t understand that. Try asking about buying, delivery, or collections.";
-      setTimeout(() => appendMessage(reply, "bot"), 500);
+  // Keyword-based matching
+  let found = false;
+  for (const key in faq) {
+    if (message.includes(key)) {
+      appendMessage(faq[key], "bot");
+      found = true;
+      break; // stop after first match
     }
+  }
 
-    function appendMessage(text, sender) {
-      const chatBox = document.getElementById("chat-box");
-      const msgDiv = document.createElement("div");
-      msgDiv.classList.add("message", sender === "user" ? "user-message" : "bot-message");
-      msgDiv.innerText = text;
-      chatBox.appendChild(msgDiv);
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
+  if (!found) {
+    appendMessage("🤖 Sorry, I didn’t understand that. Try asking about buying, delivery, or collections.", "bot");
+  }
+}
 
-    document.getElementById("user-input").addEventListener("keypress", function (e) {
-      if (e.key === "Enter") sendMessage();
-    });
+function appendMessage(text, sender) {
+  const chatBox = document.getElementById("chat-box");
+  const msgDiv = document.createElement("div");
+  msgDiv.classList.add("message", sender === "user" ? "user-message" : "bot-message");
+  msgDiv.innerText = text;
+  chatBox.appendChild(msgDiv);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+document.getElementById("user-input").addEventListener("keypress", function (e) {
+  if (e.key === "Enter") sendMessage();
+});
+</script>
+
   </script>
 </body>
 </html>
