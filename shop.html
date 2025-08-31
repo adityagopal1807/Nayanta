@@ -1,80 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nayanta Eyewear | Maintenance</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Poppins', sans-serif;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shop | Nayanta Eyewear</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    html { scroll-behavior: smooth; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f9f9f9; color: #333; }
+
+    /* Navbar */
+    nav { position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px); display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 2rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+    nav .logo { color: #fff; font-size: 1.8rem; font-weight: bold; letter-spacing: 1px; }
+    nav ul { list-style: none; display: flex; gap: 1.5rem; align-items: center; }
+    nav ul li a { color: #fff; text-decoration: none; font-size: 1rem; transition: color 0.3s; }
+    nav ul li a:hover, nav ul li a.active { color: #ff4d4d; }
+    .menu-toggle { display: none; font-size: 1.8rem; color: #fff; cursor: pointer; }
+
+    /* Cart Badge */
+    .cart-icon { position: relative; font-size: 1.3rem; color: white; }
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -12px;
+      background: #ff4d4d;
+      color: white;
+      font-size: 0.8rem;
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 50%;
     }
-    body, html {
-        height: 100%;
-        background: linear-gradient(135deg, #fefefe, #e0e0e0);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-        position: relative;
+
+    @media (max-width: 768px) {
+      nav ul { display: none; flex-direction: column; background: rgba(0, 0, 0, 0.95); position: absolute;
+        top: 60px; right: 0; width: 200px; padding: 1rem; border-radius: 8px; }
+      nav ul.show { display: flex; }
+      .menu-toggle { display: block; }
     }
-    h1 {
-        font-size: 3rem;
-        color: #222;
-        margin-bottom: 15px;
-        text-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+
+    /* Hero */
+    .shop-header { background: linear-gradient(to right, rgba(0, 0, 0, 0.6), rgba(60, 60, 60, 0.7)),
+        url('https://png.pngtree.com/background/20230528/original/pngtree-red-sunglasses-in-water-on-a-black-background-picture-image_2783564.jpg') center/cover no-repeat;
+      color: white; text-align: center; padding: 160px 20px 100px; }
+    .shop-header h1 { font-size: 3rem; font-weight: bold; margin-bottom: 10px; }
+    .shop-header p { font-size: 1.2rem; max-width: 700px; margin: 0 auto; }
+
+    /* Tabs */
+    .tabs { display: flex; justify-content: center; gap: 15px; margin: 30px 0; flex-wrap: wrap; }
+    .tab-btn { padding: 10px 20px; border: none; border-radius: 8px; background: #eee; cursor: pointer;
+      font-weight: bold; transition: all 0.3s ease; }
+    .tab-btn.active, .tab-btn:hover { background: linear-gradient(135deg, #ff0000, #cc0000); color: #fff; }
+
+    /* Shop Section */
+    .shop-section { padding: 40px 20px; max-width: 1200px; margin: auto; }
+    .shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 20px; }
+    .product-card { background: #fff; border-radius: 16px; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+      overflow: hidden; transition: transform 0.3s ease; text-align: center; padding-bottom: 20px; }
+    .product-card:hover { transform: translateY(-5px); }
+    .product-card img { width: 100%; height: 220px; object-fit: cover; }
+    .product-card h3 { font-size: 1.2rem; margin: 15px 0 8px; color: #333; }
+    .product-card p { font-size: 1rem; font-weight: bold; color: #cc0000; }
+    .btn { background: linear-gradient(135deg, #ff0000, #cc0000); color: white; padding: 10px 25px; border: none;
+      border-radius: 8px; font-weight: bold; margin-top: 10px; cursor: pointer; transition: all 0.3s ease; }
+    .btn:hover { background: #990000; transform: scale(1.05); }
+
+    /* Notice */
+    .notice { text-align: center; background: #fff3cd; color: #856404; padding: 15px 20px; border: 1px solid #ffeeba; border-radius: 8px; margin: 20px auto; max-width: 900px; }
+
+    /* Footer */
+    .footer { background: #222; color: #fff; text-align: center; padding: 20px 10px; margin-top: 60px; letter-spacing: 0.5px; }
+
+    @media (max-width: 768px) {
+      .shop-header h1 { font-size: 2.2rem; }
+      .shop-header p { font-size: 1rem; }
     }
-    p {
-        font-size: 1.2rem;
-        color: #555;
-        margin-bottom: 40px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
+    @media (max-width: 480px) {
+      .shop-header { padding: 120px 15px 80px; }
+      .shop-header h1 { font-size: 1.8rem; }
+      .shop-header p { font-size: 0.9rem; }
     }
-    p i {
-        color: #ff4d6d;
-    }
-    .glasses-icon {
-        position: absolute;
-        font-size: 2rem;
-        color: #ff4d6d;
-        animation: float 6s linear infinite;
-        cursor: default;
-        opacity: 0.7;
-    }
-    @keyframes float {
-        0% { transform: translateY(0) rotate(0deg); }
-        50% { transform: translateY(-20px) rotate(15deg); }
-        100% { transform: translateY(0) rotate(0deg); }
-    }
-    footer {
-        position: absolute;
-        bottom: 20px;
-        font-size: 0.9rem;
-        color: #888;
-    }
-</style>
+  </style>
 </head>
 <body>
 
-<h1><i class="fa-solid fa-glasses"></i> Nayanta Eyewear</h1>
-<p><i class="fa-solid fa-wrench"></i>This page is currently under maintenance. We'll be back soon! Till than Checkout other pages</p>
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">Nayanta</div>
+    <i class="fas fa-bars menu-toggle" onclick="toggleMenu()"></i>
+    <ul id="menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a class="active" href="shop.html">Shop</a></li>
+      <li>
+        <a href="cart.html" class="cart-icon">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-count" id="cart-count">0</span>
+        </a>
+      </li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
 
-<!-- Decorative glasses icons -->
-<i class="fa-solid fa-glasses glasses-icon" style="top: 10%; left: 15%; animation-duration: 7s;"></i>
-<i class="fa-solid fa-glasses glasses-icon" style="top: 50%; left: 70%; animation-duration: 5s;"></i>
-<i class="fa-solid fa-glasses glasses-icon" style="top: 30%; left: 40%; animation-duration: 6s;"></i>
-<i class="fa-solid fa-glasses glasses-icon" style="top: 70%; left: 20%; animation-duration: 8s;"></i>
-<i class="fa-solid fa-glasses glasses-icon" style="top: 80%; left: 80%; animation-duration: 5.5s;"></i>
+  <!-- Hero -->
+  <header class="shop-header">
+    <h1>Shop Eyewear</h1>
+    <p>Discover our premium collection of glasses, sunglasses, and accessories</p>
+  </header>
 
-<footer>Thank you for your patience & love for stylish eyewear!</footer>
+  <!-- Notice -->
+  <div class="notice">
+    Need prescription lenses? Call or message us for assistance before placing an order.
+  </div>
 
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showCollection('men')">For Men</button>
+    <button class="tab-btn" onclick="showCollection('women')">For Women</button>
+    <button class="tab-btn" onclick="showCollection('computer')">Computer Glasses</button>
+    <button class="tab-btn" onclick="showCollection('sunglass')">Sunglasses</button>
+    <button class="tab-btn" onclick="showCollection('kids')">For Kids</button>
+    <button class="tab-btn" onclick="showCollection('accessories')">Accessories</button>
+  </div>
+
+  <!-- Shop Section -->
+  <section class="shop-section">
+
+    <!-- Men -->
+    <div class="shop-grid collection" id="men">
+      <div class="product-card">
+        <img src="https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/lenskart-hustlr-lh-e16985-w-c4-eyeglasses_img_9728_11_01_2024.jpg" alt="Lenskart Hustlr Black">
+        <h3>Lenskart Hustlr - Grey(powered)</h3>
+        <p>₹850</p>
+        <button class="btn">Add to Cart</button>
+      </div>
+      <div class="product-card">
+        <img src="https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/lenskart-air-la-e15417-w-c1-eyeglasses_csvfile-1701688526805-img_7894.jpg" alt="Lenskart Hustlr Blue">
+        <h3>Lenskart Hustlr - Blue(powered)</h3>
+        <p>₹850</p>
+        <button class="btn">Add to Cart</button>
+      </div>
+      <div class="product-card">
+        <img src="https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/blue-sky-full-rim-square-air-essentials-la-e15417-w-c7-eyeglasses_g_6031_09_05_2025.jpg" alt="Premium Aviators">
+        <h3>Lenskart Hustlr - Skyblue(powered)</h3>
+        <p>₹850</p>
+        <button class="btn">Add to Cart</button>
+      </div>
+    </div>
+
+    <!-- Women -->
+     <div class="shop-grid collection" id="women">
+      <div class="product-card">
+        <img src="https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/lenskart-hustlr-lh-e16985-w-c4-eyeglasses_img_9728_11_01_2024.jpg" alt="Lenskart Hustlr Black">
+        <h3>Lenskart Hustlr - Grey(powered)</h3>
+        <p>₹850</p>
+        <button class="btn">Add to Cart</button>
+      </div>
+      <div class="product-card">
+        <img src="https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/lenskart-air-la-e15417-w-c1-eyeglasses_csvfile-1701688526805-img_7894.jpg" alt="Lenskart Hustlr Blue">
+        <h3>Lenskart Hustlr - Blue(powered)</h3>
+        <p>₹850</p>
+        <button class="btn">Add to Cart</button>
+      </div>
+      <div class="product-card">
+        <img src="https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/blue-sky-full-rim-square-air-essentials-la-e15417-w-c7-eyeglasses_g_6031_09_05_2025.jpg" alt="Premium Aviators">
+        <h3>Lenskart Hustlr - Skyblue(powered)</h3>
+        <p>₹850</p>
+        <button class="btn">Add to Cart</button>
+      </div>
+    </div>
+
+    <!-- Computer Glasses -->
+     <div class="shop-grid collection" id="computer">
+      <div class="product-card">
+        <img src="https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/lenskart-hustlr-lh-e16985-w-c4-eyeglasses_img_9728_11_01_2024.jpg" alt="Lenskart Hustlr Black">
+        <h3>Lenskart Hustlr - Grey</h3>
+        <p>₹850</p>
+        <button class="btn">Add to Cart</button>
+      </div>
+      <div class="product-card">
+        <img src="https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/lenskart-air-la-e15417-w-c1-eyeglasses_csvfile-1701688526805-img_7894.jpg" alt="Lenskart Hustlr Blue">
+        <h3>Lenskart Hustlr - Blue</h3>
+        <p>₹850</p>
+        <button class="btn">Add to Cart</button>
+      </div>
+      <div class="product-card">
+        <img src="https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/blue-sky-full-rim-square-air-essentials-la-e15417-w-c7-eyeglasses_g_6031_09_05_2025.jpg" alt="Premium Aviators">
+        <h3>Lenskart Hustlr - Skyblue</h3>
+        <p>₹850</p>
+        <button class="btn">Add to Cart</button>
+      </div>
+    </div>
+
+    <!-- Sunglasses -->
+    <div class="shop-grid collection" id="sunglass" style="display:none;">
+      <div class="product-card">
+        <img src="https://static.lenskart.com/media/desktop/img/May22/sunglass.jpg" alt="Lenskart Sunglass">
+        <h3>Lenskart Premium Sunglasses</h3>
+        <p>₹1499</p>
+        <button class="btn">Add to Cart</button>
+      </div>
+    </div>
+
+    <!-- Kids -->
+    <div class="shop-grid collection" id="kids" style="display:none;">
+      <div class="product-card">
+        <img src="https://static.lenskart.com/media/desktop/img/May22/hooper.jpg" alt="Lenskart Hooper">
+        <h3>Lenskart Hooper - Kids</h3>
+        <p>₹999</p>
+        <button class="btn">Add to Cart</button>
+      </div>
+    </div>
+
+    <!-- Accessories -->
+    <div class="shop-grid collection" id="accessories" style="display:none;">
+      <div class="product-card">
+        <img src="https://static.lenskart.com/media/desktop/img/May22/case.jpg" alt="Glasses Case">
+        <h3>Premium Glasses Case</h3>
+        <p>₹499</p>
+        <button class="btn">Add to Cart</button>
+      </div>
+      <div class="product-card">
+        <img src="https://static.lenskart.com/media/desktop/img/May22/cleaner.jpg" alt="Lens Cleaner">
+        <h3>Lens Cleaner Kit</h3>
+        <p>₹299</p>
+        <button class="btn">Add to Cart</button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 Nayanta Eyewear. All rights reserved.</p>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    function toggleMenu() {
+      document.getElementById("menu").classList.toggle("show");
+    }
+
+    function showCollection(id) {
+      document.querySelectorAll('.collection').forEach(col => col.style.display = "none");
+      document.getElementById(id).style.display = "grid";
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    // ---- CART FUNCTIONALITY ----
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    function updateCartCount() {
+      document.getElementById("cart-count").innerText = cart.length;
+    }
+
+    updateCartCount();
+
+    document.querySelectorAll(".btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const productCard = btn.closest(".product-card");
+        const name = productCard.querySelector("h3").innerText;
+        const price = parseInt(productCard.querySelector("p").innerText.replace("₹",""));
+        const image = productCard.querySelector("img").src;
+
+        const product = { name, price, image };
+
+        cart.push(product);
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updateCartCount();
+        alert(`${name} added to cart!`);
+      });
+    });
+  </script>
 </body>
 </html>
-
