@@ -193,4 +193,85 @@
   <div class="chat-header">Nayanta Assistant</div>
   <div class="chat-box" id="chat-box"></div>
   <div class="chat-input">
-    <input type="text" id="user-input" placeholder="Type your
+    <input type="text" id="user-input" placeholder="Type your message..." />
+    <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+  </div>
+</div>
+
+<section class="section" id="contact">
+  <h2>Contact Us</h2>
+  <p>Reach out at <a href="mailto:support@nayanta.com">support@nayanta.com</a></p>
+</section>
+
+<footer class="footer"><p>&copy; 2025 Nayanta Eyewear. All rights reserved.</p></footer>
+
+<!-- Scroll Top Button -->
+<a href="#" class="top-button" aria-label="Scroll to top"><i class="fas fa-arrow-up"></i></a>
+
+<script>
+function toggleMenu() {
+  const menu = document.getElementById("menu");
+  menu.classList.toggle("show");
+  const links = menu.querySelectorAll("a");
+  links.forEach(link => link.addEventListener("click", () => menu.classList.remove("show")));
+}
+
+const topButton = document.querySelector('.top-button');
+window.addEventListener('scroll', () => topButton.classList.toggle('show', window.scrollY > 400));
+
+const cards = document.querySelectorAll('.card');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => entry.target.classList.toggle('show', entry.isIntersecting));
+}, { threshold: 0.4 });
+cards.forEach(card => observer.observe(card));
+
+function toggleChat() {
+  const chatContainer = document.getElementById("chat-container");
+  chatContainer.style.display = chatContainer.style.display === "flex" ? "none" : "flex";
+}
+
+const faq = {
+  "hello": "Hello 👋! Welcome to Nayanta Eyewear. How can I help you?",
+  "hi": "Hi there! 😊 Looking for stylish glasses today?",
+  "buy": "To buy eyewear, go to the 'Shop' page, pick your frame, and checkout.",
+  "sunglasses": "Our sunglasses are available under the 'Collections' section.",
+  "eyeglasses": "Everyday comfort with stylish prescription eyeglasses.",
+  "contact": "You can reach us via the 'Contact' page or email support@nayanta.com.",
+  "premium": "Yes! Our Premium Collection has luxury eyewear just for you. ✨",
+  "delivery": "We usually deliver within 3-5 business days 🚚.",
+  "return": "We offer a 7-day easy return policy if your eyewear doesn’t fit.",
+  "thank": "You're welcome! 🌸 Enjoy shopping with Nayanta.",
+  "nayanta": "Nayanta is a premium eyewear brand offering stylish, durable, and affordable glasses. 😎",
+};
+
+function sendMessage() {
+  const inputField = document.getElementById("user-input");
+  const message = inputField.value.trim().toLowerCase();
+  if (!message) return;
+
+  appendMessage(inputField.value, "user");
+  inputField.value = "";
+
+  let reply = "🤖 Sorry, I didn’t understand that. Try asking about buying, delivery, or collections.";
+  for (let key in faq) {
+    if (message.includes(key)) { reply = faq[key]; break; }
+  }
+
+  setTimeout(() => appendMessage(reply, "bot"), 500);
+}
+
+function appendMessage(text, sender) {
+  const chatBox = document.getElementById("chat-box");
+  const msgDiv = document.createElement("div");
+  msgDiv.classList.add("message", sender === "user" ? "user-message" : "bot-message");
+  msgDiv.innerText = text;
+  chatBox.appendChild(msgDiv);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+document.getElementById("user-input").addEventListener("keypress", function (e) {
+  if (e.key === "Enter") sendMessage();
+});
+</script>
+</body>
+</html>
