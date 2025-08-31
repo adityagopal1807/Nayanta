@@ -117,12 +117,12 @@
 
   <!-- Tabs -->
   <div class="tabs">
-    <button class="tab-btn active" onclick="showCollection('men')">For Men</button>
-    <button class="tab-btn" onclick="showCollection('women')">For Women</button>
-    <button class="tab-btn" onclick="showCollection('computer')">Computer Glasses</button>
-    <button class="tab-btn" onclick="showCollection('sunglass')">Sunglasses</button>
-    <button class="tab-btn" onclick="showCollection('kids')">For Kids</button>
-    <button class="tab-btn" onclick="showCollection('accessories')">Accessories</button>
+    <button class="tab-btn active" data-target="men">For Men</button>
+    <button class="tab-btn" data-target="women">For Women</button>
+    <button class="tab-btn" data-target="computer">Computer Glasses</button>
+    <button class="tab-btn" data-target="sunglass">Sunglasses</button>
+    <button class="tab-btn" data-target="kids">For Kids</button>
+    <button class="tab-btn" data-target="accessories">Accessories</button>
   </div>
 
   <!-- Shop Section -->
@@ -151,7 +151,7 @@
     </div>
 
     <!-- Women -->
-     <div class="shop-grid collection" id="women">
+    <div class="shop-grid collection" id="women" style="display:none;">
       <div class="product-card">
         <img src="https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/lenskart-hustlr-lh-e16985-w-c4-eyeglasses_img_9728_11_01_2024.jpg" alt="Lenskart Hustlr Black">
         <h3>Lenskart Hustlr - Grey(powered)</h3>
@@ -164,31 +164,13 @@
         <p>₹850</p>
         <button class="btn">Add to Cart</button>
       </div>
-      <div class="product-card">
-        <img src="https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/blue-sky-full-rim-square-air-essentials-la-e15417-w-c7-eyeglasses_g_6031_09_05_2025.jpg" alt="Premium Aviators">
-        <h3>Lenskart Hustlr - Skyblue(powered)</h3>
-        <p>₹850</p>
-        <button class="btn">Add to Cart</button>
-      </div>
     </div>
 
     <!-- Computer Glasses -->
-     <div class="shop-grid collection" id="computer">
+    <div class="shop-grid collection" id="computer" style="display:none;">
       <div class="product-card">
         <img src="https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/lenskart-hustlr-lh-e16985-w-c4-eyeglasses_img_9728_11_01_2024.jpg" alt="Lenskart Hustlr Black">
         <h3>Lenskart Hustlr - Grey</h3>
-        <p>₹850</p>
-        <button class="btn">Add to Cart</button>
-      </div>
-      <div class="product-card">
-        <img src="https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/lenskart-air-la-e15417-w-c1-eyeglasses_csvfile-1701688526805-img_7894.jpg" alt="Lenskart Hustlr Blue">
-        <h3>Lenskart Hustlr - Blue</h3>
-        <p>₹850</p>
-        <button class="btn">Add to Cart</button>
-      </div>
-      <div class="product-card">
-        <img src="https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/blue-sky-full-rim-square-air-essentials-la-e15417-w-c7-eyeglasses_g_6031_09_05_2025.jpg" alt="Premium Aviators">
-        <h3>Lenskart Hustlr - Skyblue</h3>
         <p>₹850</p>
         <button class="btn">Add to Cart</button>
       </div>
@@ -243,12 +225,23 @@
       document.getElementById("menu").classList.toggle("show");
     }
 
-    function showCollection(id) {
-      document.querySelectorAll('.collection').forEach(col => col.style.display = "none");
-      document.getElementById(id).style.display = "grid";
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
-    }
+    // Tab switching
+    const tabs = document.querySelectorAll(".tab-btn");
+    const collections = document.querySelectorAll(".collection");
+
+    tabs.forEach(btn => {
+      btn.addEventListener("click", () => {
+        // Hide all collections
+        collections.forEach(col => col.style.display = "none");
+        // Remove active from all tabs
+        tabs.forEach(b => b.classList.remove("active"));
+
+        // Show the selected one
+        const target = btn.getAttribute("data-target");
+        document.getElementById(target).style.display = "grid";
+        btn.classList.add("active");
+      });
+    });
 
     // ---- CART FUNCTIONALITY ----
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
