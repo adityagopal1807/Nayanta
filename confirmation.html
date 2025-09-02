@@ -155,17 +155,17 @@
     };
 
     // 🚨 Replace with your Google Apps Script Web App URL
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxZQooGB1Xf197h9DafQfRUm4PAcOSmfbgDWeT1lEkIkLP-EQFT9zZdwa0LGdgoF5YFWw/exec";
+    const scriptURL = "https://script.google.com/macros/s/AKfycbx6SC8cvgJ7ISv6Ff4pKbiwkwdtnBB298kDhTg3DOaiBJZ8dlEfkdnz6AKZ0KG1v44CKw/exec";
 
     submitBtn.disabled = true;
     loadingMsg.style.display = "block";
 
-    fetch(scriptURL, {
-      method: "POST",
-      mode: "no-cors",
-      body: JSON.stringify(orderData),
-      headers: { "Content-Type": "application/json" }
-    })
+  fetch(scriptURL, {
+  method: "POST",
+  body: JSON.stringify(orderData),
+  headers: { "Content-Type": "application/json" }
+})
+
     .then(() => {
       localStorage.removeItem("cart");
       localStorage.removeItem("discount");
