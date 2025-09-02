@@ -114,7 +114,37 @@
  /* keeps aspect ratio without cropping */
   border-radius: 8px;
 }
+/* WhatsApp Floating Button */
+.whatsapp-float {
+.whatsapp-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px; /* ✅ moved to right side */
+  background: #d32525;
+  color: white;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  z-index: 2000;
+  transition: transform 0.3s ease;
+  text-decoration: none; /* ✅ No underline */
+}
 
+.whatsapp-float i {
+  text-decoration: none; /* ✅ Ensure no underline on icon */
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.1);
+  background: #ff4d4d;
+}
+
+                                                                                       }
   </style>
 </head>
 <body>
@@ -587,6 +617,10 @@ We can help you with any kind of Lenskart glasses, just reach out to us!
   <footer class="footer">
     <p>&copy; 2025 Nayanta Eyewear. All rights reserved.</p>
   </footer>
+  <a href="https://wa.me/919955428948" target="_blank" class="whatsapp-float">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
 
   <!-- Script -->
  <script>
@@ -656,6 +690,7 @@ We can help you with any kind of Lenskart glasses, just reach out to us!
 
 </body>
 </html>
+
 
 
 
