@@ -28,6 +28,26 @@
   nav ul li a:hover, nav ul li a.active { color: #ff4d4d; }
 
   .menu-toggle { display: none; font-size: 1.8rem; color: #fff; cursor: pointer; }
+ /* Cart Badge */
+    .cart-icon { position: relative; font-size: 1.3rem; color: white; }
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -12px;
+      background: #ff4d4d;
+      color: white;
+      font-size: 0.8rem;
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 50%;
+    }
+
+    @media (max-width: 768px) {
+      nav ul { display: none; flex-direction: column; background: rgba(0, 0, 0, 0.95); position: absolute;
+        top: 60px; right: 0; width: 200px; padding: 1rem; border-radius: 8px; }
+      nav ul.show { display: flex; }
+      .menu-toggle { display: block; }
+    }
 
   /* Hero */
   .hero {
