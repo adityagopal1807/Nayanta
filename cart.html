@@ -108,7 +108,6 @@ function applyCoupon(){
     discount = total * 0.166; // 16.6% off
     discountMsg.innerHTML = "Coupon applied: 16.6% OFF 🎉";
     localStorage.setItem("discount", JSON.stringify({ amount: discount, msg: "16.6% OFF" }));
-}
 
     } else if(code === "SVE50"){
         discount = 50; // flat 50
@@ -140,6 +139,7 @@ renderCart();
 
 </body>
 </html>
+
 
 
 
