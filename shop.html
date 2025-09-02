@@ -9,7 +9,23 @@
     html { scroll-behavior: smooth; }
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background-color: #f9f9f9; color: #333; }
-
+ .shop-container { padding: 20px; }
+    .search-box {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .search-box input {
+      padding: 10px;
+      width: 60%;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      font-size: 16px;
+    }
+    .shop-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
     /* Navbar */
     nav { position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(10px); display: flex; justify-content: space-between; align-items: center;
@@ -126,6 +142,11 @@
     <h1>Shop Eyewear</h1>
     <p>Discover our premium collection of glasses, sunglasses, and accessories</p>
   </header>
+<div class="shop-container">
+    <!-- 🔎 Search bar -->
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search glasses by name...">
+    </div>
 
   <!-- Notice -->
   <div class="notice">
@@ -612,6 +633,7 @@
   </script>
 </body>
 </html>
+
 
 
 
