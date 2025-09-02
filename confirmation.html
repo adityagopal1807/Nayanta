@@ -43,10 +43,21 @@ button:disabled { background: #ccc; cursor: not-allowed; }
   <form id="checkout-form">
     <label for="name">Full Name</label>
     <input type="text" id="name" placeholder="Your Name" required>
+
     <label for="phone">Phone Number</label>
     <input type="tel" id="phone" placeholder="Your Phone Number" required>
+
     <label for="address">Delivery Address</label>
-    <textarea id="address" rows="4" placeholder="Your Address" required></textarea>
+    <textarea id="address" rows="3" placeholder="Your Address" required></textarea>
+
+    <label for="pincode">Pin Code</label>
+    <input type="tel" id="pincode" placeholder="Your Pin Code" required>
+
+    <label for="city">City</label>
+    <input type="text" id="city" placeholder="Your City" required>
+
+    <label for="state">State</label>
+    <input type="text" id="state" placeholder="Your State" required>
 
     <div class="order-summary" id="order-summary">
       <h3>Order Summary</h3>
@@ -105,9 +116,13 @@ form.addEventListener("submit", (e) => {
   const name = document.getElementById("name").value;
   const phone = document.getElementById("phone").value;
   const address = document.getElementById("address").value;
-  if(!name || !phone || !address) return alert("Please fill all fields!");
+  const pincode = document.getElementById("pincode").value;
+  const city = document.getElementById("city").value;
+  const state = document.getElementById("state").value;
 
-  const orderData = { name, phone, address, items: cart, subtotal, discount: discountData, total: finalTotal };
+  if(!name || !phone || !address || !pincode || !city || !state) return alert("Please fill all fields!");
+
+  const orderData = { name, phone, address, pincode, city, state, items: cart, subtotal, discount: discountData, total: finalTotal };
 
   // Replace with your Google Apps Script Web App URL
   const scriptURL = "https://script.google.com/macros/s/AKfycbyfPIDjp-CojwDYyPzJgBLK6VsYD-EwCD9xabRJEL80RFp26Mi1drT4sxfqCC_XJIAEog/exec";
