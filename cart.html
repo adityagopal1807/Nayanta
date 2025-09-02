@@ -113,7 +113,6 @@ function applyCoupon(){
     discount = total * 0.285; // 28.5% of total
     discountMsg.innerHTML = "Coupon applied: 28.5% OFF 🎉";
     localStorage.setItem("discount", JSON.stringify({ amount: discount, msg: "28.5% OFF" }));
-}
 
     } else {
         discount = 0;
@@ -141,6 +140,7 @@ renderCart();
 
 </body>
 </html>
+
 
 
 
