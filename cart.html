@@ -104,11 +104,13 @@ function applyCoupon(){
     const code = document.getElementById("coupon-code").value.trim().toUpperCase();
     let total = cart.reduce((sum,item)=> sum+item.price, 0);
 
-    if(code === "SAVE10"){
-        discount = total * 0.1; // 10% off
-        discountMsg.innerHTML = "Coupon applied: 10% OFF 🎉";
-        localStorage.setItem("discount", JSON.stringify({ amount: discount, msg: "10% OFF" }));
-    } else if(code === "SAVE50"){
+   if (code === "SNEHIL") {
+    discount = total * 0.166; // 16.6% off
+    discountMsg.innerHTML = "Coupon applied: 16.6% OFF 🎉";
+    localStorage.setItem("discount", JSON.stringify({ amount: discount, msg: "16.6% OFF" }));
+}
+
+    } else if(code === "SVE50"){
         discount = 50; // flat 50
         discountMsg.innerHTML = "Coupon applied: ₹50 OFF 🎉";
         localStorage.setItem("discount", JSON.stringify({ amount: discount, msg: "₹50 OFF" }));
@@ -138,5 +140,6 @@ renderCart();
 
 </body>
 </html>
+
 
 
