@@ -172,11 +172,12 @@ function toggleMenu() {
 
 // Demo orders and current step index
 const orders = {
-  "7700830855": 1, // Confirmed
-  "6": 1, // Shipped
-  "NY12347": 3, // Out for Delivery
-  "NY12348": 4  // Delivered
+  1: ["7700830855", "6"], // Confirmed
+  2: ["NY12346"],            // Shipped
+  3: ["NY12347"],            // Out for Delivery
+  4: ["NY12348"]             // Delivered
 };
+
 
 function trackOrder() {
   const orderId = document.getElementById("order-id").value.trim().toUpperCase();
@@ -206,6 +207,7 @@ function trackOrder() {
 
 </body>
 </html>
+
 
 
 
