@@ -123,8 +123,14 @@ function applyCoupon(){
 
 checkoutBtn.addEventListener("click",()=>{
     if(cart.length === 0) return alert("Your cart is empty!");
+
+    let subtotal = cart.reduce((sum,item)=> sum+item.price, 0);
+    let finalTotal = subtotal - discount;
+
+    localStorage.setItem("finalTotal", finalTotal);
     window.location.href = "confirmation.html";
 });
+
 
 renderCart();
 
@@ -132,4 +138,5 @@ renderCart();
 
 </body>
 </html>
+
 
