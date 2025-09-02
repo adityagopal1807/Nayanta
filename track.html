@@ -102,6 +102,14 @@
     content: "\f00c"; font-family: "Font Awesome 6 Free"; font-weight: 900;
   }
 
+  /* Status text */
+  #status-text {
+    margin-top: 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #cc0000;
+  }
+
   /* Footer */
   .footer { background: #222; color: #fff; text-align: center; padding: 20px 10px; margin-top: 60px; letter-spacing: 0.5px; }
 
@@ -158,6 +166,8 @@
     <div class="step" id="step3"><div class="circle">3</div><p>Out for Delivery</p></div>
     <div class="step" id="step4"><div class="circle">4</div><p>Delivered</p></div>
   </div>
+
+  <p id="status-text" style="display:none;"></p>
 </section>
 
 <footer class="footer"><p>&copy; 2025 Nayanta Eyewear. All rights reserved.</p></footer>
@@ -170,46 +180,55 @@ function toggleMenu() {
   links.forEach(link => link.addEventListener("click", () => menu.classList.remove("show")));
 }
 
-// Demo orders and current step index
+// Demo orders: OrderID → step index
 const orders = {
-  1: ["7700830855", "6"], // Confirmed
-  2: ["NY12346"],            // Shipped
-  3: ["NY12347"],            // Out for Delivery
-  4: ["NY12348"]             // Delivered
+  "7700830855": 1, // Confirmed
+  "6": 1,
+  "NY12346": 2,    // Shipped
+  "NY22346": 2,
+  "NY12347": 3,    // Out for Delivery
+  "NY99999": 3,
+  "NY12348": 4     // Delivered
 };
 
+const statusLabels = {
+  1: "✅ Your order is Confirmed.",
+  2: "📦 Your order has been Shipped.",
+  3: "🚚 Your order is Out for Delivery.",
+  4: "🎉 Your order has been Delivered!"
+};
 
 function trackOrder() {
   const orderId = document.getElementById("order-id").value.trim().toUpperCase();
   const progress = document.getElementById("progress-container");
+  const statusText = document.getElementById("status-text");
 
   // Reset steps
-  for(let i=1; i<=4; i++){
-    document.getElementById("step"+i).classList.remove("active","completed");
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById("step" + i).classList.remove("active", "completed");
   }
 
   if (!orderId || !orders[orderId]) {
     alert("❌ Order not found. Please check your Order ID.");
     progress.style.display = "none";
+    statusText.style.display = "none";
     return;
   }
 
   progress.style.display = "flex";
   const stepIndex = orders[orderId];
 
-  for(let i=1; i<=stepIndex; i++){
-    const step = document.getElementById("step"+i);
+  for (let i = 1; i <= stepIndex; i++) {
+    const step = document.getElementById("step" + i);
     step.classList.add("active");
-    if(i<stepIndex) step.classList.add("completed");
+    if (i < stepIndex) step.classList.add("completed");
   }
-}
 
+  // Show status message
+  statusText.innerText = statusLabels[stepIndex];
+  statusText.style.display = "block";
+}
 </script>
 
 </body>
 </html>
-
-
-
-
-
