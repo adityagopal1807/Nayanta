@@ -620,7 +620,8 @@
 
     document.querySelectorAll(".btn").forEach((btn) => {
       btn.addEventListener("click", () => {
-        const productCard = btn.closest(".product-card");
+       const productCard = btn.closest(".product-card, .product-card1");
+
         const name = productCard.querySelector("h3").innerText;
         const price = parseInt(productCard.querySelector("p").innerText.replace("₹",""));
         const image = productCard.querySelector("img").src;
@@ -634,7 +635,7 @@
       });
     });
      const searchInput = document.getElementById("searchInput");
-    const productCards = document.querySelectorAll(".product-card");
+   const productCard = document.querySelectorAll(".product-card, .product-card1");
 
     searchInput.addEventListener("keyup", function() {
       const query = searchInput.value.toLowerCase();
@@ -646,6 +647,7 @@
   </script>
 </body>
 </html>
+
 
 
 
