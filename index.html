@@ -236,6 +236,32 @@
 <a href="#" class="top-button" aria-label="Scroll to top"><i class="fas fa-arrow-up"></i></a>
 
 <script>
+   <script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+// Update cart count
+function updateCartCount() {
+  document.getElementById("cart-count").innerText = cart.length;
+}
+updateCartCount();
+
+// Add product to cart
+document.querySelectorAll(".btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const productCard = btn.closest(".product-card");
+    const name = productCard.querySelector("h3").innerText;
+    const price = parseInt(productCard.querySelector("p").innerText.replace("₹",""));
+    const image = productCard.querySelector("img").src;
+
+    const product = { name, price, image };
+    cart.push(product);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+    alert(`${name} added to cart!`);
+  });
+});
+
+// Toggle mobile menu
 function toggleMenu() {
   const menu = document.getElementById("menu");
   menu.classList.toggle("show");
@@ -243,34 +269,64 @@ function toggleMenu() {
   links.forEach(link => link.addEventListener("click", () => menu.classList.remove("show")));
 }
 
+// Scroll-to-top button
 const topButton = document.querySelector('.top-button');
 window.addEventListener('scroll', () => topButton.classList.toggle('show', window.scrollY > 400));
 
+// Card reveal animation
 const cards = document.querySelectorAll('.card');
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => entry.target.classList.toggle('show', entry.isIntersecting));
 }, { threshold: 0.4 });
 cards.forEach(card => observer.observe(card));
 
+// Toggle chatbot
 function toggleChat() {
   const chatContainer = document.getElementById("chat-container");
   chatContainer.style.display = chatContainer.style.display === "flex" ? "none" : "flex";
 }
 
+// FAQ responses
 const faq = {
+  // Casual chat
   "hello": "Hello 👋! Welcome to Nayanta Eyewear. How can I help you?",
   "hi": "Hi there! 😊 Looking for stylish glasses today?",
+  "good morning": "Good morning ☀️! Hope you have a wonderful shopping day!",
+  "good night": "Good night 🌙 Sweet dreams and stylish frames await tomorrow!",
+  "bye": "Goodbye 👋! Visit us again soon at Nayanta Eyewear.",
+  "how are you": "I’m doing great, thanks for asking 🤖. Ready to help you with eyewear!",
+  "thanks": "You're welcome! 🌸 Enjoy shopping with Nayanta.",
+  "thank you": "Happy to help! 💖 Enjoy browsing our eyewear.",
+
+  // Shopping & support
   "buy": "To buy eyewear, go to the 'Shop' page, pick your frame, and checkout.",
-  "sunglasses": "Our sunglasses are available under the 'Collections' section.",
-  "eyeglasses": "Everyday comfort with stylish prescription eyeglasses.",
-  "contact": "You can reach us via the 'Contact' page or email support@nayanta.com.",
+  "sunglasses": "Our sunglasses are available under the 'Collections' section. 😎",
+  "eyeglasses": "Everyday comfort with stylish prescription eyeglasses. 👓",
+  "contact": "You can reach us via the 'Contact' page or email support@nayanta.com 📩.",
   "premium": "Yes! Our Premium Collection has luxury eyewear just for you. ✨",
   "delivery": "We usually deliver within 3-5 business days 🚚.",
-  "return": "We offer a 7-day easy return policy if your eyewear doesn’t fit.",
-  "thank": "You're welcome! 🌸 Enjoy shopping with Nayanta.",
+  "return": "We offer a 7-day easy return policy if your eyewear doesn’t fit. 🔄",
   "nayanta": "Nayanta is a premium eyewear brand offering stylish, durable, and affordable glasses. 😎",
+  "price": "Our eyewear starts at very affordable prices 💰. Visit the 'Shop' section to check all ranges.",
+  "offers": "We often run special offers 🎉. Check the 'Deals' section for current discounts.",
+  "coupon": "Apply coupon codes at checkout for discounts. 🎫",
+  "payment": "We accept all major debit/credit cards, UPI, and wallets. 💳",
+  "cod": "Yes, Cash on Delivery (COD) is available in select locations. 💵",
+  "track": "You can track your order from the 'Track Order' page 📦.",
+  "cancel": "Order cancellations are possible within 12 hours of placing your order.",
+  "exchange": "We also support exchanges if you’d like a different frame. 🔁",
+  "repair": "Need a repair? Contact support and we’ll guide you. 🛠️",
+  "store": "Currently, we operate online only 🌐, ensuring quick and safe delivery.",
+  "lens": "We offer both prescription lenses and zero-power lenses with UV protection. 🕶️",
+  "blue light": "Yes! Our Blue Light Glasses protect your eyes from screens. 💻",
+  "prescription": "Upload your prescription at checkout, and we’ll craft lenses for you. 📝",
+  "gift": "Looking for gifts? 🎁 You can order gift cards or surprise someone with eyewear.",
+  "support": "Our support team is available 24/7 to assist you. ❤️",
+  "whatsapp": "You can also chat with us on WhatsApp for quick help 📲.",
+  "location": "We deliver across India 🇮🇳, with global shipping launching soon 🌍."
 };
 
+// Chatbot send function
 function sendMessage() {
   const inputField = document.getElementById("user-input");
   const message = inputField.value.trim().toLowerCase();
@@ -287,6 +343,7 @@ function sendMessage() {
   setTimeout(() => appendMessage(reply, "bot"), 500);
 }
 
+// Append message to chat
 function appendMessage(text, sender) {
   const chatBox = document.getElementById("chat-box");
   const msgDiv = document.createElement("div");
@@ -296,9 +353,11 @@ function appendMessage(text, sender) {
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+// Send on Enter
 document.getElementById("user-input").addEventListener("keypress", function (e) {
   if (e.key === "Enter") sendMessage();
 });
 </script>
+
 </body>
 </html>
