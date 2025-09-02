@@ -115,13 +115,11 @@ if(cart.length === 0){
     orderSummary.appendChild(div);
   });
 
-  // Subtotal
   const subtotalDiv = document.createElement("div");
   subtotalDiv.classList.add("order-item");
   subtotalDiv.innerHTML = `<strong>Subtotal</strong><strong>₹${subtotal.toFixed(2)}</strong>`;
   orderSummary.appendChild(subtotalDiv);
 
-  // Discount
   if(discountData.amount > 0){
     const discountDiv = document.createElement("div");
     discountDiv.classList.add("order-item");
@@ -129,7 +127,6 @@ if(cart.length === 0){
     orderSummary.appendChild(discountDiv);
   }
 
-  // Total
   const totalDiv = document.createElement("div");
   totalDiv.classList.add("order-item", "total");
   totalDiv.innerHTML = `<strong>Total</strong><strong>₹${(subtotal - discountData.amount).toFixed(2)}</strong>`;
@@ -139,7 +136,6 @@ if(cart.length === 0){
 // Handle form submit
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-
   if(cart.length === 0) return alert("Your cart is empty!");
 
   const name = document.getElementById("name").value;
@@ -160,18 +156,18 @@ form.addEventListener("submit", (e) => {
     total: subtotal - discountData.amount
   };
 
-  const scriptURL = "https://script.google.com/macros/s/AKfycbw2SBNkrRQmKGpmYi_vjBSyXu6mcEY5n3TbHW7XETDptvWjCmFa8swMlxO58dXzH8uW-Q/exec";
+  const scriptURL = "https://script.google.com/macros/s/AKfycbwcCHszPdlcDq7IqPsL1y2ZdND5P8riVTe24nzG-uHhdAgbYirEPLe2lW4ZEqKdMqy33w/exec"; // Replace with your deployed Apps Script URL
 
   submitBtn.disabled = true;
   loadingMsg.style.display = "block";
 
   fetch(scriptURL, {
     method: "POST",
-    mode: "no-cors",
     body: JSON.stringify(orderData),
     headers: { "Content-Type": "application/json" }
   })
-  .then(() => {
+  .then(response => response.json())
+  .then(data => {
     localStorage.removeItem("cart");
     localStorage.removeItem("discount");
     form.style.display = "none";
@@ -180,7 +176,8 @@ form.addEventListener("submit", (e) => {
     setTimeout(() => { window.location.href = "thankyou.html"; }, 3000);
   })
   .catch(err => {
-    alert("Request failed: " + err);
+    console.error(err);
+    alert("Failed to place order.");
     submitBtn.disabled = false;
     loadingMsg.style.display = "none";
   });
@@ -189,4 +186,3 @@ form.addEventListener("submit", (e) => {
 
 </body>
 </html>
-
