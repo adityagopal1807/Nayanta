@@ -116,7 +116,16 @@
 
     if(!name || !phone || !address) return alert("Please fill all fields!");
 
-    const orderData = { name, phone, address, items: cart, subtotal, discount: discountData, finalTotal };
+    const orderData = { 
+  name, 
+  phone, 
+  address, 
+  items: cart, 
+  subtotal, 
+  discount: discountData, 
+  total: finalTotal     // ✅ this ensures Google Sheet sees the final price
+};
+
 
     // 🚨 Replace with your Google Apps Script Web App URL
     const scriptURL = "https://script.google.com/macros/s/AKfycbyh_xqgvx0cObiq1uDeoH-NsxX-ZxlMnh6RqQGY5OuD2x69qIyphDIWnmNN2i--ziFqMQ/exec";
@@ -149,4 +158,5 @@
 
 </body>
 </html>
+
 
