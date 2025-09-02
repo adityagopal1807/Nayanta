@@ -105,9 +105,9 @@ function applyCoupon(){
     let total = cart.reduce((sum,item)=> sum+item.price, 0);
 
    if (code === "SNEHIL") {
-    discount = total * 0.166; // 16.6% off
-    discountMsg.innerHTML = "Coupon applied: 16.6% OFF 🎉";
-    localStorage.setItem("discount", JSON.stringify({ amount: discount, msg: "16.6% OFF" }));
+    discount = total * 0; // 16.6% off
+    discountMsg.innerHTML = "lund le le 🎉";
+    localStorage.setItem("discount", JSON.stringify({ amount: discount, msg: "lund le le muh me" }));
 
     } else if(code === "SVE50"){
         discount = 50; // flat 50
@@ -139,6 +139,7 @@ renderCart();
 
 </body>
 </html>
+
 
 
 
