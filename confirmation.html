@@ -66,79 +66,87 @@
     <p id="success-msg" class="success" style="display:none;">✅ Your order has been placed successfully!</p>
   </div>
 
-  <script>
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const discountData = JSON.parse(localStorage.getItem("discount")) || { amount: 0, msg: "" };
+<script>
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const discountData = JSON.parse(localStorage.getItem("discount")) || { amount: 0, msg: "" };
 
-    const orderSummary = document.getElementById("order-summary");
-    const form = document.getElementById("checkout-form");
-    const successMsg = document.getElementById("success-msg");
-    const loadingMsg = document.getElementById("loading-msg");
-    const submitBtn = document.getElementById("submit-btn");
+  const orderSummary = document.getElementById("order-summary");
+  const form = document.getElementById("checkout-form");
+  const successMsg = document.getElementById("success-msg");
+  const loadingMsg = document.getElementById("loading-msg");
+  const submitBtn = document.getElementById("submit-btn");
 
-    // Render order summary
-    let total = 0;
-    cart.forEach(item => {
-      total += item.price;
-      const div = document.createElement("div");
-      div.classList.add("order-item");
-      div.innerHTML = `<span>${item.name}</span><span>₹${item.price}</span>`;
-      orderSummary.appendChild(div);
+  // Render order summary
+  let subtotal = 0;
+  cart.forEach(item => {
+    subtotal += item.price;
+    const div = document.createElement("div");
+    div.classList.add("order-item");
+    div.innerHTML = `<span>${item.name}</span><span>₹${item.price}</span>`;
+    orderSummary.appendChild(div);
+  });
+
+  // --- Subtotal row ---
+  const subtotalDiv = document.createElement("div");
+  subtotalDiv.classList.add("order-item");
+  subtotalDiv.innerHTML = `<strong>Subtotal</strong><strong>₹${subtotal.toFixed(2)}</strong>`;
+  orderSummary.appendChild(subtotalDiv);
+
+  // --- Discount row (if applied) ---
+  if(discountData.amount > 0){
+    const discountDiv = document.createElement("div");
+    discountDiv.classList.add("order-item");
+    discountDiv.innerHTML = `<span>Discount (${discountData.msg})</span><span>- ₹${discountData.amount.toFixed(2)}</span>`;
+    orderSummary.appendChild(discountDiv);
+  }
+
+  // --- Final total row ---
+  const finalTotal = subtotal - discountData.amount;
+  const totalDiv = document.createElement("div");
+  totalDiv.classList.add("order-item", "total");
+  totalDiv.innerHTML = `<strong>Total</strong><strong>₹${finalTotal.toFixed(2)}</strong>`;
+  orderSummary.appendChild(totalDiv);
+
+  // Handle form submit
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+    const address = document.getElementById("address").value;
+
+    if(!name || !phone || !address) return alert("Please fill all fields!");
+
+    const orderData = { name, phone, address, items: cart, subtotal, discount: discountData, finalTotal };
+
+    // 🚨 Replace with your Google Apps Script Web App URL
+    const scriptURL = "https://script.google.com/macros/s/AKfycbyh_xqgvx0cObiq1uDeoH-NsxX-ZxlMnh6RqQGY5OuD2x69qIyphDIWnmNN2i--ziFqMQ/exec";
+
+    submitBtn.disabled = true;
+    loadingMsg.style.display = "block";
+
+    fetch(scriptURL, {
+      method: "POST",
+      mode: "no-cors",
+      body: JSON.stringify(orderData),
+      headers: { "Content-Type": "application/json" }
+    })
+    .then(() => {
+      localStorage.removeItem("cart");
+      localStorage.removeItem("discount");
+      form.style.display = "none";
+      loadingMsg.style.display = "none";
+      successMsg.style.display = "block";
+
+      setTimeout(() => { window.location.href = "thankyou.html"; }, 3000);
+    })
+    .catch(err => {
+      alert("Request failed: " + err);
+      submitBtn.disabled = false;
+      loadingMsg.style.display = "none";
     });
+  });
+</script>
 
-    if(discountData.amount > 0){
-      const discountDiv = document.createElement("div");
-      discountDiv.classList.add("discount");
-      discountDiv.innerText = `${discountData.msg} (-₹${discountData.amount.toFixed(2)})`;
-      orderSummary.appendChild(discountDiv);
-    }
-
-    const finalTotal = total - discountData.amount;
-    const totalDiv = document.createElement("div");
-    totalDiv.classList.add("total");
-    totalDiv.innerText = `Total: ₹${finalTotal.toFixed(2)}`;
-    orderSummary.appendChild(totalDiv);
-
-    // Handle form submit
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const name = document.getElementById("name").value;
-      const phone = document.getElementById("phone").value;
-      const address = document.getElementById("address").value;
-
-      if(!name || !phone || !address) return alert("Please fill all fields!");
-
-      const orderData = { name, phone, address, items: cart, total, discount: discountData, finalTotal };
-
-      // 🚨 Replace with your Google Apps Script Web App URL
-      const scriptURL = "https://script.google.com/macros/s/AKfycbyh_xqgvx0cObiq1uDeoH-NsxX-ZxlMnh6RqQGY5OuD2x69qIyphDIWnmNN2i--ziFqMQ/exec";
-
-      // Prevent multiple clicks
-      submitBtn.disabled = true;
-      loadingMsg.style.display = "block";
-
-      fetch(scriptURL, {
-        method: "POST",
-        mode: "no-cors", // bypass CORS
-        body: JSON.stringify(orderData),
-        headers: { "Content-Type": "application/json" }
-      })
-      .then(() => {
-        localStorage.removeItem("cart");
-        localStorage.removeItem("discount");
-        form.style.display = "none";
-        loadingMsg.style.display = "none";
-        successMsg.style.display = "block";
-
-        // Redirect after 3s
-        setTimeout(() => { window.location.href = "thankyou.html"; }, 3000);
-      })
-      .catch(err => {
-        alert("Request failed: " + err);
-        submitBtn.disabled = false;
-        loadingMsg.style.display = "none";
-      });
-    });
-  </script>
 </body>
 </html>
+
