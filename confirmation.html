@@ -161,30 +161,30 @@ form.addEventListener("submit", (e) => {
   submitBtn.disabled = true;
   loadingMsg.style.display = "block";
 
-  fetch(scriptURL, {
+ fetch(scriptURL, {
   method: "POST",
-  mode: "no-cors",  // bypasses CORS restrictions
+  mode: "no-cors",
   body: JSON.stringify(orderData),
   headers: { "Content-Type": "application/json" }
 })
-  .then(response => response.json())
-  .then(data => {
-    localStorage.removeItem("cart");
-    localStorage.removeItem("discount");
-    form.style.display = "none";
-    loadingMsg.style.display = "none";
-    successMsg.style.display = "block";
-    setTimeout(() => { window.location.href = "thankyou.html"; }, 3000);
-  })
-  .catch(err => {
-    console.error(err);
-    alert("Failed to place order.");
-    submitBtn.disabled = false;
-    loadingMsg.style.display = "none";
-  });
+.then(() => {
+  // Assume success
+  localStorage.removeItem("cart");
+  localStorage.removeItem("discount");
+  form.style.display = "none";
+  loadingMsg.style.display = "none";
+  successMsg.style.display = "block";
+  setTimeout(() => { window.location.href = "thankyou.html"; }, 3000);
+})
+.catch(err => {
+  console.error(err);
+  alert("Failed to place order.");
+  submitBtn.disabled = false;
+  loadingMsg.style.display = "none";
 });
 </script>
 
 </body>
 </html>
+
 
