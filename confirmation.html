@@ -17,7 +17,7 @@
       box-shadow:0 2px 10px rgba(0,0,0,0.1);}
     h2 { text-align:center; margin-bottom:20px; }
     label { display:block; margin:10px 0 5px; font-weight:bold; }
-    input, textarea { width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; margin-bottom:15px; }
+    input, textarea, select { width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; margin-bottom:15px; }
     .order-summary { margin:20px 0; background:#f1f1f1; padding:15px; border-radius:8px; }
     .order-summary h3 { margin:0 0 10px; }
     .order-item { display:flex; justify-content:space-between; margin-bottom:5px; }
@@ -55,6 +55,27 @@
       <label for="address">Delivery Address</label>
       <textarea id="address" rows="4" placeholder="Your Address" required></textarea>
 
+      <label for="pincode">PIN Code</label>
+      <input type="text" id="pincode" placeholder="Enter PIN Code" required>
+
+      <label for="city">City</label>
+      <input type="text" id="city" placeholder="Enter City" required>
+
+      <label for="state">State</label>
+      <select id="state" required>
+        <option value="">Select State</option>
+        <option>Uttar Pradesh</option>
+        <option>Delhi</option>
+        <option>Maharashtra</option>
+        <option>Karnataka</option>
+        <option>Tamil Nadu</option>
+        <option>West Bengal</option>
+        <option>Punjab</option>
+        <option>Haryana</option>
+        <option>Rajasthan</option>
+        <option>Other</option>
+      </select>
+
       <div class="order-summary" id="order-summary">
         <h3>Order Summary</h3>
       </div>
@@ -86,13 +107,13 @@
     orderSummary.appendChild(div);
   });
 
-  // --- Subtotal row ---
+  // Subtotal row
   const subtotalDiv = document.createElement("div");
   subtotalDiv.classList.add("order-item");
   subtotalDiv.innerHTML = `<strong>Subtotal</strong><strong>₹${subtotal.toFixed(2)}</strong>`;
   orderSummary.appendChild(subtotalDiv);
 
-  // --- Discount row (if applied) ---
+  // Discount row
   if(discountData.amount > 0){
     const discountDiv = document.createElement("div");
     discountDiv.classList.add("order-item");
@@ -100,7 +121,7 @@
     orderSummary.appendChild(discountDiv);
   }
 
-  // --- Final total row ---
+  // Final total row
   const finalTotal = subtotal - discountData.amount;
   const totalDiv = document.createElement("div");
   totalDiv.classList.add("order-item", "total");
@@ -113,19 +134,25 @@
     const name = document.getElementById("name").value;
     const phone = document.getElementById("phone").value;
     const address = document.getElementById("address").value;
+    const pincode = document.getElementById("pincode").value;
+    const city = document.getElementById("city").value;
+    const state = document.getElementById("state").value;
 
-    if(!name || !phone || !address) return alert("Please fill all fields!");
+    if(!name || !phone || !address || !pincode || !city || !state) 
+      return alert("Please fill all fields!");
 
     const orderData = { 
-  name, 
-  phone, 
-  address, 
-  items: cart, 
-  subtotal, 
-  discount: discountData, 
-  total: finalTotal     // ✅ this ensures Google Sheet sees the final price
-};
-
+      name, 
+      phone, 
+      address, 
+      pincode, 
+      city, 
+      state,
+      items: cart, 
+      subtotal, 
+      discount: discountData, 
+      total: finalTotal
+    };
 
     // 🚨 Replace with your Google Apps Script Web App URL
     const scriptURL = "https://script.google.com/macros/s/AKfycbyh_xqgvx0cObiq1uDeoH-NsxX-ZxlMnh6RqQGY5OuD2x69qIyphDIWnmNN2i--ziFqMQ/exec";
@@ -158,5 +185,3 @@
 
 </body>
 </html>
-
-
