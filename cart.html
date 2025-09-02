@@ -103,17 +103,21 @@ function removeItem(index){
 function applyCoupon(){
     const code = document.getElementById("coupon-code").value.trim().toUpperCase();
     let total = cart.reduce((sum,item)=> sum+item.price, 0);
-    
+
     if(code === "SAVE10"){
         discount = total * 0.1; // 10% off
         discountMsg.innerHTML = "Coupon applied: 10% OFF 🎉";
+        localStorage.setItem("discount", JSON.stringify({ amount: discount, msg: "10% OFF" }));
     } else if(code === "SAVE50"){
         discount = 50; // flat 50
         discountMsg.innerHTML = "Coupon applied: ₹50 OFF 🎉";
+        localStorage.setItem("discount", JSON.stringify({ amount: discount, msg: "₹50 OFF" }));
     } else {
         discount = 0;
         discountMsg.innerHTML = "Invalid coupon ❌";
+        localStorage.setItem("discount", JSON.stringify({ amount: 0, msg: "" }));
     }
+
     renderCart();
 }
 
@@ -128,3 +132,4 @@ renderCart();
 
 </body>
 </html>
+
