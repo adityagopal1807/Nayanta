@@ -22,7 +22,6 @@
     .order-summary h3 { margin:0 0 10px; }
     .order-item { display:flex; justify-content:space-between; margin-bottom:5px; }
     .total { font-weight:bold; margin-top:10px; }
-    .discount { color:green; margin-top:5px; font-weight:bold; }
     button { width:100%; padding:12px; background:linear-gradient(135deg, #ff0000, #cc0000); 
       color:white; border:none; border-radius:8px; cursor:pointer; font-size:1rem; }
     button:hover:not(:disabled) { background:#990000; }
@@ -98,39 +97,49 @@
   const submitBtn = document.getElementById("submit-btn");
 
   // Render order summary
-  let subtotal = 0;
-  cart.forEach(item => {
-    subtotal += item.price;
-    const div = document.createElement("div");
-    div.classList.add("order-item");
-    div.innerHTML = `<span>${item.name}</span><span>₹${item.price}</span>`;
-    orderSummary.appendChild(div);
-  });
+  orderSummary.innerHTML = "<h3>Order Summary</h3>";
 
-  // Subtotal row
-  const subtotalDiv = document.createElement("div");
-  subtotalDiv.classList.add("order-item");
-  subtotalDiv.innerHTML = `<strong>Subtotal</strong><strong>₹${subtotal.toFixed(2)}</strong>`;
-  orderSummary.appendChild(subtotalDiv);
+  if(cart.length === 0){
+    const emptyMsg = document.createElement("p");
+    emptyMsg.textContent = "Your cart is empty!";
+    orderSummary.appendChild(emptyMsg);
+  } else {
+    let subtotal = 0;
 
-  // Discount row
-  if(discountData.amount > 0){
-    const discountDiv = document.createElement("div");
-    discountDiv.classList.add("order-item");
-    discountDiv.innerHTML = `<span>Discount (${discountData.msg})</span><span>- ₹${discountData.amount.toFixed(2)}</span>`;
-    orderSummary.appendChild(discountDiv);
+    cart.forEach(item => {
+      subtotal += item.price;
+      const div = document.createElement("div");
+      div.classList.add("order-item");
+      div.innerHTML = `<span>${item.name}</span><span>₹${item.price.toFixed(2)}</span>`;
+      orderSummary.appendChild(div);
+    });
+
+    // Subtotal
+    const subtotalDiv = document.createElement("div");
+    subtotalDiv.classList.add("order-item");
+    subtotalDiv.innerHTML = `<strong>Subtotal</strong><strong>₹${subtotal.toFixed(2)}</strong>`;
+    orderSummary.appendChild(subtotalDiv);
+
+    // Discount
+    if(discountData.amount > 0){
+      const discountDiv = document.createElement("div");
+      discountDiv.classList.add("order-item");
+      discountDiv.innerHTML = `<span>Discount (${discountData.msg})</span><span>- ₹${discountData.amount.toFixed(2)}</span>`;
+      orderSummary.appendChild(discountDiv);
+    }
+
+    // Total
+    const finalTotal = subtotal - discountData.amount;
+    const totalDiv = document.createElement("div");
+    totalDiv.classList.add("order-item", "total");
+    totalDiv.innerHTML = `<strong>Total</strong><strong>₹${finalTotal.toFixed(2)}</strong>`;
+    orderSummary.appendChild(totalDiv);
   }
-
-  // Final total row
-  const finalTotal = subtotal - discountData.amount;
-  const totalDiv = document.createElement("div");
-  totalDiv.classList.add("order-item", "total");
-  totalDiv.innerHTML = `<strong>Total</strong><strong>₹${finalTotal.toFixed(2)}</strong>`;
-  orderSummary.appendChild(totalDiv);
 
   // Handle form submit
   form.addEventListener("submit", (e) => {
     e.preventDefault();
+
     const name = document.getElementById("name").value;
     const phone = document.getElementById("phone").value;
     const address = document.getElementById("address").value;
@@ -138,53 +147,44 @@
     const city = document.getElementById("city").value;
     const state = document.getElementById("state").value;
 
-    if(!name || !phone || !address || !pincode || !city || !state) 
+    if(!name || !phone || !address || !pincode || !city || !state)
       return alert("Please fill all fields!");
 
-    const orderData = { 
-      name, 
-      phone, 
-      address, 
-      pincode, 
-      city, 
-      state,
-      items: cart, 
-      subtotal, 
-      discount: discountData, 
-      total: finalTotal
+    const orderData = {
+      name, phone, address, pincode, city, state,
+      items: cart,
+      subtotal,
+      discount: discountData,
+      total: subtotal - discountData.amount
     };
 
-    // 🚨 Replace with your Google Apps Script Web App URL
-    const scriptURL = "https://script.google.com/macros/s/AKfycbw2KgesnMKUyt_AksNk7ENSLzwMGPm96GqSBAwFQAF2SBP0E6lSsy0_SJaZ1UwHI5XjLg/exec";
+    // Your Google Apps Script URL
+    const scriptURL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
 
     submitBtn.disabled = true;
     loadingMsg.style.display = "block";
 
- fetch(scriptURL, {
-  method: "POST",
-  mode: "no-cors",            // ✅ this bypasses CORS
-  body: JSON.stringify(orderData),
-  headers: { "Content-Type": "application/json" }
-})
-.then(() => {
-  localStorage.removeItem("cart");
-  localStorage.removeItem("discount");
-  form.style.display = "none";
-  loadingMsg.style.display = "none";
-  successMsg.style.display = "block";
+    fetch(scriptURL, {
+      method: "POST",
+      mode: "no-cors", // bypass CORS
+      body: JSON.stringify(orderData),
+      headers: { "Content-Type": "application/json" }
+    })
+    .then(() => {
+      localStorage.removeItem("cart");
+      localStorage.removeItem("discount");
+      form.style.display = "none";
+      loadingMsg.style.display = "none";
+      successMsg.style.display = "block";
 
-  setTimeout(() => { window.location.href = "thankyou.html"; }, 3000);
-})
-.catch(err => {
-  alert("Request failed: " + err);
-  submitBtn.disabled = false;
-  loadingMsg.style.display = "none";
-});
-
+      setTimeout(() => { window.location.href = "thankyou.html"; }, 3000);
+    })
+    .catch(err => {
+      alert("Request failed: " + err);
+      submitBtn.disabled = false;
+      loadingMsg.style.display = "none";
+    });
+  });
 </script>
-
 </body>
 </html>
-
-
-
