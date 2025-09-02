@@ -586,67 +586,74 @@
   </footer>
 
   <!-- Script -->
-  <script>
-    function toggleMenu() {
-      document.getElementById("menu").classList.toggle("show");
-    }
+ <script>
+  // ---- MENU TOGGLE ----
+  function toggleMenu() {
+    document.getElementById("menu").classList.toggle("show");
+  }
 
-    // Tab switching
-    const tabs = document.querySelectorAll(".tab-btn");
-    const collections = document.querySelectorAll(".collection");
+  // ---- TAB SWITCHING ----
+  const tabs = document.querySelectorAll(".tab-btn");
+  const collections = document.querySelectorAll(".collection");
 
-    tabs.forEach(btn => {
-      btn.addEventListener("click", () => {
-        // Hide all collections
-        collections.forEach(col => col.style.display = "none");
-        // Remove active from all tabs
-        tabs.forEach(b => b.classList.remove("active"));
+  tabs.forEach(btn => {
+    btn.addEventListener("click", () => {
+      collections.forEach(col => col.style.display = "none");
+      tabs.forEach(b => b.classList.remove("active"));
 
-        // Show the selected one
-        const target = btn.getAttribute("data-target");
-        document.getElementById(target).style.display = "grid";
-        btn.classList.add("active");
-      });
+      const target = btn.getAttribute("data-target");
+      document.getElementById(target).style.display = "grid";
+      btn.classList.add("active");
     });
+  });
 
-    // ---- CART FUNCTIONALITY ----
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  // ---- CART FUNCTIONALITY ----
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    function updateCartCount() {
-      document.getElementById("cart-count").innerText = cart.length;
-    }
+  function updateCartCount() {
+    document.getElementById("cart-count").innerText = cart.length;
+  }
 
-    updateCartCount();
+  updateCartCount();
 
-    document.querySelectorAll(".btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-       const productCard = btn.closest(".product-card, .product-card1");
+  document.querySelectorAll(".btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const productCard = btn.closest(".product-card, .product-card1");
 
-        const name = productCard.querySelector("h3").innerText;
-        const price = parseInt(productCard.querySelector("p").innerText.replace("₹",""));
-        const image = productCard.querySelector("img").src;
+      const name = productCard.querySelector("h3").innerText;
+      const price = parseInt(productCard.querySelector("p").innerText.replace("₹", "").trim());
+      const image = productCard.querySelector("img").src;
 
-        const product = { name, price, image };
+      const product = { name, price, image };
 
-        cart.push(product);
-        localStorage.setItem("cart", JSON.stringify(cart));
-        updateCartCount();
-        alert(`${name} added to cart!`);
-      });
+      cart.push(product);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartCount();
+      alert(`${name} added to cart!`);
     });
-     const searchInput = document.getElementById("searchInput");
-   const productCard = document.querySelectorAll(".product-card, .product-card1");
+  });
 
-    searchInput.addEventListener("keyup", function() {
-      const query = searchInput.value.toLowerCase();
-      productCards.forEach(card => {
-        const title = card.querySelector("h3").textContent.toLowerCase();
-        card.style.display = title.includes(query) ? "block" : "none";
-      });
+  // ---- SEARCH FUNCTIONALITY ----
+  const searchInput = document.getElementById("searchInput");
+  const productCards = document.querySelectorAll(".product-card, .product-card1");
+
+  searchInput.addEventListener("input", function () {
+    const query = searchInput.value.toLowerCase().trim();
+
+    productCards.forEach(card => {
+      const title = card.querySelector("h3").textContent.toLowerCase();
+      if (title.includes(query)) {
+        card.style.display = "";
+      } else {
+        card.style.display = "none";
+      }
     });
-  </script>
+  });
+</script>
+
 </body>
 </html>
+
 
 
 
