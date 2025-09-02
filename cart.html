@@ -109,10 +109,12 @@ function applyCoupon(){
     discountMsg.innerHTML = "lund le le 🎉";
     localStorage.setItem("discount", JSON.stringify({ amount: discount, msg: "lund le le muh me" }));
 
-    } else if(code === "SVE50"){
-        discount = 50; // flat 50
-        discountMsg.innerHTML = "Coupon applied: ₹50 OFF 🎉";
-        localStorage.setItem("discount", JSON.stringify({ amount: discount, msg: "₹50 OFF" }));
+    }else if(code === "FAHAD"){
+    discount = total * 0.285; // 28.5% of total
+    discountMsg.innerHTML = "Coupon applied: 28.5% OFF 🎉";
+    localStorage.setItem("discount", JSON.stringify({ amount: discount, msg: "28.5% OFF" }));
+}
+
     } else {
         discount = 0;
         discountMsg.innerHTML = "Invalid coupon ❌";
@@ -139,6 +141,7 @@ renderCart();
 
 </body>
 </html>
+
 
 
 
