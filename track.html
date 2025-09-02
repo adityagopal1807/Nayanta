@@ -157,7 +157,7 @@
 
 <section class="tracking-section">
   <h2>Order Tracking</h2>
-  <input type="text" id="order-id" placeholder="Enter your Mobile number/Order id" />
+  <input type="text" id="order-id" placeholder="Enter your Mobile number" />
   <button onclick="trackOrder()">Track</button>
 
   <div class="progress-container" id="progress-container" style="display:none;">
@@ -184,7 +184,7 @@ function toggleMenu() {
 const orders = {
   "7700830855": 1, // Confirmed
   "6": 1,
-  "NY12346": 2,    // Shipped
+  "9708728305": 1,    // Shipped
   "NY22346": 2,
   "NY12347": 3,    // Out for Delivery
   "NY99999": 3,
@@ -209,7 +209,7 @@ function trackOrder() {
   }
 
   if (!orderId || !orders[orderId]) {
-    alert("❌ Order not found. Please check your Order ID.");
+    alert("❌ Order not found. Please check your Mobile number.");
     progress.style.display = "none";
     statusText.style.display = "none";
     return;
@@ -232,3 +232,4 @@ function trackOrder() {
 
 </body>
 </html>
+
