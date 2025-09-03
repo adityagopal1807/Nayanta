@@ -220,6 +220,19 @@ async function downloadInvoice() {
   // Notes
   doc.setFontSize(9);
   doc.text("Notes: Invoice is necessary to claim warranty", 14, finalY);
+  const stampUrl = "https://i.ibb.co/WN64wcDg/Red-and-White-Minimalist-Christmas-Circle-Sticker-removebg-preview.png";
+      try {
+        const img = await fetch(stampUrl).then(res => res.blob()).then(blob => {
+          return new Promise(resolve => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.readAsDataURL(blob);
+          });
+        });
+        doc.addImage(img, "PNG", 150, finalY + 10, 40, 40);
+      } catch (e) {
+        console.log("Stamp image not loaded.");
+      }
 
   // Save
   doc.save(`Invoice_${order.invoiceNo}.pdf`);
