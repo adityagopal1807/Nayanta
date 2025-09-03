@@ -110,6 +110,12 @@
     color: #cc0000;
   }
 
+  /* Invoice button */
+  #invoice-btn {
+    display: none;
+    margin-top: 20px;
+  }
+
   /* Footer */
   .footer { background: #222; color: #fff; text-align: center; padding: 20px 10px; margin-top: 60px; letter-spacing: 0.5px; }
 
@@ -168,6 +174,9 @@
   </div>
 
   <p id="status-text" style="display:none;"></p>
+
+  <!-- Invoice Button -->
+  <button id="invoice-btn" onclick="downloadInvoice()">Download Invoice</button>
 </section>
 
 <footer class="footer"><p>&copy; 2025 Nayanta Eyewear. All rights reserved.</p></footer>
@@ -183,9 +192,8 @@ function toggleMenu() {
 // Demo orders: OrderID → step index
 const orders = {
   "7700830855": 1, // Confirmed
-
-  "9708728305": 1,    // Shipped
-  "9060488181": 1,
+  "9708728305": 2, // Shipped
+  "9060488181": 2,
   "NY12347": 3,    // Out for Delivery
   "NY99999": 3,
   "NY12348": 4     // Delivered
@@ -202,6 +210,7 @@ function trackOrder() {
   const orderId = document.getElementById("order-id").value.trim().toUpperCase();
   const progress = document.getElementById("progress-container");
   const statusText = document.getElementById("status-text");
+  const invoiceBtn = document.getElementById("invoice-btn");
 
   // Reset steps
   for (let i = 1; i <= 4; i++) {
@@ -212,6 +221,7 @@ function trackOrder() {
     alert("❌ Order not found. Please check your Mobile number.");
     progress.style.display = "none";
     statusText.style.display = "none";
+    invoiceBtn.style.display = "none";
     return;
   }
 
@@ -227,10 +237,15 @@ function trackOrder() {
   // Show status message
   statusText.innerText = statusLabels[stepIndex];
   statusText.style.display = "block";
+
+  // Show invoice button only if order exists
+  invoiceBtn.style.display = "inline-block";
+}
+
+function downloadInvoice() {
+  window.location.href = "invoice.html";
 }
 </script>
 
 </body>
 </html>
-
-
