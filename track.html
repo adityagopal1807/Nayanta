@@ -17,27 +17,27 @@
       display: flex; justify-content: space-between; align-items: center;
       padding: 1rem 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
-    nav .logo { color: #fff; font-size: 1.8rem; font-weight: bold; }
+    nav .logo { color: #fff; font-size: 1.5rem; font-weight: bold; }
     nav ul { list-style: none; display: flex; gap: 1.5rem; }
     nav ul li a { color: #fff; text-decoration: none; font-size: 1rem; transition: 0.3s; }
     nav ul li a:hover, nav ul li a.active { color: #ff4d4d; }
 
     header {
-  background: linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-  url('https://png.pngtree.com/background/20230528/original/pngtree-red-sunglasses-in-water-on-a-black-background-picture-image_2783564.jpg') 
-  center/cover no-repeat;
-  color: #fff;
-  text-align: center;
-  padding: 140px 20px 80px;
-}
-header h1 {
-  font-size: 2.5rem;
-  text-shadow: 1px 1px 8px rgba(0,0,0,0.8);
-}
-header p {
-  font-size: 1.1rem;
-  opacity: 0.9;
-}
+      background: linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+      url('https://png.pngtree.com/background/20230528/original/pngtree-red-sunglasses-in-water-on-a-black-background-picture-image_2783564.jpg') 
+      center/cover no-repeat;
+      color: #fff;
+      text-align: center;
+      padding: 140px 20px 80px;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      text-shadow: 1px 1px 8px rgba(0,0,0,0.8);
+    }
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
 
     .tracker {
       max-width: 650px; margin: 40px auto; background: #fff; border-radius: 16px;
@@ -45,7 +45,8 @@ header p {
     }
     .tracker h2 { color: #cc0000; margin-bottom: 20px; }
     .tracker input {
-      width: 80%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; margin-bottom: 15px;
+      width: 80%; max-width: 400px;
+      padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; margin-bottom: 15px;
     }
     .tracker button {
       padding: 12px 25px; border: none; border-radius: 8px;
@@ -78,14 +79,42 @@ header p {
     }
     .labels {
       display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.9rem; color: #555;
+      flex-wrap: wrap; text-align: center;
     }
 
     .download-btn { margin-top: 20px; display: none; }
 
     footer { background: #222; color: #fff; text-align: center; padding: 20px; margin-top: 60px; }
+
+    /* === Responsive Design === */
+    @media (max-width: 768px) {
+      nav { flex-direction: column; gap: 0.5rem; padding: 0.8rem 1rem; }
+      nav ul { flex-direction: column; gap: 0.8rem; text-align: center; }
+
+      header { padding: 100px 15px 60px; }
+      header h1 { font-size: 2rem; }
+      header p { font-size: 1rem; }
+
+      .tracker { margin: 20px; padding: 20px; }
+      .tracker input { width: 100%; max-width: none; }
+
+      .progress-container { flex-direction: row; gap: 10px; }
+      .step { width: 28px; height: 28px; font-size: 12px; }
+      .labels { font-size: 0.75rem; }
+    }
+
+    @media (max-width: 480px) {
+      header h1 { font-size: 1.6rem; }
+      header p { font-size: 0.9rem; }
+      .tracker h2 { font-size: 1.3rem; }
+      .status { font-size: 1rem; }
+      .labels span { flex: 1 1 50%; margin-bottom: 5px; }
+    }
   </style>
 </head>
 <body>
+  <!-- Keep your same HTML + JS here (no changes needed) -->
+
 
 <nav>
   <div class="logo">Nayanta</div>
@@ -271,6 +300,7 @@ async function downloadInvoice() {
 </script>
 </body>
 </html>
+
 
 
 
