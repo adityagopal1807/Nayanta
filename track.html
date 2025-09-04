@@ -30,7 +30,7 @@
     header h1 { font-size: 2.5rem; }
 
     .tracker {
-      max-width: 600px; margin: 40px auto; background: #fff; border-radius: 16px;
+      max-width: 650px; margin: 40px auto; background: #fff; border-radius: 16px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 30px; text-align: center;
     }
     .tracker h2 { color: #cc0000; margin-bottom: 20px; }
@@ -44,6 +44,32 @@
     }
     .tracker button:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(255,0,0,0.4); }
     .status { margin-top: 20px; font-size: 1.1rem; font-weight: 500; }
+
+    /* Progress Bar */
+    .progress-container {
+      display: flex; justify-content: space-between; margin: 30px 0; position: relative;
+    }
+    .progress-container::before {
+      content: ""; position: absolute; top: 50%; left: 0; width: 100%; height: 4px;
+      background: #ddd; transform: translateY(-50%); z-index: 1;
+    }
+    .progress {
+      position: absolute; top: 50%; left: 0; height: 4px; background: #ff0000;
+      transform: translateY(-50%); z-index: 2; width: 0%;
+      transition: width 0.5s ease-in-out;
+    }
+    .step {
+      z-index: 3; position: relative; background: #ddd; color: #666;
+      width: 35px; height: 35px; border-radius: 50%; display: flex;
+      justify-content: center; align-items: center; font-size: 14px; font-weight: bold;
+    }
+    .step.active {
+      background: #ff0000; color: #fff; box-shadow: 0 0 10px rgba(255,0,0,0.6);
+    }
+    .labels {
+      display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.9rem; color: #555;
+    }
+
     .download-btn { margin-top: 20px; display: none; }
 
     footer { background: #222; color: #fff; text-align: center; padding: 20px; margin-top: 60px; }
@@ -71,6 +97,22 @@
   <input type="text" id="mobile" placeholder="Enter Mobile Number"/>
   <button onclick="trackOrder()">Track</button>
   <div class="status" id="status"></div>
+
+  <!-- Progress Bar -->
+  <div class="progress-container">
+    <div class="progress" id="progress"></div>
+    <div class="step" id="step1">1</div>
+    <div class="step" id="step2">2</div>
+    <div class="step" id="step3">3</div>
+    <div class="step" id="step4">4</div>
+  </div>
+  <div class="labels">
+    <span>Confirmed</span>
+    <span>Shipped</span>
+    <span>Out for Delivery</span>
+    <span>Delivered</span>
+  </div>
+
   <button class="download-btn" id="downloadBtn" onclick="downloadInvoice()">Download Invoice</button>
 </section>
 
@@ -91,20 +133,8 @@ const orders = {
     due: 750.00,
     status: "Shipped"
   },
-  "9955428948": {
-    invoiceNo: "10",
-    date: "04/09/2025",
-    customer: "Aditya",
-    address: "Greater Noida, UP",
-    items: [
-      { description: "Vincent Chase Sunglasses", qty: 1, unit: 1200.00, total: 1200.00 }
-    ],
-    subtotal: 1200.00,
-    paid: 1200.00,
-    due: 0.00,
-    status: "Delivered"
-  }
-};
+ "9905366833": { invoiceNo: "7", date: "05/09/2025", customer: "Snehil", address: "Meerut, UP", items: [ { description: "Lenskart Hustlr Military green(powered)", qty: 1, unit: 1000.00, total: 1000.00 } ], subtotal: 1000.00, paid: 300.00, due: 700.00, status: "Confirmed" } };
+const statusLevels = ["Confirmed", "Shipped", "Out for Delivery", "Delivered"];
 
 function trackOrder() {
   const mobile = document.getElementById("mobile").value.trim();
@@ -115,6 +145,7 @@ function trackOrder() {
     statusDiv.style.color = "red";
     statusDiv.textContent = "❌ Order not found!";
     downloadBtn.style.display = "none";
+    updateProgress("None");
     return;
   }
 
@@ -122,13 +153,31 @@ function trackOrder() {
   statusDiv.style.color = "green";
   statusDiv.textContent = `✅ Order Status: ${order.status}`;
 
-  if (order.status === "Shipped" || order.status === "Delivered") {
+  updateProgress(order.status);
+
+  if (order.status === "Shipped" || order.status === "Out for Delivery" || order.status === "Delivered") {
     downloadBtn.style.display = "inline-block";
   } else {
     downloadBtn.style.display = "none";
   }
 }
 
+function updateProgress(currentStatus) {
+  const steps = [document.getElementById("step1"), document.getElementById("step2"), document.getElementById("step3"), document.getElementById("step4")];
+  const progress = document.getElementById("progress");
+
+  let activeIndex = statusLevels.indexOf(currentStatus);
+  if (activeIndex === -1) activeIndex = -1;
+
+  steps.forEach((step, index) => {
+    step.classList.remove("active");
+    if (index <= activeIndex) step.classList.add("active");
+  });
+
+  progress.style.width = ((activeIndex) / (steps.length - 1)) * 100 + "%";
+}
+
+/* === Invoice Code (same as before) === */
 async function downloadInvoice() {
   const mobile = document.getElementById("mobile").value.trim();
   const order = orders[mobile];
