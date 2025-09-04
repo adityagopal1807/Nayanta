@@ -86,30 +86,95 @@
 
     footer { background: #222; color: #fff; text-align: center; padding: 20px; margin-top: 60px; }
 
-    /* === Responsive Design === */
+    <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    /* Navbar */
+    nav {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    nav .logo {
+      color: #fff;
+      font-size: 1.8rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      color: #ff4d4d;
+    }
+
+    /* Mobile Nav */
+    .menu-toggle {
+      display: none;
+      font-size: 1.8rem;
+      color: #fff;
+      cursor: pointer;
+    }
+
     @media (max-width: 768px) {
-      nav { flex-direction: column; gap: 0.5rem; padding: 0.8rem 1rem; }
-      nav ul { flex-direction: column; gap: 0.8rem; text-align: center; }
+      nav ul {
+        display: none;
+        flex-direction: column;
+        background: rgba(0, 0, 0, 0.95);
+        position: absolute;
+        top: 60px;
+        right: 0;
+        width: 200px;
+        padding: 1rem;
+        border-radius: 8px;
+      }
 
-      header { padding: 100px 15px 60px; }
-      header h1 { font-size: 2rem; }
-      header p { font-size: 1rem; }
+      nav ul.show {
+        display: flex;
+      }
 
-      .tracker { margin: 20px; padding: 20px; }
-      .tracker input { width: 100%; max-width: none; }
-
-      .progress-container { flex-direction: row; gap: 10px; }
-      .step { width: 28px; height: 28px; font-size: 12px; }
-      .labels { font-size: 0.75rem; }
+      .menu-toggle {
+        display: block;
+      }
     }
 
-    @media (max-width: 480px) {
-      header h1 { font-size: 1.6rem; }
-      header p { font-size: 0.9rem; }
-      .tracker h2 { font-size: 1.3rem; }
-      .status { font-size: 1rem; }
-      .labels span { flex: 1 1 50%; margin-bottom: 5px; }
-    }
+       
   </style>
 </head>
 <body>
@@ -300,6 +365,7 @@ async function downloadInvoice() {
 </script>
 </body>
 </html>
+
 
 
 
