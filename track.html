@@ -1,148 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Order Tracking | Nayanta</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-<style>
-  html { scroll-behavior: smooth; }
-  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-  body { background-color: #f5f5f5; color: #333; line-height: 1.6; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Tracking | Nayanta Eyewear</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body { background: #f5f5f5; color: #333; }
 
-  /* Navbar */
-  nav {
-    position: fixed; width: 100%; top: 0; left: 0; z-index: 1000;
-    background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 1rem 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  }
-  nav .logo { color: #fff; font-size: 1.8rem; font-weight: bold; letter-spacing: 1px; }
-  nav ul { list-style: none; display: flex; gap: 1.5rem; }
-  nav ul li a { color: #fff; text-decoration: none; font-size: 1rem; transition: color 0.3s; }
-  nav ul li a:hover, nav ul li a.active { color: #ff4d4d; }
-  .menu-toggle { display: none; font-size: 1.8rem; color: #fff; cursor: pointer; }
-
-  /* Page Header */
-  .page-header {
-    background: linear-gradient(to right, rgba(255,0,0,0.6), rgba(0,0,0,0.7)), url('https://png.pngtree.com/background/20230528/original/pngtree-red-sunglasses-in-water-on-a-black-background-picture-image_2783564.jpg') center/cover no-repeat;
-    color: #fff; text-align: center; padding: 140px 20px 80px;
-  }
-  .page-header h1 { font-size: 2.8rem; font-weight: 700; letter-spacing: 1px; }
-  .page-header p { font-size: 1.2rem; margin-top: 10px; }
-
-  /* Tracking Section */
-  .tracking-section {
-    max-width: 700px;
-    margin: 40px auto 60px;
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    padding: 30px;
-    text-align: center;
-  }
-  .tracking-section h2 { color: #cc0000; margin-bottom: 20px; }
-  .tracking-section input[type="text"] {
-    width: 80%; padding: 12px 15px; border-radius: 8px;
-    border: 1px solid #ccc; font-size: 16px; margin-bottom: 15px;
-  }
-  .tracking-section button {
-    padding: 12px 25px; border: none; border-radius: 8px;
-    background: linear-gradient(135deg, #ff0000, #cc0000);
-    color: #fff; font-weight: bold; cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
-  }
-  .tracking-section button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(255,0,0,0.4);
-  }
-
-  /* Progress Tracker */
-  .progress-container {
-    margin-top: 30px;
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-  }
-  .progress-container::before {
-    content: '';
-    position: absolute;
-    top: 20px;
-    left: 10%;
-    width: 80%;
-    height: 4px;
-    background: #eee;
-    z-index: 0;
-    border-radius: 2px;
-  }
-  .step {
-    z-index: 1;
-    text-align: center;
-    width: 25%;
-    position: relative;
-  }
-  .step .circle {
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    background: #eee;
-    margin: 0 auto;
-    line-height: 40px;
-    color: #fff;
-    font-weight: bold;
-    transition: 0.5s;
-    position: relative;
-    z-index: 2;
-  }
-  .step.active .circle {
-    background: linear-gradient(135deg, #ff0000, #cc0000);
-    box-shadow: 0 0 10px rgba(255,0,0,0.5);
-  }
-  .step p { margin-top: 10px; font-size: 14px; font-weight: 500; color: #333; }
-  .step.completed .circle::after {
-    content: "\f00c"; font-family: "Font Awesome 6 Free"; font-weight: 900;
-  }
-
-  /* Status text */
-  #status-text {
-    margin-top: 25px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #cc0000;
-  }
-
-  /* Invoice button */
-  #invoice-btn {
-    display: none;
-    margin-top: 20px;
-  }
-
-  /* Footer */
-  .footer { background: #222; color: #fff; text-align: center; padding: 20px 10px; margin-top: 60px; letter-spacing: 0.5px; }
-
-  @media (max-width: 768px) {
-    nav ul {
-      position: absolute;
-      top: 60px;
-      right: 0;
-      background: rgba(0,0,0,0.9);
-      flex-direction: column;
-      width: 200px;
-      padding: 20px;
-      display: none;
+    /* Navbar */
+    nav {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 2rem; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
     }
-    nav ul.show { display: flex; }
-    .menu-toggle { display: block; }
-  }
-  @media (max-width: 600px) {
-    .page-header h1 { font-size: 2rem; }
-    .page-header p { font-size: 1rem; }
-    .tracking-section input[type="text"] { width: 100%; }
-    .progress-container::before { left: 5%; width: 90%; }
-  }
-</style>
+    nav .logo { font-size: 1.6rem; font-weight: bold; color: #fff; }
+    nav ul { list-style: none; display: flex; gap: 1.2rem; }
+    nav ul li a {
+      text-decoration: none; color: #fff; font-size: 1rem;
+      transition: color 0.3s;
+    }
+    nav ul li a:hover, nav ul li a.active { color: #ff4d4d; }
+    .menu-toggle { display: none; font-size: 1.6rem; color: #fff; cursor: pointer; }
+
+    /* Header */
+    .page-header {
+      background: linear-gradient(to right, rgba(255,0,0,0.6), rgba(0,0,0,0.6)),
+        url('https://png.pngtree.com/background/20230528/original/pngtree-red-sunglasses-in-water-on-a-black-background-picture-image_2783564.jpg') center/cover no-repeat;
+      text-align: center; color: #fff; padding: 140px 20px 80px;
+    }
+    .page-header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+    .page-header p { font-size: 1.1rem; }
+
+    /* Tracking Section */
+    .track-section {
+      max-width: 600px; margin: 50px auto; padding: 30px;
+      background: #fff; border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;
+    }
+    .track-section h2 { color: #cc0000; margin-bottom: 20px; }
+    .track-section input {
+      width: 80%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;
+      font-size: 16px; margin-bottom: 15px;
+    }
+    .track-section button {
+      padding: 12px 25px; border: none; border-radius: 8px;
+      background: linear-gradient(135deg, #ff0000, #cc0000); color: #fff;
+      font-weight: bold; cursor: pointer; transition: 0.3s;
+    }
+    .track-section button:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(255,0,0,0.3); }
+
+    .msg { margin-top: 15px; font-size: 1rem; font-weight: 500; }
+
+    /* Invoice Button */
+    #invoice-btn {
+      display: none; margin-top: 20px;
+      background: #222; border: none; color: #fff; padding: 12px 25px;
+      border-radius: 8px; cursor: pointer; transition: 0.3s;
+    }
+    #invoice-btn:hover { background: #000; }
+
+    /* Footer */
+    .footer {
+      background: #222; color: #fff; text-align: center;
+      padding: 20px 10px; margin-top: 60px;
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        position: absolute; top: 60px; right: 0;
+        background: rgba(0,0,0,0.9); flex-direction: column;
+        width: 200px; padding: 20px; display: none;
+      }
+      nav ul.show { display: flex; }
+      .menu-toggle { display: block; }
+      .track-section input { width: 100%; }
+    }
+  </style>
 </head>
 <body>
 
+<!-- Navbar -->
 <nav>
   <div class="logo">Nayanta</div>
   <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
@@ -151,102 +93,153 @@
     <li><a href="about.html">About</a></li>
     <li><a href="shop.html">Shop</a></li>
     <li><a href="game.html">Game</a></li>
-    <li><a class="active" href="order-tracking.html">Track Order</a></li>
+    <li><a class="active" href="track.html">Track Order</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
 </nav>
 
+<!-- Header -->
 <header class="page-header">
   <h1>Track Your Order</h1>
-  <p>See your order’s journey from confirmation to delivery in real time.</p>
+  <p>Enter your mobile number to check your order status</p>
 </header>
 
-<section class="tracking-section">
+<!-- Tracking Section -->
+<section class="track-section">
   <h2>Order Tracking</h2>
-  <input type="text" id="order-id" placeholder="Enter your Mobile number" />
-  <button onclick="trackOrder()">Track</button>
-
-  <div class="progress-container" id="progress-container" style="display:none;">
-    <div class="step" id="step1"><div class="circle">1</div><p>Confirmed</p></div>
-    <div class="step" id="step2"><div class="circle">2</div><p>Shipped</p></div>
-    <div class="step" id="step3"><div class="circle">3</div><p>Out for Delivery</p></div>
-    <div class="step" id="step4"><div class="circle">4</div><p>Delivered</p></div>
-  </div>
-
-  <p id="status-text" style="display:none;"></p>
+  <input type="text" id="mobile" placeholder="Enter Mobile Number" />
+  <button onclick="trackOrder()">Track Order</button>
+  <div class="msg" id="msg"></div>
 
   <!-- Invoice Button -->
   <button id="invoice-btn" onclick="downloadInvoice()">Download Invoice</button>
 </section>
 
-<footer class="footer"><p>&copy; 2025 Nayanta Eyewear. All rights reserved.</p></footer>
+<!-- Footer -->
+<footer class="footer">
+  <p>&copy; 2025 Nayanta Eyewear. All rights reserved.</p>
+</footer>
 
 <script>
 function toggleMenu() {
   const menu = document.getElementById("menu");
   menu.classList.toggle("show");
-  const links = menu.querySelectorAll("a");
-  links.forEach(link => link.addEventListener("click", () => menu.classList.remove("show")));
+  menu.querySelectorAll("a").forEach(link =>
+    link.addEventListener("click", () => menu.classList.remove("show"))
+  );
 }
 
-// Demo orders: OrderID → step index
+// Sample Orders
 const orders = {
-  "7700830855": 1, // Confirmed
-  "9708728305": 1, // Shipped
-  "9060488181": 1,
-  "NY12347": 3,    // Out for Delivery
-  "NY99999": 3,
-  "NY12348": 4     // Delivered
-};
-
-const statusLabels = {
-  1: "✅ Your order is Confirmed.",
-  2: "📦 Your order has been Shipped.",
-  3: "🚚 Your order is Out for Delivery.",
-  4: "🎉 Your order has been Delivered!"
-};
-
-function trackOrder() {
-  const orderId = document.getElementById("order-id").value.trim().toUpperCase();
-  const progress = document.getElementById("progress-container");
-  const statusText = document.getElementById("status-text");
-  const invoiceBtn = document.getElementById("invoice-btn");
-
-  // Reset steps
-  for (let i = 1; i <= 4; i++) {
-    document.getElementById("step" + i).classList.remove("active", "completed");
+  "9060488181": {
+    status: 2, // 0=Confirmed, 1=Processing, 2=Shipped, 3=Out for Delivery, 4=Delivered
+    invoiceNo: "9",
+    date: "03/09/2025",
+    customer: "Aryan",
+    address: "Akshardham, Delhi",
+    items: [
+      { description: "Vincent Chase Eyeglasses (powered)", qty: 1, unit: 750.00, total: 750.00 }
+    ],
+    subtotal: 750.00,
+    paid: 0.00,
+    due: 750.00
   }
+};
 
-  if (!orderId || !orders[orderId]) {
-    alert("❌ Order not found. Please check your Mobile number.");
-    progress.style.display = "none";
-    statusText.style.display = "none";
-    invoiceBtn.style.display = "none";
+function getStatus(status) {
+  return ["Confirmed","Processing","Shipped","Out for Delivery","Delivered"][status];
+}
+
+// Track order
+function trackOrder() {
+  const mobile = document.getElementById("mobile").value.trim();
+  const msg = document.getElementById("msg");
+  const order = orders[mobile];
+
+  if (!order) {
+    msg.style.color = "red";
+    msg.textContent = "❌ Order not found!";
+    document.getElementById("invoice-btn").style.display = "none";
     return;
   }
 
-  progress.style.display = "flex";
-  const stepIndex = orders[orderId];
+  msg.style.color = "green";
+  msg.textContent = `✅ Order found! Status: ${getStatus(order.status)}`;
 
-  for (let i = 1; i <= stepIndex; i++) {
-    const step = document.getElementById("step" + i);
-    step.classList.add("active");
-    if (i < stepIndex) step.classList.add("completed");
+  // Show invoice only if shipped or later
+  if (order.status >= 2) {
+    document.getElementById("invoice-btn").style.display = "inline-block";
+  } else {
+    document.getElementById("invoice-btn").style.display = "none";
   }
-
-  // Show status message
-  statusText.innerText = statusLabels[stepIndex];
-  statusText.style.display = "block";
-
-  // Show invoice button only if order exists
-  invoiceBtn.style.display = "inline-block";
 }
 
-function downloadInvoice() {
-  window.location.href = "invoice.html";
+// Download Invoice
+async function downloadInvoice() {
+  const mobile = document.getElementById("mobile").value.trim();
+  const order = orders[mobile];
+  if (!order) return;
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFontSize(16);
+  doc.text("Nayanta Eyewear", 14, 20);
+
+  doc.setFontSize(10);
+  doc.text("Greater Noida, Uttar Pradesh", 14, 28);
+  doc.text("PIN: 203201", 14, 34);
+  doc.text("Phone: 9955428948", 14, 40);
+  doc.text("Email: nayantaeyewears@gmail.com", 14, 46);
+
+  doc.setFontSize(14);
+  doc.text("INVOICE", 195, 20, null, null, "right");
+
+  doc.setFontSize(10);
+  doc.text(`Date: ${order.date}`, 195, 28, null, null, "right");
+  doc.text(`Invoice #: ${order.invoiceNo}`, 195, 34, null, null, "right");
+
+  doc.setFontSize(11);
+  doc.text("Bill To:", 14, 60);
+  doc.setFontSize(10);
+  doc.text(order.customer, 14, 66);
+  doc.text(order.address, 14, 72);
+
+  doc.autoTable({
+    startY: 85,
+    head: [['Description', 'Qty', 'Unit Price (INR)', 'Total (INR)']],
+    body: order.items.map(item => [
+      item.description,
+      item.qty,
+      item.unit.toFixed(2),
+      item.total.toFixed(2)
+    ]),
+    theme: 'grid',
+    headStyles: { fillColor: [60, 60, 60], textColor: 255 },
+    styles: { fontSize: 10, halign: 'center' },
+    alternateRowStyles: { fillColor: [245, 245, 245] },
+  });
+
+  let finalY = doc.lastAutoTable.finalY + 10;
+
+  doc.autoTable({
+    startY: finalY,
+    margin: { left: 120 },
+    body: [
+      ['Subtotal:', `INR ${order.subtotal.toFixed(2)}`],
+      ['Paid:', `INR ${order.paid.toFixed(2)}`],
+      ['Balance Due:', `INR ${order.due.toFixed(2)}`],
+    ],
+    theme: 'plain',
+    styles: { fontSize: 10, halign: 'right' }
+  });
+
+  finalY = doc.lastAutoTable.finalY + 10;
+  doc.setFontSize(9);
+  doc.text("Notes: Invoice is necessary to claim warranty", 14, finalY);
+
+  doc.save(`Invoice_${order.invoiceNo}.pdf`);
 }
 </script>
-
 </body>
 </html>
-
