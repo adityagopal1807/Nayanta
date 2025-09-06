@@ -114,12 +114,10 @@
  /* keeps aspect ratio without cropping */
   border-radius: 8px;
 }
-/* WhatsApp Floating Button */
-
 .whatsapp-float {
   position: fixed;
   bottom: 20px;
-  right: 20px; /* ✅ moved to right side */
+  left: 20px;
   background: #d32525;
   color: white;
   border-radius: 50%;
@@ -141,8 +139,22 @@
 
 .whatsapp-float:hover {
   transform: scale(1.1);
-  background: #ff4d4d;
+  background:#ff4d4d;
 }
+
+    
+
+    @media (max-width: 480px) {
+      .contact-header {
+        padding: 120px 15px 80px;
+      }
+      .contact-header h1 {
+        font-size: 2rem;
+      }
+      .contact-header p {
+        font-size: 1rem;
+      }
+    }
 
                                                                                        }
   </style>
@@ -690,6 +702,7 @@ We can help you with any kind of Lenskart glasses, just reach out to us!
 
 </body>
 </html>
+
 
 
 
