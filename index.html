@@ -161,6 +161,47 @@
     .hero p { font-size: 1rem; }
     .chat-container { width: 90%; height: 400px; right: 5%; }
   }
+  .whatsapp-float {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: #d32525;
+  color: white;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  z-index: 2000;
+  transition: transform 0.3s ease;
+  text-decoration: none; /* ✅ No underline */
+}
+
+.whatsapp-float i {
+  text-decoration: none; /* ✅ Ensure no underline on icon */
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.1);
+  background:#ff4d4d;
+}
+
+    
+
+    @media (max-width: 480px) {
+      .contact-header {
+        padding: 120px 15px 80px;
+      }
+      .contact-header h1 {
+        font-size: 2rem;
+      }
+      .contact-header p {
+        font-size: 1rem;
+      }
+    }
 </style>
 </head>
 <body>
@@ -234,6 +275,10 @@
 
 <!-- Scroll Top Button -->
 <a href="#" class="top-button" aria-label="Scroll to top"><i class="fas fa-arrow-up"></i></a>
+  <!-- WhatsApp Floating Button -->
+  <a href="https://wa.me/919955428948" target="_blank" class="whatsapp-float">
+    <i class="fab fa-whatsapp"></i>
+  </a>
 
 <script>
   
