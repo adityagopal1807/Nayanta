@@ -314,9 +314,11 @@ async function downloadInvoice() {
     styles: { fontSize: 10, halign: 'right' }
   });
 
-  finalY = doc.lastAutoTable.finalY + 10;
-  doc.setFontSize(9);
-  doc.text("Notes: Invoice is necessary to claim warranty", 14, finalY);
+ finalY = doc.lastAutoTable.finalY + 10;
+doc.setFontSize(9);
+doc.text("Notes: Invoice is necessary to claim warranty", 14, finalY);
+doc.text("The invoice is applicable only for Nayanta Eyewear, not for Lenskart", 14, finalY + 6);
+
 
   const stampUrl = "https://i.ibb.co/WN64wcDg/Red-and-White-Minimalist-Christmas-Circle-Sticker-removebg-preview.png";
   try {
@@ -336,23 +338,3 @@ async function downloadInvoice() {
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
