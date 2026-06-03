@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cart | Nayanta Eyewear</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="premium.css"/>
+<style>
+body { background: #080808; }
+.cart-page { min-height: 100vh; padding-top: var(--nav-h); }
+.cart-header { background: linear-gradient(135deg,#0a0000,#150000); padding: 2.5rem 2rem 2rem; text-align: center; }
+.cart-header h1 { font-family:var(--font-serif); font-size:2.5rem; color:white; margin-bottom:0.3rem; }
+.cart-header p { color:rgba(255,255,255,0.5); font-size:0.9rem; }
+.cart-body { max-width: 1100px; margin: 0 auto; padding: 2rem; display: grid; grid-template-columns: 1fr 360px; gap: 2rem; }
+.cart-items-section h2 { font-size: 1rem; font-weight: 700; color: white; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; padding-bottom: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.cart-item {
+  display: flex; gap: 1.2rem; padding: 1.2rem;
+  background: var(--surface); border-radius: var(--radius-md);
+  border: 1px solid rgba(255,255,255,0.05); margin-bottom: 1rem;
+  transition: var(--transition);
+}
+.cart-item:hover { border-color: rgba(230,0,0,0.2); }
+.cart-item-img { width: 90px; height: 70px; border-radius: 8px; object-fit: cover; background:#111; flex-shrink:0; }
+.cart-item-info { flex: 1; }
+.cart-item-name { font-weight: 600; color: white; margin-bottom: 0.2rem; font-size:0.95rem; }
+.cart-item-type { font-size: 0.75rem; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
+.cart-item-price { font-size: 1.1rem; font-weight: 700; color: white; }
+.cart-item-qty { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
+.qty-btn { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); font-size: 0.85rem; }
+.qty-btn:hover { background: var(--primary); border-color: var(--primary); }
+.qty-num { font-size: 0.9rem; font-weight: 600; color: white; min-width: 20px; text-align: center; }
+.cart-item-remove { background: none; border: none; color: rgba(255,255,255,0.3); cursor: pointer; padding: 0.3rem; transition: var(--transition); }
+.cart-item-remove:hover { color: var(--primary); }
+/* Order summary */
+.order-summary { background: var(--surface); border-radius: var(--radius-lg); border: 1px solid rgba(255,255,255,0.06); padding: 1.8rem; height: fit-content; position: sticky; top: calc(var(--nav-h) + 1rem); }
+.order-summary h2 { font-size: 1rem; font-weight: 700; color: white; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; padding-bottom: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.summary-row { display: flex; justify-content: space-between; align-items: center; padding: 0.7rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.88rem; color: rgba(255,255,255,0.7); }
+.summary-row.total { font-weight: 700; font-size: 1.1rem; color: white; border-bottom: none; margin-top: 0.5rem; padding-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); }
+.summary-row .green { color: #10b981; }
+.coupon-wrap { display: flex; gap: 0.5rem; margin: 1rem 0; }
+.coupon-input { flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 0.6rem 0.9rem; border-radius: var(--radius-sm); font-size: 0.85rem; outline: none; }
+.coupon-input:focus { border-color: var(--primary); }
+.coupon-btn { background: var(--primary); color: white; border: none; padding: 0.6rem 1rem; border-radius: var(--radius-sm); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: var(--transition); }
+.coupon-btn:hover { background: var(--primary-dark); }
+.trust-mini { display: flex; gap: 1rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap; }
+.trust-mini-item { display: flex; align-items: center; gap: 0.3rem; font-size: 0.72rem; color: rgba(255,255,255,0.4); }
+.trust-mini-item i { color: var(--primary); }
+.empty-cart { text-align: center; padding: 5rem 2rem; }
+.empty-cart i { font-size: 4rem; color: rgba(255,255,255,0.15); display: block; margin-bottom: 1.5rem; }
+.empty-cart h2 { color: white; margin-bottom: 0.5rem; }
+.empty-cart p { color: rgba(255,255,255,0.4); margin-bottom: 2rem; }
+@media(max-width:768px){ .cart-body { grid-template-columns: 1fr; } .order-summary { position: static; } }
+</style>
+</head>
+<body>
+<nav class="nav-premium" id="navbar">
+  <a href="index.html" class="nav-logo">Nayanта<span style="color:var(--primary)">.</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="tryon.html">Try-On</a></li>
+    <li><a href="cart.html" class="active">Cart</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="nav-theme-btn" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+    <a href="cart.html" class="nav-cart-btn"><i class="fas fa-shopping-bag"></i><span class="cart-badge" id="cartBadge">0</span></a>
+    <button class="nav-hamburger" onclick="toggleMobileNav()"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+<div class="mobile-nav-overlay" id="mobileNav">
+  <div class="mobile-nav-header"><span class="nav-logo">Nayanта<span style="color:var(--primary)">.</span></span><button class="mobile-nav-close" onclick="toggleMobileNav()"><i class="fas fa-times"></i></button></div>
+  <ul class="mobile-nav-links">
+    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+    <li><a href="shop.html"><i class="fas fa-glasses"></i> Shop</a></li>
+    <li><a href="tryon.html"><i class="fas fa-camera"></i> Try-On</a></li>
+    <li><a href="cart.html" class="active"><i class="fas fa-shopping-bag"></i> Cart</a></li>
+  </ul>
+</div>
+<div class="cart-page">
+  <div class="cart-header">
+    <h1>Your Cart <span id="cartHeaderCount" style="color:var(--primary)"></span></h1>
+    <p>Review your selection before placing your order</p>
+  </div>
+  <div id="cartContent"></div>
+</div>
+<nav class="bottom-nav"><div class="bottom-nav-inner">
+  <a href="index.html" class="bn-item"><i class="fas fa-home"></i><span>Home</span></a>
+  <a href="shop.html" class="bn-item"><i class="fas fa-glasses"></i><span>Shop</span></a>
+  <a href="tryon.html" class="bn-item"><i class="fas fa-camera"></i><span>Try-On</span></a>
+  <a href="cart.html" class="bn-item active"><i class="fas fa-shopping-bag"></i><span>Cart</span></a>
+  <a href="contact.html" class="bn-item"><i class="fas fa-headset"></i><span>Help</span></a>
+</div></nav>
+<div class="toast-container" id="toastContainer"></div>
+<script>
+let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+// Group items
+function groupCart() {
+  const groups = {};
+  cart.forEach(item => {
+    const key = item.name;
+    if (groups[key]) groups[key].qty++;
+    else groups[key] = {...item, qty: 1};
+  });
+  return Object.values(groups);
+}
+function renderCart() {
+  const grouped = groupCart();
+  const badge = document.getElementById('cartBadge');
+  if (badge) badge.textContent = cart.length;
+  const hc = document.getElementById('cartHeaderCount');
+  if (hc) hc.textContent = cart.length > 0 ? `(${cart.length})` : '';
+  const content = document.getElementById('cartContent');
+  if (!grouped.length) {
+    content.innerHTML = `<div class="empty-cart"><i class="fas fa-shopping-bag"></i><h2>Your cart is empty</h2><p>Looks like you haven't added any frames yet.</p><a href="shop.html" class="btn-primary"><i class="fas fa-glasses"></i> Browse Frames</a><a href="tryon.html" class="btn-outline" style="margin-left:0.5rem"><i class="fas fa-camera"></i> Virtual Try-On</a></div>`;
+    return;
+  }
+  const subtotal = grouped.reduce((s,i) => s + i.price * i.qty, 0);
+  const savings = grouped.reduce((s,i) => s + (1299 - i.price) * i.qty, 0);
+  const delivery = subtotal >= 999 ? 0 : 59;
+  const total = subtotal + delivery;
+  content.innerHTML = `
+  <div class="cart-body">
+    <div class="cart-items-section">
+      <h2><i class="fas fa-shopping-bag" style="color:var(--primary);margin-right:0.5rem"></i> ${grouped.length} Item${grouped.length>1?'s':''}</h2>
+      ${grouped.map(item => `
+        <div class="cart-item">
+          <img src="${item.image || 'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/lenskart-hustlr-lh-e16985-w-c4-eyeglasses_img_9728_11_01_2024.jpg'}" class="cart-item-img" alt="${item.name}"/>
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-type">Nayanta Eyewear</div>
+            <div class="cart-item-price">₹${item.price} <span style="font-size:0.8rem;color:var(--gray3);text-decoration:line-through">₹1,299</span></div>
+            <div class="cart-item-qty">
+              <button class="qty-btn" onclick="changeQty('${item.name}',-1)"><i class="fas fa-minus"></i></button>
+              <span class="qty-num">${item.qty}</span>
+              <button class="qty-btn" onclick="changeQty('${item.name}',1)"><i class="fas fa-plus"></i></button>
+            </div>
+          </div>
+          <button class="cart-item-remove" onclick="removeItem('${item.name}')"><i class="fas fa-trash"></i></button>
+        </div>
+      `).join('')}
+      <div style="text-align:center;margin-top:1.5rem">
+        <a href="shop.html" class="btn-ghost"><i class="fas fa-arrow-left"></i> Continue Shopping</a>
+      </div>
+    </div>
+    <div class="order-summary">
+      <h2>Order Summary</h2>
+      <div class="summary-row"><span>Subtotal (${cart.length} items)</span><span>₹${subtotal}</span></div>
+      <div class="summary-row"><span>You Save</span><span class="green">-₹${savings}</span></div>
+      <div class="summary-row"><span>Delivery</span><span>${delivery === 0 ? '<span class="green">FREE</span>' : '₹'+delivery}</span></div>
+      ${delivery > 0 ? `<div style="font-size:0.75rem;color:rgba(255,255,255,0.4);padding:0.4rem 0;text-align:center">Add ₹${999-subtotal} more for free delivery</div>` : ''}
+      <div class="coupon-wrap">
+        <input type="text" class="coupon-input" id="couponCode" placeholder="Enter coupon code"/>
+        <button class="coupon-btn" onclick="applyCoupon()">Apply</button>
+      </div>
+      <div class="summary-row total"><span>Total</span><span>₹${total}</span></div>
+      <button class="btn-primary" style="width:100%;justify-content:center;margin-top:1rem;font-size:1rem" onclick="checkout()">
+        <i class="fas fa-lock"></i> Proceed to Checkout — ₹${total}
+      </button>
+      <div class="trust-mini">
+        <div class="trust-mini-item"><i class="fas fa-lock"></i> Secure Payment</div>
+        <div class="trust-mini-item"><i class="fas fa-undo"></i> 7-Day Returns</div>
+        <div class="trust-mini-item"><i class="fas fa-truck"></i> Fast Delivery</div>
+      </div>
+    </div>
+  </div>`;
+}
+function changeQty(name, delta) {
+  if (delta === -1) { const idx = cart.findLastIndex ? cart.findLastIndex(i=>i.name===name) : cart.map(i=>i.name).lastIndexOf(name); if (idx > -1) cart.splice(idx,1); }
+  else { const base = cart.find(i=>i.name===name); if(base) cart.push({...base}); }
+  localStorage.setItem('cart', JSON.stringify(cart)); renderCart();
+}
+function removeItem(name) { cart = cart.filter(i => i.name !== name); localStorage.setItem('cart', JSON.stringify(cart)); renderCart(); showToast('Item removed from cart','info'); }
+function applyCoupon() {
+  const code = document.getElementById('couponCode').value.trim().toUpperCase();
+  const total = cart.reduce((s,i) => s + i.price, 0);
+  let discount = 0, msg = '';
+
+  if (code === 'SNEHIL') {
+    discount = total * 0;
+    msg = 'qw 🎉';
+    localStorage.setItem('discount', JSON.stringify({amount: discount, msg: 'g'}));
+    showToast('Coupon applied! 🎉', 'success');
+  } else if (code === 'NAYANTA') {
+    discount = total * 0.285;
+    msg = 'Coupon applied: 28.5% OFF 🎉';
+    localStorage.setItem('discount', JSON.stringify({amount: discount, msg: '28.5% OFF'}));
+    showToast('Coupon applied: 28.5% OFF 🎉', 'success');
+  } else {
+    discount = 0;
+    localStorage.setItem('discount', JSON.stringify({amount: 0, msg: ''}));
+    showToast('Invalid coupon ❌', 'error');
+  }
+}
+function checkout() {
+  if (!cart.length) { showToast('Your cart is empty!', 'error'); return; }
+  showToast('Redirecting to checkout…', 'info');
+  setTimeout(() => { window.location.href = 'confirmation.html'; }, 800);
+}
+function toggleTheme() { const h=document.documentElement; h.setAttribute('data-theme',h.getAttribute('data-theme')==='dark'?'light':'dark'); }
+function toggleMobileNav() { document.getElementById('mobileNav').classList.toggle('active'); }
+function showToast(msg, type='info') {
+  const tc=document.getElementById('toastContainer'); const t=document.createElement('div'); t.className=`toast ${type}`;
+  t.innerHTML=`<i class="fas fa-${type==='success'?'check-circle':'info-circle'}"></i>${msg}<span class="toast-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></span>`;
+  tc.appendChild(t); setTimeout(()=>t.remove(),3500);
+}
+window.addEventListener('scroll', () => document.getElementById('navbar').classList.toggle('scrolled', window.scrollY>50));
+renderCart();
+</script>
+</body>
+</html>

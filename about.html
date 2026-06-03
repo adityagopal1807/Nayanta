@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>About | Nayanta Eyewear</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="premium.css"/>
+<style>
+body{background:#080808}
+.about-hero{background:linear-gradient(135deg,#0a0000,#150000,#0a0000);padding:calc(var(--nav-h)+4rem) 2rem 4rem;text-align:center}
+.about-hero h1{font-family:var(--font-serif);font-size:clamp(2.5rem,6vw,4rem);color:white;margin-bottom:1rem}
+.about-hero p{color:rgba(255,255,255,0.6);max-width:600px;margin:0 auto;font-size:1.1rem;line-height:1.8}
+.about-stats{background:var(--dark2);padding:3rem 2rem}
+.about-stats-inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center}
+.about-stat-num{font-family:var(--font-serif);font-size:2.5rem;font-weight:700;color:var(--primary)}
+.about-stat-label{font-size:0.85rem;color:rgba(255,255,255,0.5);margin-top:0.3rem;text-transform:uppercase;letter-spacing:1px}
+.about-mission{max-width:1000px;margin:0 auto;padding:5rem 2rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.about-mission-img{border-radius:var(--radius-xl);overflow:hidden;background:#111;aspect-ratio:1}
+.about-mission-img img{width:100%;height:100%;object-fit:cover;opacity:0.8}
+.about-values{background:var(--dark2);padding:5rem 2rem}
+.about-values-inner{max-width:1200px;margin:0 auto}
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+.value-card{background:var(--surface);border-radius:var(--radius-md);padding:2rem;border:1px solid rgba(255,255,255,0.05);transition:var(--transition)}
+.value-card:hover{border-color:rgba(230,0,0,0.3);transform:translateY(-4px)}
+.value-icon{width:52px;height:52px;border-radius:50%;background:rgba(230,0,0,0.1);display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:var(--primary);margin-bottom:1.2rem}
+.value-card h3{font-size:1.1rem;font-weight:600;color:white;margin-bottom:0.5rem}
+.value-card p{font-size:0.88rem;color:rgba(255,255,255,0.6);line-height:1.7}
+.about-cta{background:linear-gradient(135deg,#0d0000,#1a0000);padding:5rem 2rem;text-align:center}
+@media(max-width:768px){.about-stats-inner{grid-template-columns:1fr 1fr}.about-mission{grid-template-columns:1fr;gap:2rem}.values-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="nav-premium" id="navbar">
+  <a href="index.html" class="nav-logo">Nayanта<span style="color:var(--primary)">.</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="tryon.html">Try-On</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="nav-theme-btn" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+    <a href="cart.html" class="nav-cart-btn"><i class="fas fa-shopping-bag"></i><span class="cart-badge" id="cartBadge">0</span></a>
+    <button class="nav-hamburger" onclick="toggleMobileNav()"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+<div class="mobile-nav-overlay" id="mobileNav">
+  <div class="mobile-nav-header"><span class="nav-logo">Nayanта<span style="color:var(--primary)">.</span></span><button class="mobile-nav-close" onclick="toggleMobileNav()"><i class="fas fa-times"></i></button></div>
+  <ul class="mobile-nav-links">
+    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+    <li><a href="about.html" class="active"><i class="fas fa-info-circle"></i> About</a></li>
+    <li><a href="shop.html"><i class="fas fa-glasses"></i> Shop</a></li>
+    <li><a href="tryon.html"><i class="fas fa-camera"></i> Try-On</a></li>
+    <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+  </ul>
+</div>
+<div class="about-hero">
+  <div class="section-label" style="justify-content:center;margin-bottom:1rem"><i class="fas fa-heart"></i> Our Story</div>
+  <h1>Built on a Passion<br/>for <span style="color:var(--primary)">Perfect Vision</span></h1>
+  <p>Nayanta was born from a simple belief — premium eyewear should be accessible to everyone, without compromise on style or quality.</p>
+</div>
+<div class="about-stats">
+  <div class="about-stats-inner">
+    <div class="animate-fadeup"><div class="about-stat-num">10k+</div><div class="about-stat-label">Happy Customers</div></div>
+    <div class="animate-fadeup animate-delay-1"><div class="about-stat-num">500+</div><div class="about-stat-label">Frame Styles</div></div>
+    <div class="animate-fadeup animate-delay-2"><div class="about-stat-num">4.8★</div><div class="about-stat-label">Average Rating</div></div>
+    <div class="animate-fadeup animate-delay-3"><div class="about-stat-num">100%</div><div class="about-stat-label">Authentic Products</div></div>
+  </div>
+</div>
+<div class="about-mission">
+  <div class="about-mission-img animate-fadeup">
+    <img src="https://png.pngtree.com/background/20230528/original/pngtree-red-sunglasses-in-water-on-a-black-background-picture-image_2783564.jpg" alt="Mission" loading="lazy"/>
+  </div>
+  <div class="animate-fadeup animate-delay-2">
+    <div class="section-label"><i class="fas fa-bullseye"></i> Our Mission</div>
+    <h2 class="section-title">See Better, Look Better, Feel Better</h2>
+    <p style="color:rgba(255,255,255,0.65);line-height:1.8;margin-bottom:1.5rem">We partner with trusted brands like Lenskart to bring you authentic, high-quality eyewear at prices that make sense. From blue-light blocking glasses for your screen-heavy lifestyle to prescription lenses crafted with precision — we've got every vision need covered.</p>
+    <p style="color:rgba(255,255,255,0.65);line-height:1.8;margin-bottom:2rem">Our Virtual Try-On technology means you'll never have to guess how a frame looks on you again. See it, love it, order it.</p>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap">
+      <a href="shop.html" class="btn-primary"><i class="fas fa-glasses"></i> Browse Collection</a>
+      <a href="tryon.html" class="btn-outline"><i class="fas fa-camera"></i> Virtual Try-On</a>
+    </div>
+  </div>
+</div>
+<div class="about-values">
+  <div class="about-values-inner">
+    <div class="section-header" style="text-align:center">
+      <div class="section-label" style="justify-content:center"><i class="fas fa-star"></i> Our Values</div>
+      <h2 class="section-title">What We Stand For</h2>
+    </div>
+    <div class="values-grid">
+      <div class="value-card animate-fadeup"><div class="value-icon"><i class="fas fa-gem"></i></div><h3>Authentic Quality</h3><p>We source only genuine products from verified brands. Every frame is exactly as described — no compromises.</p></div>
+      <div class="value-card animate-fadeup animate-delay-1"><div class="value-icon"><i class="fas fa-tags"></i></div><h3>Honest Pricing</h3><p>No inflated MRPs, no fake discounts. Our prices are transparent and genuinely affordable.</p></div>
+      <div class="value-card animate-fadeup animate-delay-2"><div class="value-icon"><i class="fas fa-headset"></i></div><h3>Customer First</h3><p>We're here 24/7 via WhatsApp and email. Your satisfaction is not just a priority — it's our promise.</p></div>
+      <div class="value-card animate-fadeup animate-delay-3"><div class="value-icon"><i class="fas fa-truck"></i></div><h3>Fast Delivery</h3><p>Pan-India delivery in 3-5 business days. We take care of packaging so your frames arrive perfect.</p></div>
+      <div class="value-card animate-fadeup animate-delay-4"><div class="value-icon"><i class="fas fa-sync"></i></div><h3>Easy Returns</h3><p>Not happy? Our 7-day return policy makes it stress-free to find the perfect frame for you.</p></div>
+      <div class="value-card animate-fadeup"><div class="value-icon"><i class="fas fa-camera"></i></div><h3>Innovation</h3><p>We invest in tools like Virtual Try-On so your online shopping experience is as good as in-store.</p></div>
+    </div>
+  </div>
+</div>
+<div class="about-cta">
+  <div class="section-label" style="justify-content:center;margin-bottom:1rem"><i class="fas fa-envelope"></i> Get in Touch</div>
+  <h2 class="section-title" style="text-align:center">Questions? We're Here.</h2>
+  <p style="color:rgba(255,255,255,0.5);text-align:center;max-width:500px;margin:0 auto 2rem">Whether you need help choosing frames, tracking an order, or anything else — our team is ready to help.</p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+    <a href="contact.html" class="btn-primary"><i class="fas fa-envelope"></i> Contact Us</a>
+    <a href="https://wa.me/919955428948" target="_blank" class="btn-outline" style="color:#25d366;border-color:#25d366"><i class="fab fa-whatsapp"></i> WhatsApp Us</a>
+  </div>
+</div>
+<footer class="footer-premium" style="margin-top:0">
+  <div class="footer-bottom" style="border-top:none;margin-top:0;padding:1.5rem 2rem">
+    <p style="color:var(--gray3);font-size:0.82rem">© 2025 Nayanta Eyewear. All rights reserved.</p>
+    <p style="color:var(--gray3);font-size:0.82rem">Made with ❤️ in India</p>
+  </div>
+</footer>
+<nav class="bottom-nav"><div class="bottom-nav-inner">
+  <a href="index.html" class="bn-item"><i class="fas fa-home"></i><span>Home</span></a>
+  <a href="shop.html" class="bn-item"><i class="fas fa-glasses"></i><span>Shop</span></a>
+  <a href="tryon.html" class="bn-item" style="color:var(--primary)"><i class="fas fa-camera"></i><span>Try-On</span></a>
+  <a href="cart.html" class="bn-item"><i class="fas fa-shopping-bag"></i><span>Cart</span></a>
+  <a href="contact.html" class="bn-item"><i class="fas fa-headset"></i><span>Help</span></a>
+</div></nav>
+<div class="toast-container" id="toastContainer"></div>
+<script>
+function toggleTheme(){const h=document.documentElement;h.setAttribute('data-theme',h.getAttribute('data-theme')==='dark'?'light':'dark');}
+function toggleMobileNav(){document.getElementById('mobileNav').classList.toggle('active');}
+window.addEventListener('scroll',()=>{document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>50);});
+const ob=new IntersectionObserver(e=>e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('visible');}),{threshold:0.15});
+document.querySelectorAll('.animate-fadeup').forEach(el=>ob.observe(el));
+document.getElementById('cartBadge').textContent=JSON.parse(localStorage.getItem('cart')||'[]').length;
+</script>
+</body>
+</html>

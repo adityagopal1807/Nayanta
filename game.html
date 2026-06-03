@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Style Challenge | Nayanta Eyewear</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="premium.css"/>
+<style>
+body{background:#080808}
+.game-page{min-height:100vh;padding-top:var(--nav-h)}
+.game-hero{background:linear-gradient(135deg,#0a0000,#150000);padding:3rem 2rem 2rem;text-align:center}
+.game-hero h1{font-family:var(--font-serif);font-size:clamp(2rem,5vw,3rem);color:white;margin-bottom:.5rem}
+.game-hero p{color:rgba(255,255,255,.6)}
+.game-area{max-width:700px;margin:0 auto;padding:3rem 2rem}
+.game-card{background:var(--surface);border-radius:var(--radius-xl);border:1px solid rgba(255,255,255,.06);overflow:hidden;box-shadow:var(--shadow-lg)}
+.game-header{background:linear-gradient(135deg,var(--primary-dark),var(--primary));padding:1.5rem 2rem;display:flex;align-items:center;justify-content:space-between}
+.game-score{font-size:1.5rem;font-weight:700;color:white}
+.game-level{background:rgba(255,255,255,.2);color:white;padding:.3rem .9rem;border-radius:20px;font-size:.82rem;font-weight:600}
+.game-timer{font-size:1.1rem;font-weight:700;color:white;background:rgba(0,0,0,.3);padding:.3rem .9rem;border-radius:20px}
+.game-progress{height:4px;background:rgba(0,0,0,.3)}
+.game-progress-fill{height:100%;background:white;transition:width .1s linear}
+.game-body{padding:2rem}
+.game-question{font-family:var(--font-serif);font-size:1.3rem;color:white;margin-bottom:.5rem;text-align:center}
+.game-hint{font-size:.85rem;color:rgba(255,255,255,.4);text-align:center;margin-bottom:2rem}
+.game-img{width:220px;height:160px;object-fit:cover;border-radius:var(--radius-md);margin:0 auto 1.5rem;display:block;border:2px solid rgba(255,255,255,.1)}
+.game-choices{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.game-choice{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.1);color:white;padding:1rem;border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);font-size:.9rem;font-weight:500;text-align:center}
+.game-choice:hover{border-color:var(--primary);background:rgba(230,0,0,.1)}
+.game-choice.correct{border-color:#10b981;background:rgba(16,185,129,.15);color:#10b981}
+.game-choice.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
+.game-result{text-align:center;padding:2rem}
+.game-result h2{font-family:var(--font-serif);font-size:2rem;color:white;margin-bottom:.5rem}
+.game-streak{display:inline-flex;align-items:center;gap:.4rem;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.3);color:var(--gold);padding:.4rem 1rem;border-radius:20px;font-size:.85rem;font-weight:600;margin:1rem 0}
+@media(max-width:480px){.game-choices{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="nav-premium" id="navbar">
+  <a href="index.html" class="nav-logo">Nayanта<span style="color:var(--primary)">.</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="tryon.html">Try-On</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="cart.html" class="nav-cart-btn"><i class="fas fa-shopping-bag"></i><span class="cart-badge" id="cartBadge">0</span></a>
+    <button class="nav-hamburger" onclick="toggleMobileNav()"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+<div class="mobile-nav-overlay" id="mobileNav">
+  <div class="mobile-nav-header"><span class="nav-logo">Nayanта<span style="color:var(--primary)">.</span></span><button class="mobile-nav-close" onclick="toggleMobileNav()"><i class="fas fa-times"></i></button></div>
+  <ul class="mobile-nav-links">
+    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+    <li><a href="shop.html"><i class="fas fa-glasses"></i> Shop</a></li>
+    <li><a href="tryon.html"><i class="fas fa-camera"></i> Try-On</a></li>
+  </ul>
+</div>
+
+<div class="game-page">
+  <div class="game-hero">
+    <div class="section-label" style="justify-content:center;margin-bottom:.8rem"><i class="fas fa-gamepad"></i> Style Challenge</div>
+    <h1>Eyewear Style Quiz</h1>
+    <p>Test your knowledge of eyewear styles, frames & fashion. Earn discounts!</p>
+  </div>
+  <div class="game-area">
+    <div id="startScreen" style="text-align:center;padding:3rem 1rem">
+      <div style="font-size:5rem;margin-bottom:1.5rem">🕶️</div>
+      <h2 style="font-family:var(--font-serif);font-size:2rem;color:white;margin-bottom:.8rem">Ready to Play?</h2>
+      <p style="color:rgba(255,255,255,.5);margin-bottom:2rem;line-height:1.7">Answer 10 questions about eyewear. Score 8+ and get a <strong style="color:var(--gold)">10% discount coupon!</strong></p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;max-width:400px;margin:0 auto 2rem;text-align:center">
+        <div style="background:var(--surface);border-radius:var(--radius-md);padding:1rem;border:1px solid rgba(255,255,255,.06)"><div style="font-size:1.5rem;margin-bottom:.3rem">🎯</div><div style="font-size:.78rem;color:rgba(255,255,255,.5)">10 Questions</div></div>
+        <div style="background:var(--surface);border-radius:var(--radius-md);padding:1rem;border:1px solid rgba(255,255,255,.06)"><div style="font-size:1.5rem;margin-bottom:.3rem">⏱️</div><div style="font-size:.78rem;color:rgba(255,255,255,.5)">15 Sec Each</div></div>
+        <div style="background:var(--surface);border-radius:var(--radius-md);padding:1rem;border:1px solid rgba(255,255,255,.06)"><div style="font-size:1.5rem;margin-bottom:.3rem">🎁</div><div style="font-size:.78rem;color:rgba(255,255,255,.5)">Win Discounts</div></div>
+      </div>
+      <button class="btn-primary" onclick="startGame()" style="font-size:1rem;padding:1rem 2.5rem"><i class="fas fa-play"></i> Start Challenge</button>
+    </div>
+    <div class="game-card" id="gameCard" style="display:none">
+      <div class="game-header">
+        <div><div style="font-size:.72rem;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:1px">Score</div><div class="game-score" id="scoreDisplay">0</div></div>
+        <div class="game-level" id="levelDisplay">Q 1/10</div>
+        <div class="game-timer" id="timerDisplay">15</div>
+      </div>
+      <div class="game-progress"><div class="game-progress-fill" id="timerBar" style="width:100%"></div></div>
+      <div class="game-body">
+        <div class="game-question" id="qText"></div>
+        <div class="game-hint" id="qHint"></div>
+        <img id="qImg" class="game-img" src="" alt="" style="display:none"/>
+        <div class="game-choices" id="qChoices"></div>
+      </div>
+    </div>
+    <div id="endScreen" style="display:none;text-align:center;padding:2rem">
+      <div class="game-card">
+        <div class="game-body">
+          <div class="game-result">
+            <div id="endEmoji" style="font-size:4rem;margin-bottom:1rem">🎉</div>
+            <h2 id="endTitle">Brilliant!</h2>
+            <p id="endSub" style="color:rgba(255,255,255,.5);margin-bottom:1rem"></p>
+            <div class="game-streak"><i class="fas fa-star"></i> Final Score: <span id="finalScore">0</span>/10</div>
+            <div id="couponSection" style="display:none;margin:1.5rem 0;background:rgba(212,175,55,.08);border:2px dashed rgba(212,175,55,.4);border-radius:var(--radius-md);padding:1.5rem">
+              <p style="color:var(--gold);font-weight:700;font-size:1.1rem;margin-bottom:.3rem">🎁 Your Reward!</p>
+              <p style="font-size:2rem;font-weight:700;color:white;letter-spacing:3px;margin:.5rem 0">NAYANTA10</p>
+              <p style="color:rgba(255,255,255,.4);font-size:.8rem">10% off your next order</p>
+            </div>
+            <div style="display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem">
+              <button class="btn-primary" onclick="startGame()"><i class="fas fa-redo"></i> Play Again</button>
+              <a href="shop.html" class="btn-outline"><i class="fas fa-glasses"></i> Shop Now</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<nav class="bottom-nav"><div class="bottom-nav-inner">
+  <a href="index.html" class="bn-item"><i class="fas fa-home"></i><span>Home</span></a>
+  <a href="shop.html" class="bn-item"><i class="fas fa-glasses"></i><span>Shop</span></a>
+  <a href="tryon.html" class="bn-item" style="color:var(--primary)"><i class="fas fa-camera"></i><span>Try-On</span></a>
+  <a href="cart.html" class="bn-item"><i class="fas fa-shopping-bag"></i><span>Cart</span></a>
+  <a href="game.html" class="bn-item active"><i class="fas fa-gamepad"></i><span>Game</span></a>
+</div></nav>
+<div class="toast-container" id="toastContainer"></div>
+<script>
+const QUESTIONS = [
+  {q:"Which face shape suits almost ANY frame style?",hint:"It's the most versatile face shape",choices:["Round","Oval","Square","Diamond"],correct:1},
+  {q:"What does 'Blu Lens' mean in eyewear?",hint:"Think about screen time",choices:["Blue-coloured lenses","Blue light blocking lenses","Underwater glasses","UV blocking only"],correct:1},
+  {q:"Which frame style did Peyush Bansal (Shark Tank) popularise?",hint:"It was a Lenskart collaboration",choices:["Round retro","Aviator","Square wayfarer","Cat-eye"],correct:2},
+  {q:"What's the best frame shape for a ROUND face?",hint:"You want to add definition",choices:["Round","Oval","Rectangular/Angular","Cat-eye"],correct:2},
+  {q:"What does 'anti-glare' coating do?",hint:"Helps with reflections",choices:["Darkens lenses in sunlight","Reduces reflections on lens surface","Changes lens colour","Adds magnification"],correct:1},
+  {q:"Which material makes the LIGHTEST eyewear frames?",hint:"Used in premium eyewear",choices:["Steel","Acetate","Titanium","Plastic"],correct:2},
+  {q:"Blue light mainly comes from which source?",hint:"You're probably using one right now",choices:["Sunlight only","Candles","Digital screens","Fluorescent bulbs"],correct:2},
+  {q:"What does 'UV400' protection mean?",hint:"About wavelength",choices:["400% stronger glass","Blocks UV rays up to 400nm","400 hour durability","Lens weight 400mg"],correct:1},
+  {q:"For a HEART-shaped face, which frames work best?",hint:"Balance the face shape",choices:["Wide top, narrow bottom","Narrow top, wider bottom","Round frames","Oversized square"],correct:1},
+  {q:"What is 'anti-fog' coating designed for?",hint:"Common issue with glasses",choices:["UV protection","Prevent scratches","Stop lenses fogging in temperature changes","Add tint"],correct:2},
+];
+let score=0,qIdx=0,timer=null,timeLeft=15;
+function startGame(){
+  score=0;qIdx=0;
+  document.getElementById('startScreen').style.display='none';
+  document.getElementById('endScreen').style.display='none';
+  document.getElementById('gameCard').style.display='block';
+  loadQuestion();
+}
+function loadQuestion(){
+  if(qIdx>=QUESTIONS.length){endGame();return;}
+  const q=QUESTIONS[qIdx];
+  document.getElementById('qText').textContent=q.q;
+  document.getElementById('qHint').textContent='💡 '+q.hint;
+  document.getElementById('levelDisplay').textContent=`Q ${qIdx+1}/10`;
+  document.getElementById('scoreDisplay').textContent=score;
+  const img=document.getElementById('qImg');img.style.display='none';
+  const ch=document.getElementById('qChoices');
+  ch.innerHTML=q.choices.map((c,i)=>`<button class="game-choice" onclick="answer(${i})">${c}</button>`).join('');
+  startTimer();
+}
+function startTimer(){
+  clearInterval(timer);timeLeft=15;
+  updateTimer();
+  timer=setInterval(()=>{
+    timeLeft--;updateTimer();
+    if(timeLeft<=0){clearInterval(timer);autoNext();}
+  },1000);
+}
+function updateTimer(){
+  document.getElementById('timerDisplay').textContent=timeLeft;
+  document.getElementById('timerBar').style.width=(timeLeft/15*100)+'%';
+  document.getElementById('timerDisplay').style.color=timeLeft<=5?'#ef4444':'white';
+}
+function answer(idx){
+  clearInterval(timer);
+  const q=QUESTIONS[qIdx];
+  const btns=document.querySelectorAll('.game-choice');
+  btns.forEach((b,i)=>{
+    if(i===q.correct)b.classList.add('correct');
+    else if(i===idx&&i!==q.correct)b.classList.add('wrong');
+  });
+  if(idx===q.correct){score++;showToast('✓ Correct! +1 point','success');}
+  else{showToast('✗ Wrong! The answer was: '+q.choices[q.correct],'error');}
+  setTimeout(()=>{qIdx++;loadQuestion();},1200);
+}
+function autoNext(){
+  const q=QUESTIONS[qIdx];
+  document.querySelectorAll('.game-choice').forEach((b,i)=>{if(i===q.correct)b.classList.add('correct');});
+  showToast("⏱️ Time's up!",'info');
+  setTimeout(()=>{qIdx++;loadQuestion();},1000);
+}
+function endGame(){
+  clearInterval(timer);
+  document.getElementById('gameCard').style.display='none';
+  document.getElementById('endScreen').style.display='block';
+  document.getElementById('finalScore').textContent=score;
+  const emojis=['😢','😕','🙂','😊','🎉','🏆'];
+  const ei=Math.min(Math.floor(score/2),5);
+  document.getElementById('endEmoji').textContent=emojis[ei];
+  const titles=['Keep Practicing!','Getting There!','Good Effort!','Well Done!','Excellent!','Eyewear Expert!'];
+  document.getElementById('endTitle').textContent=titles[ei];
+  document.getElementById('endSub').textContent=score>=8?'Amazing! You scored '+score+'/10. Here\'s your reward!':'You scored '+score+'/10. Score 8+ to win a discount coupon!';
+  document.getElementById('couponSection').style.display=score>=8?'block':'none';
+  if(score>=8)showToast('🎉 You won a 10% discount! Use code NAYANTA10','success');
+}
+function toggleMobileNav(){document.getElementById('mobileNav').classList.toggle('active');}
+function showToast(msg,type='info'){const tc=document.getElementById('toastContainer');const t=document.createElement('div');t.className=`toast ${type}`;t.innerHTML=`<i class="fas fa-${type==='success'?'check-circle':type==='error'?'times-circle':'info-circle'}"></i>${msg}<span class="toast-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></span>`;tc.appendChild(t);setTimeout(()=>t.remove(),3000);}
+window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>50));
+document.getElementById('cartBadge').textContent=JSON.parse(localStorage.getItem('cart')||'[]').length;
+</script>
+</body>
+</html>

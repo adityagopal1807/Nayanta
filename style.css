@@ -1,0 +1,10 @@
+/*
+ * Nayanta Eyewear — Legacy style.css
+ * This file is kept for backward compatibility.
+ * All main styles are now in premium.css
+ */
+@import url('premium.css');
+
+/* Any legacy overrides can go here */
+* { box-sizing: border-box; }
+body { margin: 0; padding: 0; }

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Checkout | Nayanta Eyewear</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="premium.css"/>
+<style>
+body { background: #080808; }
+.checkout-page { min-height: 100vh; padding-top: var(--nav-h); }
+.checkout-hero {
+  background: linear-gradient(135deg, #0a0000, #150000);
+  padding: 2.5rem 2rem 2rem; text-align: center;
+}
+.checkout-hero h1 { font-family: var(--font-serif); font-size: clamp(1.8rem,4vw,3rem); color: white; margin-bottom: .4rem; }
+.checkout-hero p { color: rgba(255,255,255,.5); font-size: .9rem; }
+
+.checkout-body {
+  max-width: 1000px; margin: 0 auto;
+  padding: 2.5rem 2rem;
+  display: grid; grid-template-columns: 1.2fr 1fr;
+  gap: 2rem; align-items: start;
+}
+
+/* ---- FORM CARD ---- */
+.checkout-form-card {
+  background: var(--surface); border-radius: var(--radius-xl);
+  border: 1px solid rgba(255,255,255,.06); padding: 2rem;
+}
+.checkout-form-card h2 {
+  font-size: 1rem; font-weight: 700; color: white;
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 1.5rem; padding-bottom: .8rem;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  display: flex; align-items: center; gap: .6rem;
+}
+.form-group { margin-bottom: 1.1rem; }
+.form-group label {
+  display: block; font-size: .78rem; font-weight: 600;
+  color: rgba(255,255,255,.55); text-transform: uppercase;
+  letter-spacing: .5px; margin-bottom: .4rem;
+}
+.form-group input,
+.form-group textarea {
+  width: 100%; background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  color: white; padding: .75rem 1rem;
+  border-radius: var(--radius-sm); font-size: .9rem;
+  outline: none; transition: var(--transition);
+  font-family: var(--font-sans);
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--primary); background: rgba(230,0,0,.05);
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: rgba(255,255,255,.25); }
+.form-group textarea { resize: vertical; min-height: 90px; }
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+/* ---- ORDER SUMMARY CARD ---- */
+.order-summary-card {
+  background: var(--surface); border-radius: var(--radius-xl);
+  border: 1px solid rgba(255,255,255,.06); padding: 1.8rem;
+  position: sticky; top: calc(var(--nav-h) + 1rem);
+}
+.order-summary-card h2 {
+  font-size: 1rem; font-weight: 700; color: white;
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 1.2rem; padding-bottom: .8rem;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  display: flex; align-items: center; gap: .6rem;
+}
+.summary-items { margin-bottom: 1rem; max-height: 260px; overflow-y: auto; }
+.summary-item {
+  display: flex; align-items: center; gap: .8rem;
+  padding: .7rem 0; border-bottom: 1px solid rgba(255,255,255,.04);
+}
+.summary-item:last-child { border-bottom: none; }
+.summary-item img { width: 50px; height: 38px; border-radius: 6px; object-fit: cover; background: #111; flex-shrink: 0; }
+.summary-item-name { flex: 1; font-size: .84rem; color: rgba(255,255,255,.8); line-height: 1.3; }
+.summary-item-price { font-size: .88rem; font-weight: 700; color: white; white-space: nowrap; }
+
+.summary-divider { height: 1px; background: rgba(255,255,255,.06); margin: .8rem 0; }
+.summary-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: .45rem 0; font-size: .88rem; color: rgba(255,255,255,.65);
+}
+.summary-row.total { font-weight: 700; font-size: 1.1rem; color: white; padding-top: .7rem; margin-top: .3rem; border-top: 1px solid rgba(255,255,255,.1); }
+.summary-row .discount-val { color: #10b981; }
+
+/* Coupon */
+.coupon-wrap { display: flex; gap: .5rem; margin: 1rem 0; }
+.coupon-input {
+  flex: 1; background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  color: white; padding: .65rem .9rem;
+  border-radius: var(--radius-sm); font-size: .85rem; outline: none;
+  text-transform: uppercase;
+}
+.coupon-input:focus { border-color: var(--primary); }
+.coupon-btn {
+  background: var(--primary); color: white; border: none;
+  padding: .65rem 1rem; border-radius: var(--radius-sm);
+  font-size: .82rem; font-weight: 700; cursor: pointer; transition: var(--transition);
+}
+.coupon-btn:hover { background: var(--primary-dark); }
+.coupon-msg { font-size: .78rem; margin-top: .3rem; min-height: 1.2em; }
+.coupon-msg.success { color: #10b981; }
+.coupon-msg.error { color: #ef4444; }
+
+/* Submit button */
+.place-order-btn {
+  width: 100%; padding: 1rem; font-size: 1rem; font-weight: 700;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white; border: none; border-radius: 50px;
+  cursor: pointer; transition: var(--transition);
+  box-shadow: var(--shadow-red); display: flex; align-items: center;
+  justify-content: center; gap: .6rem; margin-top: 1rem;
+}
+.place-order-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(230,0,0,.45); }
+.place-order-btn:disabled { background: #444; box-shadow: none; cursor: not-allowed; }
+
+/* States */
+.loading-state, .success-state {
+  display: none; text-align: center; padding: 2rem 1rem;
+}
+.loading-state.show, .success-state.show { display: block; animation: fadeUp .4s ease; }
+.loading-spinner {
+  width: 50px; height: 50px; border-radius: 50%;
+  border: 3px solid rgba(230,0,0,.15);
+  border-top-color: var(--primary);
+  animation: spin .8s linear infinite; margin: 0 auto 1rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.success-icon {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: linear-gradient(135deg, #10b981, #059669);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1.2rem; font-size: 2.2rem; color: white;
+  box-shadow: 0 0 30px rgba(16,185,129,.3);
+}
+
+/* Trust strip */
+.trust-strip {
+  display: flex; gap: 1rem; flex-wrap: wrap;
+  justify-content: center; margin-top: 1rem;
+}
+.trust-strip-item {
+  display: flex; align-items: center; gap: .35rem;
+  font-size: .72rem; color: rgba(255,255,255,.4);
+}
+.trust-strip-item i { color: var(--primary); }
+
+/* Empty cart banner */
+.empty-checkout {
+  text-align: center; padding: 5rem 2rem;
+  max-width: 500px; margin: 0 auto;
+}
+.empty-checkout i { font-size: 4rem; color: rgba(255,255,255,.1); display: block; margin-bottom: 1.5rem; }
+
+/* Confetti canvas */
+#confettiCanvas { position: fixed; inset: 0; pointer-events: none; z-index: 9999; display: none; }
+
+@media (max-width: 768px) {
+  .checkout-body { grid-template-columns: 1fr; }
+  .order-summary-card { position: static; order: -1; }
+  .form-row-2 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="confettiCanvas"></canvas>
+
+<!-- NAVBAR -->
+<nav class="nav-premium" id="navbar">
+  <a href="index.html" class="nav-logo">Nayanта<span style="color:var(--primary)">.</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="cart.html">Cart</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="nav-theme-btn" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+    <a href="cart.html" class="nav-cart-btn"><i class="fas fa-shopping-bag"></i><span class="cart-badge" id="cartBadge">0</span></a>
+  </div>
+</nav>
+
+<div class="checkout-page">
+  <div class="checkout-hero">
+    <div class="section-label" style="justify-content:center;margin-bottom:.6rem"><i class="fas fa-lock"></i> Secure Checkout</div>
+    <h1>Complete Your Order</h1>
+    <p>Fill in your delivery details and we'll get your frames to you in 3–5 days.</p>
+  </div>
+
+  <div id="mainContent"></div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ============================================================
+// DATA FROM CART + DISCOUNT (exact same keys as original)
+// ============================================================
+const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+const discountData = JSON.parse(localStorage.getItem('discount') || '{"amount":0,"msg":""}');
+
+// Google Apps Script URL — ORIGINAL, UNCHANGED
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyfPIDjp-CojwDYyPzJgBLK6VsYD-EwCD9xabRJEL80RFp26Mi1drT4sxfqCC_XJIAEog/exec';
+
+let discount = discountData.amount || 0;
+let subtotal = cart.reduce((s, i) => s + i.price, 0);
+let finalTotal = subtotal - discount;
+
+// ============================================================
+// RENDER PAGE
+// ============================================================
+function render() {
+  document.getElementById('cartBadge').textContent = cart.length;
+  const main = document.getElementById('mainContent');
+
+  if (!cart.length) {
+    main.innerHTML = `
+      <div class="empty-checkout animate-fadeup">
+        <i class="fas fa-shopping-bag"></i>
+        <h2 style="color:white;margin-bottom:.5rem">Your cart is empty</h2>
+        <p style="color:rgba(255,255,255,.4);margin-bottom:2rem">Add some frames before checking out.</p>
+        <a href="shop.html" class="btn-primary"><i class="fas fa-glasses"></i> Browse Frames</a>
+      </div>`;
+    return;
+  }
+
+  main.innerHTML = `
+  <div class="checkout-body">
+
+    <!-- FORM -->
+    <div class="checkout-form-card animate-fadeup">
+      <h2><i class="fas fa-map-marker-alt" style="color:var(--primary)"></i> Delivery Details</h2>
+      <form id="checkoutForm">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="name" placeholder="Your full name" required/>
+        </div>
+        <div class="form-group">
+          <label>Phone Number *</label>
+          <input type="tel" id="phone" placeholder="Your phone number" required/>
+        </div>
+        <div class="form-group">
+          <label>Delivery Address *</label>
+          <textarea id="address" placeholder="House / flat no., street, area…" required></textarea>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Pin Code *</label>
+            <input type="tel" id="pincode" placeholder="e.g. 110001" required maxlength="6"/>
+          </div>
+          <div class="form-group">
+            <label>City *</label>
+            <input type="text" id="city" placeholder="Your city" required/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>State *</label>
+          <input type="text" id="state" placeholder="Your state" required/>
+        </div>
+
+        <div id="loadingState" class="loading-state">
+          <div class="loading-spinner"></div>
+          <p style="color:rgba(255,255,255,.6)">⏳ Processing your order…</p>
+          <p style="font-size:.8rem;color:rgba(255,255,255,.35);margin-top:.4rem">Saving to our order system, please wait.</p>
+        </div>
+
+        <div id="successState" class="success-state">
+          <div class="success-icon"><i class="fas fa-check"></i></div>
+          <h3 style="color:white;font-family:var(--font-serif);font-size:1.6rem;margin-bottom:.5rem">Order Placed!</h3>
+          <p style="color:rgba(255,255,255,.55)">✅ Your order has been placed successfully!<br/>Redirecting you…</p>
+        </div>
+
+        <button type="submit" class="place-order-btn" id="submitBtn">
+          <i class="fas fa-lock"></i> Place Order — ₹<span id="btnTotal">${finalTotal.toFixed(0)}</span>
+        </button>
+      </form>
+      <div class="trust-strip">
+        <div class="trust-strip-item"><i class="fas fa-lock"></i> Secure</div>
+        <div class="trust-strip-item"><i class="fas fa-truck"></i> 3–5 Day Delivery</div>
+        <div class="trust-strip-item"><i class="fas fa-undo"></i> 7-Day Returns</div>
+        <div class="trust-strip-item"><i class="fas fa-shield-alt"></i> Genuine Products</div>
+      </div>
+    </div>
+
+    <!-- ORDER SUMMARY -->
+    <div class="order-summary-card animate-fadeup animate-delay-2">
+      <h2><i class="fas fa-receipt" style="color:var(--primary)"></i> Order Summary</h2>
+      <div class="summary-items" id="summaryItems"></div>
+      <div class="summary-divider"></div>
+      <div class="summary-row"><span>Subtotal</span><span>₹${subtotal.toFixed(2)}</span></div>
+      <div class="summary-row" id="discountRow" style="display:none">
+        <span>Discount (${discountData.msg})</span>
+        <span class="discount-val">− ₹${discount.toFixed(2)}</span>
+      </div>
+      <div class="summary-row"><span>Delivery</span><span style="color:#10b981">${subtotal >= 999 ? 'FREE' : '₹59'}</span></div>
+      <div class="summary-row total"><span>Total</span><span>₹${finalTotal.toFixed(2)}</span></div>
+
+      <div class="coupon-wrap">
+        <input type="text" class="coupon-input" id="couponCode" placeholder="Coupon code"/>
+        <button class="coupon-btn" onclick="applyCoupon()">Apply</button>
+      </div>
+      <div class="coupon-msg" id="couponMsg"></div>
+
+      <div style="margin-top:1.2rem;padding:1rem;background:rgba(255,255,255,.03);border-radius:var(--radius-sm);font-size:.8rem;color:rgba(255,255,255,.4);line-height:1.7">
+        <i class="fas fa-info-circle" style="color:var(--primary);margin-right:.4rem"></i>
+        By placing your order you agree to our terms. We'll contact you on WhatsApp to confirm.
+      </div>
+    </div>
+  </div>`;
+
+  renderItems();
+  if (discount > 0) document.getElementById('discountRow').style.display = 'flex';
+  setupForm();
+  setupScrollAnim();
+}
+
+// ============================================================
+// RENDER CART ITEMS IN SUMMARY
+// ============================================================
+function renderItems() {
+  const container = document.getElementById('summaryItems');
+  if (!container) return;
+  // Group duplicates
+  const grouped = {};
+  cart.forEach(item => {
+    if (grouped[item.name]) grouped[item.name].qty++;
+    else grouped[item.name] = {...item, qty: 1};
+  });
+  container.innerHTML = Object.values(grouped).map(item => `
+    <div class="summary-item">
+      <img src="${item.image || ''}" alt="${item.name}" onerror="this.style.display='none'"/>
+      <div class="summary-item-name">${item.name} ${item.qty > 1 ? `<span style="color:var(--primary)">×${item.qty}</span>` : ''}</div>
+      <div class="summary-item-price">₹${(item.price * item.qty).toFixed(0)}</div>
+    </div>`).join('');
+}
+
+// ============================================================
+// COUPON  (exact codes from original)
+// ============================================================
+function applyCoupon() {
+  const code = document.getElementById('couponCode').value.trim().toUpperCase();
+  const msg = document.getElementById('couponMsg');
+  const total = cart.reduce((s, i) => s + i.price, 0);
+
+  if (code === 'SNEHIL') {
+    discount = total * 0;
+    msg.className = 'coupon-msg success';
+    msg.textContent = 'qw 🎉';
+    localStorage.setItem('discount', JSON.stringify({amount: discount, msg: 'g'}));
+  } else if (code === 'NAYANTA') {
+    discount = total * 0.285;
+    msg.className = 'coupon-msg success';
+    msg.textContent = 'Coupon applied: 28.5% OFF 🎉';
+    localStorage.setItem('discount', JSON.stringify({amount: discount, msg: '28.5% OFF'}));
+  } else {
+    discount = 0;
+    msg.className = 'coupon-msg error';
+    msg.textContent = 'Invalid coupon ❌';
+    localStorage.setItem('discount', JSON.stringify({amount: 0, msg: ''}));
+  }
+
+  finalTotal = subtotal - discount;
+  // update summary rows
+  const drow = document.getElementById('discountRow');
+  if (discount > 0) {
+    drow.style.display = 'flex';
+    drow.querySelector('.discount-val').textContent = `− ₹${discount.toFixed(2)}`;
+  } else {
+    drow.style.display = 'none';
+  }
+  document.querySelectorAll('.summary-row.total span:last-child').forEach(el => el.textContent = `₹${finalTotal.toFixed(2)}`);
+  document.getElementById('btnTotal').textContent = finalTotal.toFixed(0);
+}
+
+// ============================================================
+// FORM SUBMIT → GOOGLE APPS SCRIPT (exact logic from original)
+// ============================================================
+function setupForm() {
+  const form = document.getElementById('checkoutForm');
+  if (!form) return;
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const name     = document.getElementById('name').value.trim();
+    const phone    = document.getElementById('phone').value.trim();
+    const address  = document.getElementById('address').value.trim();
+    const pincode  = document.getElementById('pincode').value.trim();
+    const city     = document.getElementById('city').value.trim();
+    const state    = document.getElementById('state').value.trim();
+
+    if (!name || !phone || !address || !pincode || !city || !state) {
+      showToast('Please fill all required fields!', 'error');
+      return;
+    }
+
+    const orderData = {
+      name, phone, address, pincode, city, state,
+      items: cart,
+      subtotal,
+      discount: discountData,
+      total: finalTotal
+    };
+
+    const submitBtn = document.getElementById('submitBtn');
+    const loadingState = document.getElementById('loadingState');
+    const successState = document.getElementById('successState');
+
+    submitBtn.disabled = true;
+    submitBtn.style.display = 'none';
+    loadingState.classList.add('show');
+
+    // POST to Google Apps Script — exact same as original
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: JSON.stringify(orderData),
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(() => {
+      localStorage.removeItem('cart');
+      localStorage.removeItem('discount');
+      loadingState.classList.remove('show');
+      successState.classList.add('show');
+      launchConfetti();
+      setTimeout(() => { window.location.href = 'thankyou.html'; }, 3000);
+    })
+    .catch(err => {
+      showToast('Request failed: ' + err, 'error');
+      submitBtn.disabled = false;
+      submitBtn.style.display = 'flex';
+      loadingState.classList.remove('show');
+    });
+  });
+}
+
+// ============================================================
+// CONFETTI
+// ============================================================
+function launchConfetti() {
+  const canvas = document.getElementById('confettiCanvas');
+  canvas.style.display = 'block';
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  const pieces = Array.from({length: 120}, () => ({
+    x: Math.random() * canvas.width, y: -20,
+    w: 8 + Math.random() * 8, h: 4 + Math.random() * 4,
+    color: ['#e60000','#ff6b35','#d4af37','#10b981','#8b5cf6','#fff'][Math.floor(Math.random() * 6)],
+    rot: Math.random() * 360, vx: (Math.random() - .5) * 3,
+    vy: 2 + Math.random() * 3, vr: (Math.random() - .5) * 8
+  }));
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color; ctx.globalAlpha = .85;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h); ctx.restore();
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.vy += .05;
+      if (p.y > canvas.height + 20) { p.y = -20; p.x = Math.random() * canvas.width; }
+    });
+    frame++;
+    if (frame < 240) requestAnimationFrame(draw);
+    else { ctx.clearRect(0, 0, canvas.width, canvas.height); canvas.style.display = 'none'; }
+  }
+  draw();
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function setupScrollAnim() {
+  const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), {threshold: .15});
+  document.querySelectorAll('.animate-fadeup').forEach(el => obs.observe(el));
+}
+function toggleTheme() {
+  const h = document.documentElement;
+  h.setAttribute('data-theme', h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+function showToast(msg, type = 'info') {
+  const tc = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':type==='error'?'exclamation-circle':'info-circle'}"></i>${msg}<span class="toast-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></span>`;
+  tc.appendChild(t);
+  setTimeout(() => t.remove(), 4000);
+}
+window.addEventListener('scroll', () => document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50));
+
+render();
+</script>
+</body>
+</html>

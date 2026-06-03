@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Thank You | Nayanta Eyewear</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="premium.css"/>
+<style>
+body{background:#080808;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;padding-top:calc(var(--nav-h)+2rem)}
+.ty-card{max-width:600px;width:100%;text-align:center}
+.ty-icon{font-size:5rem;margin-bottom:1.5rem;animation:float 3s ease-in-out infinite}
+.ty-card h1{font-family:var(--font-serif);font-size:clamp(2rem,6vw,3.5rem);color:white;margin-bottom:1rem}
+.ty-card p{color:rgba(255,255,255,.6);font-size:1.05rem;line-height:1.8;margin-bottom:2rem;max-width:480px;margin-left:auto;margin-right:auto}
+.ty-divider{width:60px;height:3px;background:var(--primary);border-radius:2px;margin:1.5rem auto}
+.ty-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem}
+.ty-social{background:var(--surface);border-radius:var(--radius-lg);padding:2rem;border:1px solid rgba(255,255,255,.05);margin-bottom:2rem}
+.ty-social h3{color:white;font-size:1rem;margin-bottom:1.2rem;font-weight:600}
+.ty-social-btns{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap}
+.ty-social-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.2rem;border-radius:50px;font-size:.82rem;font-weight:600;cursor:pointer;text-decoration:none;transition:var(--transition)}
+.ty-social-btn.wa{background:linear-gradient(135deg,#25d366,#128c7e);color:white}
+.ty-social-btn.wa:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(37,211,102,.3)}
+.ty-rating{background:var(--surface);border-radius:var(--radius-lg);padding:2rem;border:1px solid rgba(255,255,255,.05)}
+.ty-rating h3{color:white;font-size:1rem;margin-bottom:1rem;font-weight:600}
+.stars-rate{display:flex;gap:.5rem;justify-content:center;font-size:2rem;margin-bottom:1rem}
+.star-rate{cursor:pointer;color:rgba(255,255,255,.2);transition:var(--transition)}
+.star-rate:hover,.star-rate.active{color:var(--gold)}
+</style>
+</head>
+<body>
+<nav class="nav-premium" id="navbar" style="background:rgba(10,10,10,.98)">
+  <a href="index.html" class="nav-logo">Nayanта<span style="color:var(--primary)">.</span></a>
+  <div class="nav-actions"><a href="shop.html" class="nav-tryon-btn"><i class="fas fa-glasses"></i> Shop Again</a></div>
+</nav>
+<div class="ty-card animate-fadeup">
+  <div class="ty-icon">🥂</div>
+  <div class="section-label" style="justify-content:center;margin-bottom:.8rem"><i class="fas fa-heart"></i> From Nayanta</div>
+  <h1>Thank You<br/>for Your Order!</h1>
+  <div class="ty-divider"></div>
+  <p>Your frames are on their way to you! We hope you love them as much as we loved curating them. Please reach out if you need anything at all.</p>
+  <div class="ty-actions">
+    <a href="shop.html" class="btn-primary"><i class="fas fa-glasses"></i> Shop More</a>
+    <a href="track.html" class="btn-outline"><i class="fas fa-truck"></i> Track Order</a>
+  </div>
+  <div class="ty-social">
+    <h3>📢 Tell Your Friends!</h3>
+    <p style="color:rgba(255,255,255,.4);font-size:.85rem;margin-bottom:1rem">Share your experience and help us reach more eyewear lovers.</p>
+    <div class="ty-social-btns">
+      <a href="https://wa.me/?text=I just ordered amazing glasses from Nayanta Eyewear! Check them out at nayanta.in" target="_blank" class="ty-social-btn wa"><i class="fab fa-whatsapp"></i> Share on WhatsApp</a>
+    </div>
+  </div>
+  <div class="ty-rating">
+    <h3>⭐ Rate Your Experience</h3>
+    <div class="stars-rate" id="starsRate">
+      <span class="star-rate" onclick="rate(1)">★</span>
+      <span class="star-rate" onclick="rate(2)">★</span>
+      <span class="star-rate" onclick="rate(3)">★</span>
+      <span class="star-rate" onclick="rate(4)">★</span>
+      <span class="star-rate" onclick="rate(5)">★</span>
+    </div>
+    <div id="ratingFeedback" style="color:rgba(255,255,255,.4);font-size:.85rem"></div>
+  </div>
+</div>
+<script>
+function rate(n){
+  document.querySelectorAll('.star-rate').forEach((s,i)=>{s.classList.toggle('active',i<n);});
+  const msgs=['We\'re sorry! Please contact us to make it right.','We\'ll work to improve!','Thanks! We appreciate the feedback.','Great! We\'re glad you\'re happy!','Amazing! You made our day! 🎉'];
+  document.getElementById('ratingFeedback').textContent=msgs[n-1];
+  if(n>=4)showToast('Thank you for the great rating! ⭐','success');
+}
+function toggleTheme(){const h=document.documentElement;h.setAttribute('data-theme',h.getAttribute('data-theme')==='dark'?'light':'dark');}
+window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>50));
+const ob=new IntersectionObserver(e=>e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('visible');}),{threshold:.15});
+document.querySelectorAll('.animate-fadeup').forEach(el=>ob.observe(el));
+function showToast(msg,type='info'){const tc=document.body;const t=document.createElement('div');t.style.cssText='position:fixed;top:90px;right:1.5rem;background:#252525;color:white;padding:.9rem 1.4rem;border-radius:12px;border-left:3px solid #10b981;z-index:20000;font-size:.88rem;animation:fadeIn .3s ease';t.textContent=msg;tc.appendChild(t);setTimeout(()=>t.remove(),3000);}
+</script>
+</body>
+</html>

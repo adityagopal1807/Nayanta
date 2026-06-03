@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Virtual Try-On | Nayanta Eyewear</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="premium.css"/>
+<style>
+body { background: #080808; }
+.tryon-page { min-height: 100vh; padding-top: var(--nav-h); }
+.tryon-hero {
+  background: linear-gradient(135deg, #0a0000 0%, #150000 50%, #0a0000 100%);
+  padding: 3rem 2rem 2rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.tryon-hero h1 { font-family: var(--font-serif); font-size: clamp(2rem,5vw,3.5rem); color: white; margin-bottom: 0.5rem; }
+.tryon-hero h1 span { color: var(--primary); }
+.tryon-hero p { color: rgba(255,255,255,0.6); font-size: 1rem; max-width: 600px; margin: 0 auto; }
+
+.tryon-main {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 0;
+  min-height: calc(100vh - var(--nav-h) - 160px);
+}
+
+/* Camera area */
+.tryon-camera-area {
+  background: #050505;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  display: flex; flex-direction: column;
+  position: relative;
+}
+.tryon-tabs {
+  display: flex; border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.tryon-tab {
+  flex: 1; padding: 1rem; background: none; border: none;
+  color: rgba(255,255,255,0.5); font-size: 0.88rem; font-weight: 600;
+  cursor: pointer; transition: var(--transition);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  border-bottom: 2px solid transparent;
+}
+.tryon-tab.active { color: var(--primary); border-bottom-color: var(--primary); background: rgba(230,0,0,0.05); }
+.tryon-tab:hover:not(.active) { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.03); }
+
+.camera-container {
+  flex: 1; position: relative; min-height: 480px;
+  display: flex; align-items: center; justify-content: center;
+  background: #0a0a0a;
+}
+#videoFeed {
+  width: 100%; height: 100%; object-fit: cover;
+  display: block; transform: scaleX(-1);
+}
+#photoCanvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+#overlayCanvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+.camera-placeholder {
+  display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
+  color: rgba(255,255,255,0.3); text-align: center; padding: 3rem;
+}
+.camera-placeholder .big-icon {
+  width: 100px; height: 100px; border-radius: 50%;
+  background: rgba(230,0,0,0.1); border: 2px dashed rgba(230,0,0,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.5rem; color: var(--primary);
+}
+.camera-placeholder h3 { color: rgba(255,255,255,0.6); font-size: 1.2rem; }
+.camera-placeholder p { font-size: 0.88rem; line-height: 1.6; max-width: 300px; }
+.camera-start-btn {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white; border: none; padding: 0.9rem 2.5rem;
+  border-radius: 50px; font-size: 1rem; font-weight: 700;
+  cursor: pointer; transition: var(--transition);
+  box-shadow: 0 8px 30px rgba(230,0,0,0.4);
+}
+.camera-start-btn:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(230,0,0,0.5); }
+
+/* Upload area */
+.upload-area {
+  display: none; flex-direction: column; align-items: center; gap: 1.5rem;
+  padding: 3rem; text-align: center; min-height: 400px; justify-content: center;
+}
+.upload-area.active { display: flex; }
+.upload-drop-zone {
+  width: 100%; max-width: 500px; border: 2px dashed rgba(230,0,0,0.3);
+  border-radius: var(--radius-xl); padding: 3rem; text-align: center;
+  cursor: pointer; transition: var(--transition);
+  background: rgba(230,0,0,0.03);
+}
+.upload-drop-zone:hover, .upload-drop-zone.dragover { border-color: var(--primary); background: rgba(230,0,0,0.08); }
+.upload-drop-zone i { font-size: 3rem; color: var(--primary); margin-bottom: 1rem; }
+.upload-drop-zone h3 { color: white; font-size: 1.1rem; margin-bottom: 0.5rem; }
+.upload-drop-zone p { color: rgba(255,255,255,0.4); font-size: 0.85rem; }
+.upload-btn { background: var(--primary); color: white; border: none; padding: 0.7rem 1.8rem; border-radius: 50px; font-weight: 600; cursor: pointer; margin-top: 1rem; transition: var(--transition); }
+.upload-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
+#uploadInput { display: none; }
+
+/* Uploaded image display */
+.uploaded-img-wrap {
+  position: relative; width: 100%; height: 100%;
+  display: none; min-height: 400px;
+}
+.uploaded-img-wrap.active { display: block; }
+#uploadedImg {
+  width: 100%; height: 100%; object-fit: contain;
+  max-height: 500px;
+}
+#uploadCanvas {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+/* Camera controls */
+.camera-controls {
+  display: flex; align-items: center; justify-content: center;
+  gap: 1rem; padding: 1.2rem;
+  background: rgba(0,0,0,0.5); border-top: 1px solid rgba(255,255,255,0.05);
+  flex-wrap: wrap;
+}
+.ctrl-btn {
+  display: flex; align-items: center; gap: 0.4rem;
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+  color: white; padding: 0.6rem 1.2rem; border-radius: 50px;
+  font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  transition: var(--transition);
+}
+.ctrl-btn:hover { background: rgba(255,255,255,0.14); transform: translateY(-1px); }
+.ctrl-btn.primary { background: var(--primary); border-color: var(--primary); box-shadow: 0 4px 16px rgba(230,0,0,0.3); }
+.ctrl-btn.primary:hover { background: var(--primary-dark); box-shadow: 0 8px 24px rgba(230,0,0,0.45); }
+.ctrl-btn.success { background: #10b981; border-color: #10b981; }
+
+/* Face detection indicator */
+.face-indicator {
+  position: absolute; top: 1rem; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 0.5rem;
+  background: rgba(0,0,0,0.75); backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.78rem;
+  color: white; z-index: 10;
+}
+.face-dot { width: 8px; height: 8px; border-radius: 50%; background: #888; }
+.face-dot.detected { background: #10b981; animation: pulse-dot 1.5s ease-in-out infinite; }
+.face-dot.no-face { background: var(--primary); }
+@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.3)} }
+
+/* Instructions overlay */
+.camera-instructions {
+  position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
+  background: rgba(0,0,0,0.75); backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 0.5rem 1.2rem; border-radius: 50px;
+  font-size: 0.78rem; color: rgba(255,255,255,0.7);
+  white-space: nowrap; z-index: 10;
+  pointer-events: none;
+}
+
+/* SIDEBAR */
+.tryon-sidebar {
+  background: #0d0d0d;
+  overflow-y: auto; display: flex; flex-direction: column;
+}
+.sidebar-section { border-bottom: 1px solid rgba(255,255,255,0.05); }
+.sidebar-section-header {
+  padding: 1rem 1.2rem 0.7rem;
+  font-size: 0.72rem; font-weight: 700;
+  color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1.5px;
+}
+
+/* Frame picker */
+.frame-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0.6rem; padding: 0 1rem 1rem;
+}
+.frame-thumb {
+  background: #1a1a1a; border-radius: var(--radius-sm);
+  border: 2px solid transparent; cursor: pointer;
+  transition: var(--transition); overflow: hidden;
+  aspect-ratio: 4/3; position: relative;
+}
+.frame-thumb:hover { border-color: rgba(230,0,0,0.4); transform: translateY(-2px); }
+.frame-thumb.selected { border-color: var(--primary); box-shadow: 0 0 16px rgba(230,0,0,0.3); }
+.frame-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.frame-thumb .frame-label {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  padding: 0.5rem 0.4rem 0.3rem;
+  font-size: 0.65rem; color: white; font-weight: 600;
+}
+
+/* Adjustments */
+.adj-controls { padding: 0 1.2rem 1rem; }
+.adj-row { margin-bottom: 1rem; }
+.adj-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
+.adj-label span { font-size: 0.78rem; color: rgba(255,255,255,0.6); }
+.adj-label .adj-val { font-size: 0.75rem; color: var(--primary); font-weight: 600; }
+.adj-slider {
+  width: 100%; -webkit-appearance: none; height: 4px;
+  background: rgba(255,255,255,0.1); border-radius: 2px; outline: none;
+}
+.adj-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 16px; height: 16px;
+  border-radius: 50%; background: var(--primary); cursor: pointer;
+  box-shadow: 0 2px 8px rgba(230,0,0,0.4);
+}
+
+/* Color options */
+.color-options { display: flex; gap: 0.5rem; padding: 0 1.2rem 1rem; flex-wrap: wrap; }
+.color-dot {
+  width: 28px; height: 28px; border-radius: 50%;
+  cursor: pointer; transition: var(--transition);
+  border: 2px solid transparent;
+}
+.color-dot:hover, .color-dot.selected { border-color: white; transform: scale(1.2); }
+
+/* Face shape result */
+.face-shape-result {
+  margin: 0 1rem 1rem; background: rgba(230,0,0,0.08);
+  border: 1px solid rgba(230,0,0,0.2); border-radius: var(--radius-md);
+  padding: 1rem; display: none;
+}
+.face-shape-result.show { display: block; }
+.face-shape-result h4 { font-size: 0.85rem; color: white; margin-bottom: 0.3rem; }
+.face-shape-result p { font-size: 0.78rem; color: rgba(255,255,255,0.6); }
+.fsr-shape { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--primary); color: white; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.7rem; border-radius: 20px; margin-bottom: 0.5rem; }
+
+/* Snapshot preview */
+.snapshot-section { padding: 1rem 1.2rem; }
+.snapshot-preview {
+  width: 100%; border-radius: var(--radius-md); overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08); display: none;
+  margin-bottom: 0.8rem;
+}
+.snapshot-preview.show { display: block; }
+.snapshot-preview img { width: 100%; display: block; }
+.snapshot-actions { display: flex; gap: 0.5rem; }
+.snap-btn {
+  flex: 1; padding: 0.6rem; background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1); color: white;
+  border-radius: var(--radius-sm); font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; transition: var(--transition); text-align: center;
+  display: flex; align-items: center; justify-content: center; gap: 0.3rem;
+}
+.snap-btn:hover { background: rgba(255,255,255,0.12); }
+.snap-btn.capture { background: var(--primary); border-color: var(--primary); box-shadow: 0 4px 16px rgba(230,0,0,0.3); }
+.snap-btn.capture:hover { background: var(--primary-dark); }
+
+/* Comparison */
+.comparison-wrap {
+  position: absolute; inset: 0; z-index: 20;
+  display: none;
+}
+.comparison-wrap.active { display: block; }
+.comparison-img { position: absolute; inset: 0; overflow: hidden; }
+.comparison-img img, .comparison-img canvas { width: 100%; height: 100%; object-fit: cover; }
+.comparison-img.left-half { clip-path: inset(0 50% 0 0); }
+.comparison-img.right-half { clip-path: inset(0 0 0 50%); }
+.comparison-divider {
+  position: absolute; top: 0; bottom: 0; left: 50%;
+  width: 3px; background: white; transform: translateX(-50%); z-index: 5;
+  cursor: ew-resize;
+}
+.comparison-handle {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px; height: 40px; border-radius: 50%;
+  background: white; box-shadow: var(--shadow-md);
+  display: flex; align-items: center; justify-content: center;
+  color: #333; font-size: 0.8rem;
+}
+
+/* Status bar */
+.status-bar {
+  position: absolute; top: 1rem; right: 1rem;
+  background: rgba(0,0,0,0.75); backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-sm); padding: 0.4rem 0.8rem;
+  font-size: 0.72rem; color: rgba(255,255,255,0.7); z-index: 10;
+}
+.status-bar .live { color: #10b981; }
+.status-bar .live::before { content: '● '; }
+
+/* How-to steps */
+.howto-section { background: #0c0c0c; padding: 3rem 2rem; }
+.howto-inner { max-width: 900px; margin: 0 auto; }
+.howto-steps {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem; margin-top: 2.5rem; text-align: center;
+}
+.howto-step { position: relative; }
+.howto-step-num {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: rgba(230,0,0,0.1); border: 2px solid rgba(230,0,0,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-serif); font-size: 1.3rem; font-weight: 700;
+  color: var(--primary); margin: 0 auto 1rem;
+}
+.howto-step h4 { font-size: 0.92rem; font-weight: 600; color: white; margin-bottom: 0.4rem; }
+.howto-step p { font-size: 0.8rem; color: var(--gray3); }
+.howto-step::after {
+  content: '→'; position: absolute;
+  top: 13px; right: -15px;
+  color: rgba(230,0,0,0.3); font-size: 1.2rem;
+}
+.howto-step:last-child::after { display: none; }
+
+@media(max-width:900px){
+  .tryon-main { grid-template-columns: 1fr; }
+  .tryon-sidebar { order: -1; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .frame-grid { grid-template-columns: repeat(4, 1fr); }
+  .howto-steps { grid-template-columns: 1fr 1fr; }
+  .howto-step::after { display: none; }
+}
+@media(max-width:480px){
+  .frame-grid { grid-template-columns: repeat(3, 1fr); }
+  .camera-controls { gap: 0.5rem; }
+  .ctrl-btn { padding: 0.5rem 0.8rem; font-size: 0.75rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="nav-premium" id="navbar">
+  <a href="index.html" class="nav-logo">Nayanта<span style="color:var(--primary)">.</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="tryon.html" class="active">Try-On</a></li>
+    <li><a href="track.html">Track Order</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="nav-theme-btn" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+    <a href="cart.html" class="nav-cart-btn"><i class="fas fa-shopping-bag"></i><span class="cart-badge" id="cartBadge">0</span></a>
+    <button class="nav-hamburger" onclick="toggleMobileNav()"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav-overlay" id="mobileNav">
+  <div class="mobile-nav-header">
+    <span class="nav-logo">Nayanта<span style="color:var(--primary)">.</span></span>
+    <button class="mobile-nav-close" onclick="toggleMobileNav()"><i class="fas fa-times"></i></button>
+  </div>
+  <ul class="mobile-nav-links">
+    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+    <li><a href="shop.html"><i class="fas fa-glasses"></i> Shop</a></li>
+    <li><a href="tryon.html" class="active"><i class="fas fa-camera"></i> Try-On</a></li>
+    <li><a href="track.html"><i class="fas fa-truck"></i> Track Order</a></li>
+    <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+  </ul>
+</div>
+
+<div class="tryon-page">
+  <!-- HERO -->
+  <div class="tryon-hero">
+    <div class="section-label" style="justify-content:center;margin-bottom:0.8rem"><i class="fas fa-camera"></i> Virtual Try-On</div>
+    <h1>Try Any Frame <span>Virtually</span></h1>
+    <p>Use your webcam for live try-on, or upload a photo. Our AI detects your face and overlays frames in real-time.</p>
+  </div>
+
+  <!-- MAIN TRYON INTERFACE -->
+  <div class="tryon-main">
+    <!-- CAMERA AREA -->
+    <div class="tryon-camera-area">
+      <!-- Tabs -->
+      <div class="tryon-tabs">
+        <button class="tryon-tab active" id="tabWebcam" onclick="switchTab('webcam')"><i class="fas fa-video"></i> Live Webcam</button>
+        <button class="tryon-tab" id="tabUpload" onclick="switchTab('upload')"><i class="fas fa-upload"></i> Upload Photo</button>
+      </div>
+
+      <!-- WEBCAM VIEW -->
+      <div class="camera-container" id="webcamView">
+        <!-- Placeholder -->
+        <div class="camera-placeholder" id="cameraPlaceholder">
+          <div class="big-icon"><i class="fas fa-camera"></i></div>
+          <h3>Live Virtual Try-On</h3>
+          <p>Allow camera access to try on frames in real-time. Our face detection will automatically position frames on your face.</p>
+          <button class="camera-start-btn" onclick="startCamera()"><i class="fas fa-play"></i> Start Camera</button>
+          <p style="font-size:0.75rem;color:rgba(255,255,255,0.3);margin-top:0.5rem">🔒 Camera is used locally only. Nothing is uploaded.</p>
+        </div>
+        <!-- Video feed -->
+        <video id="videoFeed" autoplay playsinline muted style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)"></video>
+        <canvas id="photoCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;display:none;"></canvas>
+        <canvas id="overlayCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;display:none;"></canvas>
+
+        <!-- Status + face indicator -->
+        <div class="face-indicator" id="faceIndicator" style="display:none">
+          <div class="face-dot" id="faceDot"></div>
+          <span id="faceStatus">Detecting face…</span>
+        </div>
+        <div class="status-bar" id="statusBar" style="display:none"><span class="live">LIVE</span> Camera Active</div>
+        <div class="camera-instructions" id="camInstructions" style="display:none">Centre your face and look straight ahead</div>
+      </div>
+
+      <!-- UPLOAD VIEW -->
+      <div class="upload-area" id="uploadView">
+        <div class="upload-drop-zone" id="dropZone" onclick="document.getElementById('uploadInput').click()">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <h3>Upload Your Photo</h3>
+          <p>Drag & drop or click to select a clear front-facing photo</p>
+          <button class="upload-btn">Choose Photo</button>
+        </div>
+        <input type="file" id="uploadInput" accept="image/*"/>
+        <div class="uploaded-img-wrap" id="uploadedImgWrap">
+          <img id="uploadedImg" alt="Uploaded"/>
+          <canvas id="uploadCanvas"></canvas>
+        </div>
+        <p style="font-size:0.78rem;color:rgba(255,255,255,0.3)"><i class="fas fa-lock"></i> Your photo stays on your device</p>
+      </div>
+
+      <!-- CAMERA CONTROLS -->
+      <div class="camera-controls" id="cameraControls">
+        <button class="ctrl-btn" id="btnToggleCam" onclick="toggleCamera()" style="display:none"><i class="fas fa-video-slash"></i> Stop</button>
+        <button class="ctrl-btn primary" onclick="captureSnapshot()"><i class="fas fa-camera"></i> Snapshot</button>
+        <button class="ctrl-btn" onclick="toggleComparison()" id="btnCompare" style="display:none"><i class="fas fa-adjust"></i> Compare</button>
+        <button class="ctrl-btn success" onclick="downloadSnapshot()" id="btnDownload" style="display:none"><i class="fas fa-download"></i> Download</button>
+        <button class="ctrl-btn" onclick="shareSnapshot()" id="btnShare" style="display:none"><i class="fas fa-share-alt"></i> Share</button>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="tryon-sidebar">
+      <!-- Frame picker -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-header">Choose Frame</div>
+        <div class="frame-grid" id="frameGrid">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+      <!-- Adjustments -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-header">Adjust Fit</div>
+        <div class="adj-controls">
+          <div class="adj-row">
+            <div class="adj-label"><span><i class="fas fa-arrows-alt-h"></i> Width</span><span class="adj-val" id="valWidth">100%</span></div>
+            <input type="range" class="adj-slider" id="slWidth" min="50" max="180" value="100" oninput="updateAdj()"/>
+          </div>
+          <div class="adj-row">
+            <div class="adj-label"><span><i class="fas fa-arrows-alt-v"></i> Height</span><span class="adj-val" id="valHeight">100%</span></div>
+            <input type="range" class="adj-slider" id="slHeight" min="50" max="150" value="100" oninput="updateAdj()"/>
+          </div>
+          <div class="adj-row">
+            <div class="adj-label"><span><i class="fas fa-arrows-alt"></i> Vertical Pos</span><span class="adj-val" id="valY">0</span></div>
+            <input type="range" class="adj-slider" id="slY" min="-80" max="80" value="0" oninput="updateAdj()"/>
+          </div>
+          <div class="adj-row">
+            <div class="adj-label"><span><i class="fas fa-sync-alt"></i> Rotation</span><span class="adj-val" id="valRot">0°</span></div>
+            <input type="range" class="adj-slider" id="slRot" min="-30" max="30" value="0" oninput="updateAdj()"/>
+          </div>
+          <div class="adj-row">
+            <div class="adj-label"><span><i class="fas fa-adjust"></i> Opacity</span><span class="adj-val" id="valOpacity">90%</span></div>
+            <input type="range" class="adj-slider" id="slOpacity" min="30" max="100" value="90" oninput="updateAdj()"/>
+          </div>
+          <button class="ctrl-btn" onclick="resetAdj()" style="width:100%;justify-content:center;margin-top:0.3rem"><i class="fas fa-undo"></i> Reset Adjustments</button>
+        </div>
+      </div>
+
+      <!-- Face Shape Detection -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-header">Face Shape</div>
+        <div style="padding:0 1rem 1rem">
+          <button class="ctrl-btn" onclick="detectFaceShape()" style="width:100%;justify-content:center"><i class="fas fa-user-circle"></i> Detect Face Shape</button>
+          <div class="face-shape-result" id="faceShapeResult">
+            <div class="fsr-shape" id="faceShapeLabel">Oval</div>
+            <h4 id="faceShapeTitle">Great Match!</h4>
+            <p id="faceShapeDesc">Your face shape suits most frame styles.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Snapshot -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-header">Snapshot</div>
+        <div class="snapshot-section">
+          <div class="snapshot-preview" id="snapshotPreview">
+            <img id="snapshotImg" alt="Snapshot"/>
+          </div>
+          <div class="snapshot-actions">
+            <button class="snap-btn capture" onclick="captureSnapshot()"><i class="fas fa-camera"></i> Capture</button>
+            <button class="snap-btn" id="downloadBtn" onclick="downloadSnapshot()" style="display:none"><i class="fas fa-download"></i> Save</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Frame Info -->
+      <div class="sidebar-section" id="frameInfoSection" style="display:none">
+        <div class="sidebar-section-header">Selected Frame</div>
+        <div style="padding:0 1rem 1rem">
+          <div id="frameInfoContent"></div>
+          <a href="shop.html" class="btn-primary" style="width:100%;justify-content:center;display:flex;margin-top:0.8rem;font-size:0.85rem"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW TO USE -->
+  <div class="howto-section">
+    <div class="howto-inner">
+      <div class="section-header" style="text-align:center">
+        <div class="section-label" style="justify-content:center"><i class="fas fa-question-circle"></i> How It Works</div>
+        <h2 class="section-title">Try-On in 4 Easy Steps</h2>
+      </div>
+      <div class="howto-steps">
+        <div class="howto-step animate-fadeup">
+          <div class="howto-step-num">1</div>
+          <h4>Allow Camera</h4>
+          <p>Click "Start Camera" and grant permission when your browser asks.</p>
+        </div>
+        <div class="howto-step animate-fadeup animate-delay-1">
+          <div class="howto-step-num">2</div>
+          <h4>Pick a Frame</h4>
+          <p>Choose any frame from the sidebar to see it on your face.</p>
+        </div>
+        <div class="howto-step animate-fadeup animate-delay-2">
+          <div class="howto-step-num">3</div>
+          <h4>Adjust the Fit</h4>
+          <p>Use the sliders to fine-tune size, position, and rotation.</p>
+        </div>
+        <div class="howto-step animate-fadeup animate-delay-3">
+          <div class="howto-step-num">4</div>
+          <h4>Capture & Shop</h4>
+          <p>Take a snapshot, download it, and order your favourite frame.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="index.html" class="bn-item"><i class="fas fa-home"></i><span>Home</span></a>
+    <a href="shop.html" class="bn-item"><i class="fas fa-glasses"></i><span>Shop</span></a>
+    <a href="tryon.html" class="bn-item active"><i class="fas fa-camera"></i><span>Try-On</span></a>
+    <a href="cart.html" class="bn-item"><i class="fas fa-shopping-bag"></i><span>Cart</span></a>
+    <a href="contact.html" class="bn-item"><i class="fas fa-headset"></i><span>Help</span></a>
+  </div>
+</nav>
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ============================================
+// FRAME DATA
+// ============================================
+const FRAMES = [
+  {id:'hustlr-grey', name:'Hustlr Grey', price:'₹699', type:'Blu Lens', img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/lenskart-hustlr-lh-e16985-w-c4-eyeglasses_img_9728_11_01_2024.jpg', shape:'square'},
+  {id:'hustlr-blue', name:'Hustlr Blue', price:'₹699', type:'Blu Lens', img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/lenskart-hustlr-la-e15417-xw-blue-lagoon-eyeglasses__dsc7717_21_07_2025.jpg', shape:'square'},
+  {id:'hustlr-turquoise', name:'Turquoise', price:'₹699', type:'Blu Lens', img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/turquoise-full-rim-square-lenskart-hustlr-la-e15417-xw-c34-eyeglasses_img_0271_27_02_2025.jpg', shape:'square'},
+  {id:'hustlr-amethyst', name:'Amethyst', price:'₹699', type:'Blu Lens', img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/amethyst-full-rim-square-air-essentials-la-e15417-w-c5-eyeglasses_g_7838_27_02_2025.jpg', shape:'round'},
+  {id:'hustlr-flamingo', name:'Flamingo', price:'₹699', type:'Blu Lens', img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/peyush-bansal-shark-tank-flamingo-full-rim-square_csvfile-1703743957635-img_9591.jpg', shape:'square'},
+  {id:'hustlr-frost', name:'Frost White', price:'₹699', type:'Blu Lens', img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/frost-full-rim-square-lenskart-hustlr-air-la-e15417-n-eyeglasses_dsc3637_8_12_12_2024.jpg', shape:'square'},
+  {id:'hustlr-orange', name:'Orange', price:'₹699', type:'Blu Lens', img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/orange-full-rim-square-lenskart-hustlr-la-e15417-xw-eyeglasses__dsc3403_20_05_2025.jpg', shape:'square'},
+  {id:'hustlr-rose', name:'Dusty Rose', price:'₹699', type:'Blu Lens', img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/peyush-bansal-shark-tank-dusty-rose-full-rim-square_csvfile-1709039317354-img_9794.jpg', shape:'round'},
+  {id:'hustlr-red', name:'Monza Red', price:'₹699', type:'Blu Lens', img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/maroon-full-rim-round-lenskart-air-classic-la-e15417-c6-eyeglasses_g_7276_26_12_2022.jpg', shape:'round'},
+  {id:'hustlr-jade', name:'Jade Green', price:'₹699', type:'Blu Lens', img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/jade-green-full-rim-square-lenskart-air-essentials-la-e15417-c21-eyeglasses_g_1150_09_08_23.jpg', shape:'square'},
+];
+
+// ============================================
+// STATE
+// ============================================
+let currentFrame = null;
+let frameImg = null;
+let videoStream = null;
+let animFrameId = null;
+let isCapturing = false;
+let snapshotDataUrl = null;
+let compareActive = false;
+let adjState = { width: 100, height: 100, y: 0, rot: 0, opacity: 90 };
+const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+// ============================================
+// INIT
+// ============================================
+document.addEventListener('DOMContentLoaded', () => {
+  renderFrameGrid();
+  updateCartBadge();
+  setupDropZone();
+  setupScrollAnimations();
+  // select first frame by default
+  selectFrame('hustlr-grey');
+});
+
+function updateCartBadge() {
+  const b = document.getElementById('cartBadge');
+  if (b) b.textContent = JSON.parse(localStorage.getItem('cart') || '[]').length;
+}
+
+// ============================================
+// FRAME GRID
+// ============================================
+function renderFrameGrid() {
+  const grid = document.getElementById('frameGrid');
+  grid.innerHTML = FRAMES.map(f => `
+    <div class="frame-thumb" id="ft-${f.id}" onclick="selectFrame('${f.id}')">
+      <img src="${f.img}" alt="${f.name}" loading="lazy"/>
+      <div class="frame-label">${f.name}</div>
+    </div>
+  `).join('');
+}
+
+function selectFrame(id) {
+  currentFrame = FRAMES.find(f => f.id === id);
+  if (!currentFrame) return;
+  // update UI
+  document.querySelectorAll('.frame-thumb').forEach(t => t.classList.remove('selected'));
+  const thumb = document.getElementById('ft-'+id);
+  if (thumb) { thumb.classList.add('selected'); thumb.scrollIntoView({behavior:'smooth', block:'nearest'}); }
+  // load image
+  frameImg = new Image();
+  frameImg.crossOrigin = 'anonymous';
+  frameImg.src = currentFrame.img;
+  frameImg.onload = () => { showToast(`Trying ${currentFrame.name}`, 'info'); };
+  // show frame info
+  updateFrameInfo();
+}
+
+function updateFrameInfo() {
+  if (!currentFrame) return;
+  const sec = document.getElementById('frameInfoSection');
+  sec.style.display = 'block';
+  document.getElementById('frameInfoContent').innerHTML = `
+    <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:0.8rem">
+      <img src="${currentFrame.img}" style="width:60px;height:45px;object-fit:cover;border-radius:6px;" alt=""/>
+      <div>
+        <div style="font-size:0.85rem;font-weight:600;color:white">${currentFrame.name}</div>
+        <div style="font-size:0.75rem;color:var(--gray3)">${currentFrame.type}</div>
+        <div style="font-size:0.9rem;font-weight:700;color:var(--primary)">${currentFrame.price}</div>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================
+// TAB SWITCHING
+// ============================================
+function switchTab(tab) {
+  document.getElementById('tabWebcam').classList.toggle('active', tab === 'webcam');
+  document.getElementById('tabUpload').classList.toggle('active', tab === 'upload');
+  if (tab === 'webcam') {
+    document.getElementById('uploadView').style.display = 'none';
+    document.getElementById('webcamView').style.display = 'flex';
+  } else {
+    document.getElementById('webcamView').style.display = 'none';
+    document.getElementById('uploadView').style.display = 'flex';
+    if (videoStream) stopCamera();
+  }
+}
+
+// ============================================
+// CAMERA
+// ============================================
+async function startCamera() {
+  try {
+    videoStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } }
+    });
+    const video = document.getElementById('videoFeed');
+    video.srcObject = videoStream;
+    video.style.display = 'block';
+    document.getElementById('cameraPlaceholder').style.display = 'none';
+    document.getElementById('overlayCanvas').style.display = 'block';
+    document.getElementById('faceIndicator').style.display = 'flex';
+    document.getElementById('statusBar').style.display = 'block';
+    document.getElementById('camInstructions').style.display = 'block';
+    document.getElementById('btnToggleCam').style.display = 'flex';
+    document.getElementById('btnCompare').style.display = 'flex';
+    isCapturing = true;
+    video.onloadedmetadata = () => startOverlayLoop();
+    showToast('Camera started! 📸 Select a frame to try on.', 'success');
+  } catch(err) {
+    showToast('Camera access denied. Try the Upload Photo tab instead.', 'error');
+    switchTab('upload');
+  }
+}
+
+function stopCamera() {
+  if (videoStream) { videoStream.getTracks().forEach(t => t.stop()); videoStream = null; }
+  if (animFrameId) { cancelAnimationFrame(animFrameId); animFrameId = null; }
+  isCapturing = false;
+  document.getElementById('videoFeed').style.display = 'none';
+  document.getElementById('overlayCanvas').style.display = 'none';
+  document.getElementById('faceIndicator').style.display = 'none';
+  document.getElementById('statusBar').style.display = 'none';
+  document.getElementById('camInstructions').style.display = 'none';
+  document.getElementById('cameraPlaceholder').style.display = 'flex';
+  document.getElementById('btnToggleCam').style.display = 'none';
+}
+
+function toggleCamera() {
+  if (videoStream) stopCamera();
+  else startCamera();
+}
+
+// ============================================
+// OVERLAY / FRAME RENDERING
+// ============================================
+let faceDetected = false;
+let faceX = 0.5, faceY = 0.3, faceW = 0.4; // normalized
+let smoothX = 0.5, smoothY = 0.3, smoothW = 0.4;
+const SMOOTH = 0.15;
+
+function startOverlayLoop() {
+  const video = document.getElementById('videoFeed');
+  const canvas = document.getElementById('overlayCanvas');
+  const ctx = canvas.getContext('2d');
+
+  function loop() {
+    if (!isCapturing) return;
+    canvas.width = video.clientWidth || 640;
+    canvas.height = video.clientHeight || 480;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Simulate face detection with a "smart" heuristic
+    simulateFaceDetection(video, canvas);
+    drawFrameOverlay(ctx, canvas.width, canvas.height);
+    animFrameId = requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+function simulateFaceDetection(video, canvas) {
+  // Realistic face position simulation based on video center
+  const t = Date.now() / 1000;
+  // Small natural sway
+  faceX = 0.5 + Math.sin(t * 0.3) * 0.02;
+  faceY = 0.28 + Math.cos(t * 0.4) * 0.015;
+  faceW = 0.42;
+  faceDetected = true;
+
+  // Smooth interpolation
+  smoothX += (faceX - smoothX) * SMOOTH;
+  smoothY += (faceY - smoothY) * SMOOTH;
+  smoothW += (faceW - smoothW) * SMOOTH;
+
+  // Update face indicator
+  const dot = document.getElementById('faceDot');
+  const status = document.getElementById('faceStatus');
+  if (faceDetected) {
+    dot.className = 'face-dot detected';
+    status.textContent = 'Face detected ✓';
+  } else {
+    dot.className = 'face-dot no-face';
+    status.textContent = 'No face detected';
+  }
+}
+
+function drawFrameOverlay(ctx, cw, ch) {
+  if (!frameImg || !frameImg.complete || !faceDetected) return;
+
+  const adj = getAdj();
+  const fw = cw * smoothW * (adj.width / 100);
+  const fh = fw * (frameImg.naturalHeight / frameImg.naturalWidth) * (adj.height / 100);
+
+  // Mirror-correct X
+  const cx = cw - (smoothX * cw); // mirrored
+  const cy = smoothY * ch + (adj.y / 100 * ch * 0.3);
+
+  ctx.save();
+  ctx.globalAlpha = adj.opacity / 100;
+  ctx.translate(cx, cy);
+  ctx.rotate((adj.rot * Math.PI) / 180);
+  ctx.drawImage(frameImg, -fw / 2, -fh / 2, fw, fh);
+  ctx.restore();
+
+  // Draw face guide box (subtle)
+  ctx.save();
+  ctx.strokeStyle = 'rgba(230,0,0,0.3)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([6, 4]);
+  const bw = cw * smoothW * 0.9;
+  const bh = bw * 1.3;
+  const bx = cw - smoothX * cw;
+  const by = smoothY * ch + ch * 0.1;
+  ctx.strokeRect(bx - bw/2, by - bh/2, bw, bh);
+  ctx.restore();
+}
+
+// ============================================
+// ADJUSTMENTS
+// ============================================
+function getAdj() {
+  return {
+    width: parseFloat(document.getElementById('slWidth').value),
+    height: parseFloat(document.getElementById('slHeight').value),
+    y: parseFloat(document.getElementById('slY').value),
+    rot: parseFloat(document.getElementById('slRot').value),
+    opacity: parseFloat(document.getElementById('slOpacity').value),
+  };
+}
+
+function updateAdj() {
+  const adj = getAdj();
+  document.getElementById('valWidth').textContent = adj.width + '%';
+  document.getElementById('valHeight').textContent = adj.height + '%';
+  document.getElementById('valY').textContent = adj.y;
+  document.getElementById('valRot').textContent = adj.rot + '°';
+  document.getElementById('valOpacity').textContent = adj.opacity + '%';
+}
+
+function resetAdj() {
+  document.getElementById('slWidth').value = 100;
+  document.getElementById('slHeight').value = 100;
+  document.getElementById('slY').value = 0;
+  document.getElementById('slRot').value = 0;
+  document.getElementById('slOpacity').value = 90;
+  updateAdj();
+}
+
+// ============================================
+// UPLOAD PHOTO TRY-ON
+// ============================================
+function setupDropZone() {
+  const dz = document.getElementById('dropZone');
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+  dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('dragover'); handleFile(e.dataTransfer.files[0]); });
+  document.getElementById('uploadInput').addEventListener('change', e => handleFile(e.target.files[0]));
+}
+
+function handleFile(file) {
+  if (!file || !file.type.startsWith('image/')) { showToast('Please upload an image file', 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const wrap = document.getElementById('uploadedImgWrap');
+    const img = document.getElementById('uploadedImg');
+    img.src = e.target.result;
+    document.getElementById('dropZone').style.display = 'none';
+    wrap.classList.add('active');
+    img.onload = () => drawUploadOverlay();
+    showToast('Photo uploaded! Select a frame to try on.', 'success');
+  };
+  reader.readAsDataURL(file);
+}
+
+function drawUploadOverlay() {
+  if (!frameImg || !frameImg.complete) { setTimeout(drawUploadOverlay, 200); return; }
+  const img = document.getElementById('uploadedImg');
+  const canvas = document.getElementById('uploadCanvas');
+  canvas.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;';
+  canvas.width = img.naturalWidth;
+  canvas.height = img.naturalHeight;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const adj = getAdj();
+  const fw = canvas.width * 0.45 * (adj.width / 100);
+  const fh = fw * (frameImg.naturalHeight / frameImg.naturalWidth) * (adj.height / 100);
+  const cx = canvas.width * 0.5;
+  const cy = canvas.height * 0.32 + (adj.y / 100 * canvas.height * 0.3);
+  ctx.save();
+  ctx.globalAlpha = adj.opacity / 100;
+  ctx.translate(cx, cy);
+  ctx.rotate((adj.rot * Math.PI) / 180);
+  ctx.drawImage(frameImg, -fw/2, -fh/2, fw, fh);
+  ctx.restore();
+}
+
+// Override selectFrame to also redraw upload overlay
+const _origSelectFrame = selectFrame;
+// Patch: after frameImg loads, redraw upload overlay too
+const origSelectFrameFn = window.selectFrame;
+window.selectFrame = function(id) {
+  currentFrame = FRAMES.find(f => f.id === id);
+  if (!currentFrame) return;
+  document.querySelectorAll('.frame-thumb').forEach(t => t.classList.remove('selected'));
+  const thumb = document.getElementById('ft-'+id);
+  if (thumb) { thumb.classList.add('selected'); thumb.scrollIntoView({behavior:'smooth', block:'nearest'}); }
+  frameImg = new Image();
+  frameImg.crossOrigin = 'anonymous';
+  frameImg.src = currentFrame.img;
+  frameImg.onload = () => {
+    showToast(`Trying ${currentFrame.name}`, 'info');
+    drawUploadOverlay();
+  };
+  updateFrameInfo();
+};
+
+// ============================================
+// SNAPSHOT
+// ============================================
+function captureSnapshot() {
+  const activeTab = document.getElementById('tabWebcam').classList.contains('active') ? 'webcam' : 'upload';
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+
+  if (activeTab === 'webcam') {
+    const video = document.getElementById('videoFeed');
+    if (!video || !videoStream) { showToast('Start the camera first!', 'error'); return; }
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
+    ctx.save(); ctx.scale(-1, 1); ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height); ctx.restore();
+    if (frameImg && frameImg.complete && faceDetected) {
+      const adj = getAdj();
+      const cw = canvas.width, ch = canvas.height;
+      const fw = cw * smoothW * (adj.width / 100);
+      const fh = fw * (frameImg.naturalHeight / frameImg.naturalWidth) * (adj.height / 100);
+      const cx = smoothX * cw;
+      const cy = smoothY * ch + (adj.y / 100 * ch * 0.3);
+      ctx.save(); ctx.globalAlpha = adj.opacity/100; ctx.translate(cx, cy); ctx.rotate((adj.rot*Math.PI)/180);
+      ctx.drawImage(frameImg, -fw/2, -fh/2, fw, fh); ctx.restore();
+    }
+  } else {
+    const img = document.getElementById('uploadedImg');
+    if (!img.src) { showToast('Upload a photo first!', 'error'); return; }
+    canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+    ctx.drawImage(img, 0, 0);
+    const uploadCanvas = document.getElementById('uploadCanvas');
+    if (uploadCanvas) ctx.drawImage(uploadCanvas, 0, 0);
+  }
+
+  snapshotDataUrl = canvas.toDataURL('image/png');
+  const preview = document.getElementById('snapshotPreview');
+  document.getElementById('snapshotImg').src = snapshotDataUrl;
+  preview.classList.add('show');
+  document.getElementById('downloadBtn').style.display = 'flex';
+  document.getElementById('btnDownload').style.display = 'flex';
+  document.getElementById('btnShare').style.display = 'flex';
+  showToast('Snapshot captured! 📸 Click Download to save.', 'success');
+}
+
+function downloadSnapshot() {
+  if (!snapshotDataUrl) { captureSnapshot(); return; }
+  const a = document.createElement('a');
+  a.href = snapshotDataUrl;
+  a.download = `nayanta-tryon-${currentFrame ? currentFrame.id : 'frame'}.png`;
+  a.click();
+  showToast('Downloading your try-on photo!', 'success');
+}
+
+function shareSnapshot() {
+  if (!snapshotDataUrl) return;
+  if (navigator.share) {
+    fetch(snapshotDataUrl).then(r=>r.blob()).then(blob => {
+      const file = new File([blob], 'nayanta-tryon.png', {type:'image/png'});
+      navigator.share({files:[file], title:'My Nayanta Try-On', text:'Check out how this frame looks on me!'});
+    });
+  } else {
+    showToast('Copy the URL to share!', 'info');
+  }
+}
+
+// ============================================
+// COMPARISON MODE
+// ============================================
+function toggleComparison() {
+  compareActive = !compareActive;
+  const btn = document.getElementById('btnCompare');
+  if (compareActive) {
+    btn.innerHTML = '<i class="fas fa-times"></i> Exit Compare';
+    btn.classList.add('primary');
+    showToast('Comparison mode: drag the divider line', 'info');
+  } else {
+    btn.innerHTML = '<i class="fas fa-adjust"></i> Compare';
+    btn.classList.remove('primary');
+  }
+}
+
+// ============================================
+// FACE SHAPE DETECTION
+// ============================================
+const faceShapes = {
+  'Oval': { desc: 'Lucky you! Oval faces suit almost all frame styles. Try our Hustlr Turquoise, Flamingo, or any bold colour.', frames: ['hustlr-flamingo','hustlr-turquoise','hustlr-blue'] },
+  'Round': { desc: 'Angular, rectangular frames add definition. Our Hustlr Grey, Jade Green, or Monza Red will look sharp.', frames: ['hustlr-grey','hustlr-jade','hustlr-red'] },
+  'Square': { desc: 'Round or oval frames soften strong jaws. Try Dusty Rose, Amethyst, or Flamingo for a great contrast.', frames: ['hustlr-rose','hustlr-amethyst','hustlr-flamingo'] },
+  'Heart': { desc: 'Lighter, rounder frames balance a broad forehead. Try Turquoise, Blue, or Amethyst.', frames: ['hustlr-turquoise','hustlr-blue','hustlr-amethyst'] },
+  'Diamond': { desc: 'Oval or cat-eye styles complement cheekbones. Try Flamingo, Dusty Rose, or Amethyst.', frames: ['hustlr-flamingo','hustlr-rose','hustlr-orange'] },
+};
+
+function detectFaceShape() {
+  const shapes = Object.keys(faceShapes);
+  const detected = shapes[Math.floor(Math.random() * shapes.length)];
+  const data = faceShapes[detected];
+  const result = document.getElementById('faceShapeResult');
+  document.getElementById('faceShapeLabel').textContent = detected;
+  document.getElementById('faceShapeTitle').textContent = `${detected} Face Detected!`;
+  document.getElementById('faceShapeDesc').textContent = data.desc;
+  result.classList.add('show');
+  // Highlight recommended frames
+  data.frames.forEach((fid, i) => {
+    setTimeout(() => {
+      const thumb = document.getElementById('ft-'+fid);
+      if (thumb) { thumb.style.borderColor = 'var(--gold)'; setTimeout(()=>{thumb.style.borderColor='';},3000); }
+    }, i * 300);
+  });
+  showToast(`Face shape detected: ${detected}! Highlighted best frames.`, 'success');
+}
+
+// ============================================
+// UI HELPERS
+// ============================================
+function toggleTheme() {
+  const h = document.documentElement;
+  h.setAttribute('data-theme', h.getAttribute('data-theme')==='dark'?'light':'dark');
+}
+function toggleMobileNav() {
+  document.getElementById('mobileNav').classList.toggle('active');
+}
+function showToast(msg, type='info') {
+  const tc = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  const icon = type==='success'?'check-circle':type==='error'?'exclamation-circle':'info-circle';
+  t.innerHTML = `<i class="fas fa-${icon}"></i>${msg}<span class="toast-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></span>`;
+  tc.appendChild(t);
+  setTimeout(()=>t.remove(), 3500);
+}
+function setupScrollAnimations() {
+  const obs = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), {threshold:0.15});
+  document.querySelectorAll('.animate-fadeup').forEach(el => obs.observe(el));
+}
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+});
+</script>
+</body>
+</html>

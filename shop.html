@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Shop | Nayanta Eyewear</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="premium.css"/>
+<style>
+body { background: #080808; }
+.shop-header {
+  background: linear-gradient(135deg,#0a0000,#150000,#0a0000);
+  padding: calc(var(--nav-h) + 3rem) 2rem 3rem;
+  text-align: center;
+}
+.shop-header h1 { font-family:var(--font-serif); font-size:clamp(2rem,5vw,3.5rem); color:white; margin-bottom:0.5rem; }
+.shop-header p { color:rgba(255,255,255,0.6); max-width:600px; margin:0 auto; }
+
+/* FILTER BAR */
+.filter-bar {
+  position: sticky; top: var(--nav-h); z-index: 100;
+  background: rgba(10,10,10,0.95); backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 0.8rem 2rem;
+}
+.filter-bar-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.search-wrap { flex: 1; min-width: 200px; position: relative; }
+.search-wrap input {
+  width: 100%; background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: white; padding: 0.6rem 1rem 0.6rem 2.5rem;
+  border-radius: 50px; font-size: 0.88rem; outline: none;
+  transition: var(--transition);
+}
+.search-wrap input:focus { border-color: var(--primary); background: rgba(230,0,0,0.06); }
+.search-wrap i { position:absolute; left:0.9rem; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3); font-size:0.85rem; }
+.filter-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.ftab {
+  padding: 0.4rem 1rem; border-radius: 50px;
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.6); font-size: 0.8rem; font-weight: 600;
+  cursor: pointer; transition: var(--transition); white-space: nowrap;
+}
+.ftab.active, .ftab:hover { background: var(--primary); border-color: var(--primary); color: white; }
+.sort-select {
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+  color: white; padding: 0.5rem 1rem; border-radius: 50px;
+  font-size: 0.8rem; cursor: pointer; outline: none;
+}
+.sort-select option { background: #1a1a1a; }
+.view-toggle { display: flex; gap: 0.3rem; }
+.view-btn { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); width: 34px; height: 34px; border-radius: 8px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:var(--transition); }
+.view-btn.active { background: var(--primary); border-color:var(--primary); color:white; }
+
+/* SHOP BODY */
+.shop-body { display: flex; gap: 0; min-height: 60vh; }
+
+/* SIDEBAR FILTERS */
+.shop-sidebar {
+  width: 220px; min-width: 220px;
+  background: #0d0d0d; border-right: 1px solid rgba(255,255,255,0.05);
+  padding: 1.5rem 1.2rem;
+  position: sticky; top: calc(var(--nav-h) + 60px);
+  height: calc(100vh - var(--nav-h) - 60px);
+  overflow-y: auto;
+}
+.sf-section { margin-bottom: 1.8rem; }
+.sf-title { font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.8rem; }
+.sf-option { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0; cursor: pointer; }
+.sf-option input { accent-color: var(--primary); cursor: pointer; }
+.sf-option label { font-size: 0.85rem; color: rgba(255,255,255,0.7); cursor: pointer; flex: 1; }
+.sf-option .sf-count { font-size: 0.72rem; color: rgba(255,255,255,0.3); }
+.price-range { width: 100%; accent-color: var(--primary); }
+.price-display { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--gray3); margin-top: 0.4rem; }
+
+/* PRODUCT GRID */
+.shop-products { flex: 1; padding: 1.5rem 2rem; }
+.products-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem; }
+.products-count { font-size: 0.85rem; color: rgba(255,255,255,0.5); }
+.products-count strong { color: white; }
+
+/* Notice banner */
+.shop-notice {
+  background: linear-gradient(135deg, rgba(212,175,55,0.1), rgba(212,175,55,0.05));
+  border: 1px solid rgba(212,175,55,0.25);
+  border-radius: var(--radius-md); padding: 0.9rem 1.2rem;
+  font-size: 0.85rem; color: rgba(255,255,255,0.7);
+  margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.7rem;
+}
+.shop-notice i { color: var(--gold); }
+
+/* LIST VIEW */
+.products-list .product-card-premium { display: flex; flex-direction: row; }
+.products-list .pcard-img-wrap { width: 180px; min-width: 180px; aspect-ratio: unset; height: 140px; }
+.products-list .pcard-body { display: flex; align-items: center; gap: 2rem; flex: 1; padding: 1rem 1.5rem; }
+.products-list .pcard-name { font-size: 1.1rem; }
+
+/* Empty state */
+.empty-state { text-align: center; padding: 5rem 2rem; color: rgba(255,255,255,0.3); }
+.empty-state i { font-size: 4rem; margin-bottom: 1rem; display: block; }
+
+/* Quick-view modal */
+.qv-modal-content { padding: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.qv-img-wrap { border-radius: var(--radius-md); overflow: hidden; aspect-ratio: 1; background: #111; }
+.qv-img-wrap img { width:100%; height:100%; object-fit:cover; }
+.qv-info {}
+.qv-info h2 { font-family:var(--font-serif); font-size:1.6rem; color:white; margin-bottom:0.5rem; }
+.qv-info .qv-cat { font-size:0.75rem; color:var(--primary); text-transform:uppercase; letter-spacing:1px; margin-bottom:0.3rem; }
+.qv-info .stars { color:var(--gold); margin-bottom:1rem; }
+.qv-info .price { font-size:1.8rem; font-weight:700; color:white; }
+.qv-info .price-old { font-size:1rem; color:var(--gray3); text-decoration:line-through; }
+.qv-features { list-style:none; margin:1rem 0; }
+.qv-features li { display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; color:rgba(255,255,255,0.7); padding:0.3rem 0; border-bottom:1px solid rgba(255,255,255,0.05); }
+.qv-features li i { color:var(--primary); width:16px; }
+.qv-actions { display:flex; gap:0.8rem; margin-top:1.2rem; flex-wrap:wrap; }
+
+@media(max-width:1024px){ .shop-sidebar { display:none; } }
+@media(max-width:600px){ .qv-modal-content { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="nav-premium" id="navbar">
+  <a href="index.html" class="nav-logo">Nayanта<span style="color:var(--primary)">.</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="shop.html" class="active">Shop</a></li>
+    <li><a href="tryon.html">Try-On</a></li>
+    <li><a href="track.html">Track Order</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="nav-theme-btn" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+    <button class="nav-tryon-btn" onclick="location.href='tryon.html'"><i class="fas fa-camera"></i> Try On</button>
+    <a href="cart.html" class="nav-cart-btn"><i class="fas fa-shopping-bag"></i><span class="cart-badge" id="cartBadge">0</span></a>
+    <button class="nav-hamburger" onclick="toggleMobileNav()"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+<div class="mobile-nav-overlay" id="mobileNav">
+  <div class="mobile-nav-header">
+    <span class="nav-logo">Nayanта<span style="color:var(--primary)">.</span></span>
+    <button class="mobile-nav-close" onclick="toggleMobileNav()"><i class="fas fa-times"></i></button>
+  </div>
+  <ul class="mobile-nav-links">
+    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+    <li><a href="shop.html" class="active"><i class="fas fa-glasses"></i> Shop</a></li>
+    <li><a href="tryon.html"><i class="fas fa-camera"></i> Try-On</a></li>
+    <li><a href="cart.html"><i class="fas fa-shopping-bag"></i> Cart</a></li>
+    <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+  </ul>
+</div>
+
+<!-- HEADER -->
+<header class="shop-header">
+  <div class="section-label" style="justify-content:center;margin-bottom:0.8rem"><i class="fas fa-glasses"></i> Collection</div>
+  <h1>Shop Eyewear</h1>
+  <p>Premium frames, blue-light protection, and prescription lenses for every style.</p>
+</header>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <div class="filter-bar-inner">
+    <div class="search-wrap">
+      <i class="fas fa-search"></i>
+      <input type="text" id="searchInput" placeholder="Search frames, colours, types…" oninput="filterProducts()"/>
+    </div>
+    <div class="filter-tabs">
+      <button class="ftab active" data-cat="all" onclick="filterTab(this,'all')">All</button>
+      <button class="ftab" data-cat="blu" onclick="filterTab(this,'blu')"><i class="fas fa-laptop"></i> Blu Lens</button>
+      <button class="ftab" data-cat="powered" onclick="filterTab(this,'powered')"><i class="fas fa-eye"></i> Powered</button>
+      <button class="ftab" data-cat="kids" onclick="filterTab(this,'kids')"><i class="fas fa-child"></i> Kids</button>
+      <button class="ftab" data-cat="accessories" onclick="filterTab(this,'accessories')"><i class="fas fa-box"></i> Accessories</button>
+    </div>
+    <select class="sort-select" id="sortSelect" onchange="sortProducts()">
+      <option value="popular">Popular</option>
+      <option value="priceasc">Price: Low–High</option>
+      <option value="pricedesc">Price: High–Low</option>
+      <option value="newest">Newest</option>
+      <option value="rating">Top Rated</option>
+    </select>
+    <div class="view-toggle">
+      <button class="view-btn active" id="viewGrid" onclick="setView('grid')" title="Grid view"><i class="fas fa-th"></i></button>
+      <button class="view-btn" id="viewList" onclick="setView('list')" title="List view"><i class="fas fa-list"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- SHOP BODY -->
+<div class="shop-body">
+  <!-- SIDEBAR -->
+  <aside class="shop-sidebar">
+    <div class="sf-section">
+      <div class="sf-title">Price Range</div>
+      <input type="range" class="price-range" id="priceRange" min="0" max="1500" value="1500" oninput="filterProducts()"/>
+      <div class="price-display"><span>₹0</span><span>Up to ₹<span id="priceVal">1500</span></span></div>
+    </div>
+    <div class="sf-section">
+      <div class="sf-title">Frame Shape</div>
+      <div class="sf-option"><input type="checkbox" id="shapeSquare" onchange="filterProducts()"><label for="shapeSquare">Square</label><span class="sf-count">18</span></div>
+      <div class="sf-option"><input type="checkbox" id="shapeRound" onchange="filterProducts()"><label for="shapeRound">Round</label><span class="sf-count">8</span></div>
+      <div class="sf-option"><input type="checkbox" id="shapeRect" onchange="filterProducts()"><label for="shapeRect">Rectangle</label><span class="sf-count">6</span></div>
+    </div>
+    <div class="sf-section">
+      <div class="sf-title">Lens Type</div>
+      <div class="sf-option"><input type="checkbox" id="lensBlu" onchange="filterProducts()"><label for="lensBlu">Blue Light</label><span class="sf-count">15</span></div>
+      <div class="sf-option"><input type="checkbox" id="lensPow" onchange="filterProducts()"><label for="lensPow">Powered</label><span class="sf-count">15</span></div>
+    </div>
+    <div class="sf-section">
+      <div class="sf-title">Colour</div>
+      <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.3rem">
+        <div style="width:24px;height:24px;border-radius:50%;background:#888;cursor:pointer;border:2px solid transparent;transition:0.2s" title="Grey" onclick="colorFilter(this,'grey')"></div>
+        <div style="width:24px;height:24px;border-radius:50%;background:#3b82f6;cursor:pointer;border:2px solid transparent;transition:0.2s" title="Blue" onclick="colorFilter(this,'blue')"></div>
+        <div style="width:24px;height:24px;border-radius:50%;background:#14b8a6;cursor:pointer;border:2px solid transparent;transition:0.2s" title="Turquoise" onclick="colorFilter(this,'turquoise')"></div>
+        <div style="width:24px;height:24px;border-radius:50%;background:#a855f7;cursor:pointer;border:2px solid transparent;transition:0.2s" title="Amethyst" onclick="colorFilter(this,'amethyst')"></div>
+        <div style="width:24px;height:24px;border-radius:50%;background:#ec4899;cursor:pointer;border:2px solid transparent;transition:0.2s" title="Flamingo" onclick="colorFilter(this,'flamingo')"></div>
+        <div style="width:24px;height:24px;border-radius:50%;background:#f97316;cursor:pointer;border:2px solid transparent;transition:0.2s" title="Orange" onclick="colorFilter(this,'orange')"></div>
+        <div style="width:24px;height:24px;border-radius:50%;background:#ef4444;cursor:pointer;border:2px solid transparent;transition:0.2s" title="Red" onclick="colorFilter(this,'red')"></div>
+        <div style="width:24px;height:24px;border-radius:50%;background:#22c55e;cursor:pointer;border:2px solid transparent;transition:0.2s" title="Green" onclick="colorFilter(this,'green')"></div>
+      </div>
+    </div>
+    <button class="btn-ghost" onclick="clearFilters()" style="font-size:0.82rem;padding:0.5rem 0"><i class="fas fa-times"></i> Clear All Filters</button>
+  </aside>
+
+  <!-- PRODUCTS -->
+  <main class="shop-products">
+    <div class="shop-notice">
+      <i class="fas fa-info-circle"></i>
+      Can't find your perfect pair? We source any Lenskart frame — <a href="contact.html" style="color:var(--gold);font-weight:600">contact us!</a>
+    </div>
+    <div class="products-header">
+      <div class="products-count"><strong id="countDisplay">0</strong> products found</div>
+    </div>
+    <div class="products-grid" id="productsGrid"></div>
+    <div class="empty-state" id="emptyState" style="display:none">
+      <i class="fas fa-search"></i>
+      <h3 style="color:rgba(255,255,255,0.5);margin-bottom:0.5rem">No frames found</h3>
+      <p>Try adjusting your filters or search term</p>
+      <button class="btn-primary" onclick="clearFilters()" style="margin-top:1rem">Clear Filters</button>
+    </div>
+  </main>
+</div>
+
+<!-- QUICK VIEW MODAL -->
+<div class="modal-overlay" id="quickViewModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeQV()"><i class="fas fa-times"></i></button>
+    <div class="qv-modal-content" id="qvContent"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer-premium" style="margin-top:0">
+  <div class="footer-bottom" style="border-top:none;margin-top:0;padding:1.5rem 2rem">
+    <p style="color:var(--gray3);font-size:0.82rem">© 2025 Nayanta Eyewear. All rights reserved.</p>
+    <p style="color:var(--gray3);font-size:0.82rem">Made with ❤️ in India</p>
+  </div>
+</footer>
+<nav class="bottom-nav"><div class="bottom-nav-inner">
+  <a href="index.html" class="bn-item"><i class="fas fa-home"></i><span>Home</span></a>
+  <a href="shop.html" class="bn-item active"><i class="fas fa-glasses"></i><span>Shop</span></a>
+  <a href="tryon.html" class="bn-item" style="color:var(--primary)"><i class="fas fa-camera"></i><span>Try-On</span></a>
+  <a href="cart.html" class="bn-item"><i class="fas fa-shopping-bag"></i><span>Cart</span><span class="bn-badge" id="bnCartBadge">0</span></a>
+  <a href="contact.html" class="bn-item"><i class="fas fa-headset"></i><span>Help</span></a>
+</div></nav>
+<div class="toast-container" id="toastContainer"></div>
+<div class="fab-container">
+  <button class="fab-btn fab-chat" onclick="location.href='https://wa.me/919955428948'" title="WhatsApp"><i class="fab fa-whatsapp"></i></button>
+  <button class="fab-btn fab-top" id="fabTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-arrow-up"></i></button>
+</div>
+
+<script>
+// ============================================
+// PRODUCT DATABASE
+// ============================================
+const PRODUCTS = [
+  // BLU LENS
+  {id:1,name:'Hustlr Grey',cat:'blu',price:699,old:1299,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/lenskart-hustlr-lh-e16985-w-c4-eyeglasses_img_9728_11_01_2024.jpg',rating:4.8,reviews:342,badge:'bestseller',badgeText:'Best Seller',type:'Blu Lens',color:'grey',shape:'square',features:['Blue light blocking','Lightweight frame','UV protection','Square shape']},
+  {id:2,name:'Hustlr Blue',cat:'blu',price:699,old:1299,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/lenskart-hustlr-la-e15417-xw-blue-lagoon-eyeglasses__dsc7717_21_07_2025.jpg',rating:4.7,reviews:218,badge:'new',badgeText:'New',type:'Blu Lens',color:'blue',shape:'square',features:['Blue light blocking','Flexible frame','UV protection']},
+  {id:3,name:'Hustlr Skyblue',cat:'blu',price:699,old:1299,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/blue-sky-full-rim-square-air-essentials-la-e15417-w-c7-eyeglasses_g_6031_09_05_2025.jpg',rating:4.6,reviews:156,badge:'',badgeText:'',type:'Blu Lens',color:'blue',shape:'square',features:['Blue light blocking','Premium lens','UV400']},
+  {id:4,name:'Hustlr Military Green',cat:'blu',price:699,old:1299,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/blue-block-screen-glasses:-violet-full-rim-square-lenskart-hustlr-lenskart-hustlr-lb-e14058-c17_g_7866_image_pla_23_12_2022.jpg',rating:4.5,reviews:89,badge:'',badgeText:'',type:'Blu Lens',color:'green',shape:'square',features:['Blue light','Durable','Military style']},
+  {id:5,name:'Hustlr Frost White',cat:'blu',price:699,old:1299,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/frost-full-rim-square-lenskart-hustlr-air-la-e15417-n-eyeglasses_dsc3637_8_12_12_2024.jpg',rating:4.7,reviews:201,badge:'',badgeText:'',type:'Blu Lens',color:'grey',shape:'square',features:['Blue light','Clean minimal','Air frame']},
+  {id:6,name:'Hustlr Turquoise',cat:'blu',price:699,old:1299,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/turquoise-full-rim-square-lenskart-hustlr-la-e15417-xw-c34-eyeglasses_img_0271_27_02_2025.jpg',rating:4.9,reviews:412,badge:'trending',badgeText:'🔥 Trending',type:'Blu Lens',color:'turquoise',shape:'square',features:['Blue light','Bold colour','UV protection']},
+  {id:7,name:'Hustlr Amethyst',cat:'blu',price:699,old:1299,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/amethyst-full-rim-square-air-essentials-la-e15417-w-c5-eyeglasses_g_7838_27_02_2025.jpg',rating:4.8,reviews:287,badge:'',badgeText:'',type:'Blu Lens',color:'amethyst',shape:'round',features:['Blue light','Premium build','Air essentials']},
+  {id:8,name:'Hustlr Orange',cat:'blu',price:699,old:1299,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/orange-full-rim-square-lenskart-hustlr-la-e15417-xw-eyeglasses__dsc3403_20_05_2025.jpg',rating:4.5,reviews:123,badge:'',badgeText:'',type:'Blu Lens',color:'orange',shape:'square',features:['Blue light','Vibrant colour']},
+  {id:9,name:'Hustlr Monza Red',cat:'blu',price:699,old:1299,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/maroon-full-rim-round-lenskart-air-classic-la-e15417-c6-eyeglasses_g_7276_26_12_2022.jpg',rating:4.7,reviews:178,badge:'',badgeText:'',type:'Blu Lens',color:'red',shape:'round',features:['Blue light','Round frame','Classic style']},
+  {id:10,name:'Hustlr Jade Green',cat:'blu',price:699,old:1299,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/jade-green-full-rim-square-lenskart-air-essentials-la-e15417-c21-eyeglasses_g_1150_09_08_23.jpg',rating:4.6,reviews:145,badge:'',badgeText:'',type:'Blu Lens',color:'green',shape:'square',features:['Blue light','Jade green','Air essentials']},
+  {id:11,name:'Hustlr Pink Crystal',cat:'blu',price:699,old:1299,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/lenskart-hustlr-la-e15417-w-c11-eyeglasses__dsc8452_224783.jpg',rating:4.8,reviews:267,badge:'',badgeText:'',type:'Blu Lens',color:'flamingo',shape:'square',features:['Blue light','Crystal frame','Feminine style']},
+  {id:12,name:'Hustlr Dusty Rose',cat:'blu',price:699,old:1299,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/peyush-bansal-shark-tank-dusty-rose-full-rim-square_csvfile-1709039317354-img_9794.jpg',rating:4.9,reviews:523,badge:'bestseller',badgeText:'Best Seller',type:'Blu Lens',color:'flamingo',shape:'round',features:['Blue light','Shark Tank pick','Premium design']},
+  {id:13,name:'Hustlr Caribbean',cat:'blu',price:699,old:1299,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/caribbean-full-rim-square-lenskart-air-classic-la-e15417-c18-eyeglasses_csvfile-1679566223189-g_6181_21_03_2023.jpg',rating:4.6,reviews:198,badge:'',badgeText:'',type:'Blu Lens',color:'blue',shape:'square',features:['Blue light','Caribbean blue','Classic air']},
+  {id:14,name:'Hustlr Ocean Blue',cat:'blu',price:699,old:1299,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/lenskart-air-la-e15417-w-c1-eyeglasses_csvfile-1701688526805-img_7894.jpg',rating:4.7,reviews:234,badge:'',badgeText:'',type:'Blu Lens',color:'blue',shape:'square',features:['Blue light','Ocean blue','Lenskart air']},
+  {id:15,name:'Hustlr Flamingo',cat:'blu',price:699,old:1299,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/peyush-bansal-shark-tank-flamingo-full-rim-square_csvfile-1703743957635-img_9591.jpg',rating:4.9,reviews:634,badge:'trending',badgeText:'🔥 Top Pick',type:'Blu Lens',color:'flamingo',shape:'square',features:['Blue light','Shark Tank collab','Bestseller 2024']},
+  // POWERED
+  {id:16,name:'Powered Grey',cat:'powered',price:999,old:1799,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/lenskart-hustlr-lh-e16985-w-c4-eyeglasses_img_9728_11_01_2024.jpg',rating:4.8,reviews:189,badge:'',badgeText:'',type:'Powered',color:'grey',shape:'square',features:['Prescription lens','Anti-glare','UV protection','Custom power']},
+  {id:17,name:'Powered Blue',cat:'powered',price:999,old:1799,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/lenskart-hustlr-la-e15417-xw-blue-lagoon-eyeglasses__dsc7717_21_07_2025.jpg',rating:4.7,reviews:145,badge:'',badgeText:'',type:'Powered',color:'blue',shape:'square',features:['Prescription lens','Blue tint','Custom power']},
+  {id:18,name:'Powered Flamingo',cat:'powered',price:999,old:1799,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/peyush-bansal-shark-tank-flamingo-full-rim-square_csvfile-1703743957635-img_9591.jpg',rating:4.9,reviews:301,badge:'bestseller',badgeText:'Best Seller',type:'Powered',color:'flamingo',shape:'square',features:['Prescription','Shark Tank design','Premium quality']},
+  // KIDS
+  {id:19,name:'Hooper Kids Grey',cat:'kids',price:850,old:1499,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/lenskart-hustlr-lh-e16985-w-c4-eyeglasses_img_9728_11_01_2024.jpg',rating:4.7,reviews:98,badge:'',badgeText:'',type:'Kids',color:'grey',shape:'square',features:['Kids sized','Blue light','Flexible frame','Safe for kids']},
+  {id:20,name:'Hooper Kids Blue',cat:'kids',price:850,old:1499,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/lenskart-hustlr-la-e15417-xw-blue-lagoon-eyeglasses__dsc7717_21_07_2025.jpg',rating:4.8,reviews:134,badge:'bestseller',badgeText:'Kids\' Fav',type:'Kids',color:'blue',shape:'square',features:['Kids sized','Blue light','Lightweight']},
+  {id:21,name:'Hooper Kids Flamingo',cat:'kids',price:850,old:1499,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//l/i/peyush-bansal-shark-tank-flamingo-full-rim-square_csvfile-1703743957635-img_9591.jpg',rating:4.9,reviews:212,badge:'trending',badgeText:'🔥 Popular',type:'Kids',color:'flamingo',shape:'square',features:['Kids sized','Cute colour','Durable']},
+  // ACCESSORIES
+  {id:22,name:'Aqualens Cleaner 100ml',cat:'accessories',price:79,old:149,img:'https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//a/q/aqualens-lens-lens-spray-100-ml__mg_9794_1.jpg',rating:4.6,reviews:567,badge:'bestseller',badgeText:'Must Have',type:'Accessory',color:'',shape:'',features:['100ml spray','Anti-fog','Lens safe','Portable']},
+];
+
+let activeCategory = 'all';
+let activeColor = null;
+let currentView = 'grid';
+let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+document.addEventListener('DOMContentLoaded', () => {
+  updateCartBadge();
+  filterProducts();
+  setupScroll();
+});
+
+// ============================================
+// FILTER & RENDER
+// ============================================
+function filterTab(btn, cat) {
+  document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeCategory = cat;
+  filterProducts();
+}
+
+function colorFilter(el, color) {
+  if (activeColor === color) {
+    activeColor = null;
+    el.style.borderColor = 'transparent';
+  } else {
+    document.querySelectorAll('[onclick^="colorFilter"]').forEach(d => d.style.borderColor = 'transparent');
+    activeColor = color;
+    el.style.borderColor = 'white';
+  }
+  filterProducts();
+}
+
+function filterProducts() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  const maxPrice = parseInt(document.getElementById('priceRange').value);
+  document.getElementById('priceVal').textContent = maxPrice;
+  const sort = document.getElementById('sortSelect').value;
+
+  let filtered = PRODUCTS.filter(p => {
+    if (activeCategory !== 'all' && p.cat !== activeCategory) return false;
+    if (activeColor && !p.color.includes(activeColor)) return false;
+    if (p.price > maxPrice) return false;
+    if (q && !p.name.toLowerCase().includes(q) && !p.type.toLowerCase().includes(q) && !p.color.includes(q)) return false;
+    return true;
+  });
+
+  if (sort === 'priceasc') filtered.sort((a,b) => a.price - b.price);
+  else if (sort === 'pricedesc') filtered.sort((a,b) => b.price - a.price);
+  else if (sort === 'rating') filtered.sort((a,b) => b.rating - a.rating);
+  else if (sort === 'newest') filtered.sort((a,b) => b.id - a.id);
+  else filtered.sort((a,b) => b.reviews - a.reviews);
+
+  renderProducts(filtered);
+}
+
+function sortProducts() { filterProducts(); }
+
+function renderProducts(products) {
+  const grid = document.getElementById('productsGrid');
+  const empty = document.getElementById('emptyState');
+  document.getElementById('countDisplay').textContent = products.length;
+
+  if (!products.length) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  grid.className = currentView === 'list' ? 'products-list' : 'products-grid';
+
+  grid.innerHTML = products.map(p => {
+    const inWish = wishlist.includes(p.id);
+    const savings = p.old - p.price;
+    const pct = Math.round(savings / p.old * 100);
+    const stars = '★'.repeat(Math.floor(p.rating)) + '☆'.repeat(5 - Math.floor(p.rating));
+    return `
+    <div class="product-card-premium animate-fadeup" data-id="${p.id}">
+      <div class="pcard-img-wrap">
+        <img src="${p.img}" alt="${p.name}" loading="lazy"/>
+        ${p.badge ? `<span class="pcard-badge ${p.badge}">${p.badgeText}</span>` : ''}
+        ${pct >= 20 ? `<span class="pcard-badge" style="top:auto;bottom:55px;background:rgba(0,0,0,0.8);border:1px solid rgba(255,255,255,0.2)">-${pct}%</span>` : ''}
+        <div class="pcard-actions">
+          <button class="pcard-action-btn ${inWish?'wishlisted':''}" onclick="toggleWishlist(${p.id},this)" title="Wishlist">
+            <i class="${inWish?'fas':'far'} fa-heart"></i>
+          </button>
+          <button class="pcard-action-btn" onclick="openQuickView(${p.id})" title="Quick view"><i class="fas fa-eye"></i></button>
+          <a href="tryon.html" class="pcard-action-btn" title="Try On"><i class="fas fa-camera"></i></a>
+        </div>
+        <button class="pcard-tryon-btn" onclick="location.href='tryon.html'"><i class="fas fa-camera"></i> Virtual Try-On</button>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-category">${p.type}</div>
+        <div class="pcard-name">${p.name}</div>
+        <div class="pcard-stars"><span class="stars">${stars}</span><span class="count">${p.rating} (${p.reviews})</span></div>
+        <div class="pcard-price-row">
+          <div><span class="pcard-price">₹${p.price}</span><span class="pcard-price-old">₹${p.old}</span></div>
+          <button class="pcard-add-btn" onclick="addToCart(${p.id},this)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Animate in
+  const observer = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), {threshold:0.1});
+  document.querySelectorAll('.animate-fadeup:not(.visible)').forEach(el => observer.observe(el));
+}
+
+// ============================================
+// CART / WISHLIST
+// ============================================
+function addToCart(id, btn) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p) return;
+  cart.push({name:p.name, price:p.price, image:p.img});
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartBadge();
+  if (btn) { btn.innerHTML='<i class="fas fa-check"></i>'; btn.style.cssText='background:#10b981;border-color:#10b981;color:white'; setTimeout(()=>{btn.innerHTML='<i class="fas fa-plus"></i>';btn.style.cssText='';},2000); }
+  showToast(`${p.name} added to cart! 🛍️`, 'success');
+}
+
+function toggleWishlist(id, btn) {
+  const idx = wishlist.indexOf(id);
+  if (idx > -1) { wishlist.splice(idx,1); btn.classList.remove('wishlisted'); btn.querySelector('i').className = 'far fa-heart'; showToast('Removed from wishlist','info'); }
+  else { wishlist.push(id); btn.classList.add('wishlisted'); btn.querySelector('i').className = 'fas fa-heart'; showToast('Added to wishlist ❤️','success'); }
+  localStorage.setItem('wishlist', JSON.stringify(wishlist));
+}
+
+function updateCartBadge() {
+  const b = document.getElementById('cartBadge');
+  const bn = document.getElementById('bnCartBadge');
+  const c = JSON.parse(localStorage.getItem('cart')||'[]').length;
+  if(b) b.textContent = c;
+  if(bn) bn.textContent = c;
+}
+
+// ============================================
+// QUICK VIEW
+// ============================================
+function openQuickView(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p) return;
+  const stars = '★'.repeat(Math.floor(p.rating)) + '☆'.repeat(5-Math.floor(p.rating));
+  document.getElementById('qvContent').innerHTML = `
+    <div class="qv-img-wrap"><img src="${p.img}" alt="${p.name}"/></div>
+    <div class="qv-info">
+      <div class="qv-cat">${p.type}</div>
+      <h2>${p.name}</h2>
+      <div class="stars">${stars} <span style="font-size:0.85rem;color:var(--gray3)">(${p.reviews} reviews)</span></div>
+      <div class="price">₹${p.price} <span class="price-old">₹${p.old}</span></div>
+      <ul class="qv-features">
+        ${p.features.map(f=>`<li><i class="fas fa-check-circle"></i>${f}</li>`).join('')}
+      </ul>
+      <div class="qv-actions">
+        <button class="btn-primary" onclick="addToCart(${p.id});closeQV()"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+        <a href="tryon.html" class="btn-outline"><i class="fas fa-camera"></i> Try On</a>
+      </div>
+    </div>`;
+  document.getElementById('quickViewModal').classList.add('active');
+}
+function closeQV() { document.getElementById('quickViewModal').classList.remove('active'); }
+document.getElementById('quickViewModal').addEventListener('click', e => { if(e.target === e.currentTarget) closeQV(); });
+
+// ============================================
+// VIEW / MISC
+// ============================================
+function setView(v) {
+  currentView = v;
+  document.getElementById('viewGrid').classList.toggle('active', v==='grid');
+  document.getElementById('viewList').classList.toggle('active', v==='list');
+  filterProducts();
+}
+
+function clearFilters() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('priceRange').value = 1500;
+  document.getElementById('priceVal').textContent = 1500;
+  document.querySelectorAll('.sf-option input').forEach(i => i.checked = false);
+  document.querySelectorAll('[onclick^="colorFilter"]').forEach(d => d.style.borderColor='transparent');
+  document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
+  document.querySelector('.ftab[data-cat="all"]').classList.add('active');
+  activeCategory = 'all'; activeColor = null;
+  filterProducts();
+}
+
+function toggleTheme() { const h=document.documentElement; h.setAttribute('data-theme',h.getAttribute('data-theme')==='dark'?'light':'dark'); }
+function toggleMobileNav() { document.getElementById('mobileNav').classList.toggle('active'); }
+function showToast(msg, type='info') {
+  const tc=document.getElementById('toastContainer'); const t=document.createElement('div');
+  t.className=`toast ${type}`;
+  t.innerHTML=`<i class="fas fa-${type==='success'?'check-circle':'info-circle'}"></i>${msg}<span class="toast-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></span>`;
+  tc.appendChild(t); setTimeout(()=>t.remove(),3500);
+}
+function setupScroll() {
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY>50);
+    document.getElementById('fabTop').classList.toggle('show', window.scrollY>400);
+  });
+}
+</script>
+</body>
+</html>
